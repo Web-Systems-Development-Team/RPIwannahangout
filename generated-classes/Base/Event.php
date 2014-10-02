@@ -1945,15 +1945,15 @@ abstract class Event implements ActiveRecordInterface
         $metadata->addPropertyConstraint('title', new Length(array ('max' => 50,)));
         $metadata->addPropertyConstraint('start_time', new SymfonyDateTime());
         $metadata->addPropertyConstraint('end_time', new SymfonyDateTime());
-        $metadata->addPropertyConstraint('title', new NotNull());
-        $metadata->addPropertyConstraint('title', new NotBlank());
-        $metadata->addPropertyConstraint('title', new Length(array ('max' => 255,)));
-        $metadata->addPropertyConstraint('title', new NotNull());
-        $metadata->addPropertyConstraint('title', new NotBlank());
-        $metadata->addPropertyConstraint('title', new Length(array ('max' => 1200,)));
+        $metadata->addPropertyConstraint('location', new NotNull());
+        $metadata->addPropertyConstraint('location', new NotBlank());
+        $metadata->addPropertyConstraint('location', new Length(array ('max' => 255,)));
+        $metadata->addPropertyConstraint('description', new NotNull());
+        $metadata->addPropertyConstraint('description', new NotBlank());
+        $metadata->addPropertyConstraint('description', new Length(array ('max' => 1200,)));
         $metadata->addPropertyConstraint('creator_user_id', new NotNull());
         $metadata->addPropertyConstraint('creator_user_id', new NotBlank());
-        $metadata->addPropertyConstraint('end_time', new NotNull());
+        $metadata->addPropertyConstraint('need_car', new NotNull());
     }
 
     /**

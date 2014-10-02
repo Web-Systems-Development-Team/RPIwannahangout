@@ -32,18 +32,14 @@
 	$user = $user_query->findPk(1); //this is the test user
 	$event->setCreator($user);
 
-	echo "location '";
-	echo $_POST["location"];
-	echo "'\n";
-
 	if (!$event->validate()) {
 	    foreach ($event->getValidationFailures() as $failure) {
-	        echo "Property ".$failure->getPropertyPath().": ".$failure->getMessage()."\n";
+	        echo '<p class="error_message">Property '.$failure->getPropertyPath().": ".$failure->getMessage()."</p>";
 	    }
 	}
 	else {
 	   echo "Everything's all right!";
-	   // http_redirect("../index.php");
+	   http_redirect("../index.php");
 	}
 
 ?>

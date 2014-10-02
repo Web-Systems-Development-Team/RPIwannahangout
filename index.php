@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>RPI Wanna Hangout</title>
+	<!-- <link rel="stylesheet" type="text/css" href="bootstrap/bootstrap.css"> -->
+	<!-- <script src="bootstrap/bootstrap.min.js"></script> -->
 </head>
 <body>
 	<h1>Simple event creator</h1>
