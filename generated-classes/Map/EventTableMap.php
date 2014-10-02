@@ -182,6 +182,19 @@ class EventTableMap extends TableMap
     } // buildRelations()
 
     /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'validate' => array('title_exists' => array ('column' => 'title','validator' => 'NotNull',), 'title_not_blank' => array ('column' => 'title','validator' => 'NotBlank',), 'title_length' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 50,),), 'start_time_valid' => array ('column' => 'start_time','validator' => 'SymfonyDateTime',), 'end_time_valid' => array ('column' => 'end_time','validator' => 'SymfonyDateTime',), 'location_exists' => array ('column' => 'title','validator' => 'NotNull',), 'location_not_blank' => array ('column' => 'title','validator' => 'NotBlank',), 'location_length' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), 'description_exists' => array ('column' => 'title','validator' => 'NotNull',), 'description_not_blank' => array ('column' => 'title','validator' => 'NotBlank',), 'description_length' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 1200,),), 'creator_exists' => array ('column' => 'creator_user_id','validator' => 'NotNull',), 'creator_not_blank' => array ('column' => 'creator_user_id','validator' => 'NotBlank',), 'need_car_exists' => array ('column' => 'end_time','validator' => 'NotNull',), ),
+        );
+    } // getBehaviors()
+
+    /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
      *
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with

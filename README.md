@@ -26,29 +26,6 @@ Set up database tables
 
 ================
 
+How to set up xdebug:
 
-Max database schema notes:
-*means foreign key stuff going on
-Database tables:
-	Events
-		start + end time
-		*creator
-		where
-		title
-		description
-		need car
-	Users
-		first + last name
-		email
-		user group
-		has car? (# seats?)
-	Users interested in event
-		event id
-		*user id
-		user bringing car (# seats?)
-	Comments
-		*event_id
-		*author_id
-		creation_date
-		edit_date ??
-		comment text
+Varies with platform, make sure to display_errors in php.ini is set to On not Off.

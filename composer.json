@@ -3,6 +3,9 @@
         "propel/propel": "~2.0@dev"
     },
     "autoload": {
-    	"classmap": ["generated-classes/"]
+    	"classmap": ["generated-classes/"],
+    	 "psr-0": {
+            "Propel\\Runtime\\Validator\\Constraints": "myConstraints/"
+        }
  	}
 }
