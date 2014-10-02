@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="RPIWannaHangOut" defaultIdMethod="native">
+	<table name="event" phpName="Event">
+		<column name="event_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="title" type="varchar" size="50" required="true" />
+		<column name="start_time" type="timestamp" required="true" />
+		<column name="end_time" type="timestamp" required="true" />
+		<column name="location" type="varchar" size="255" required="true" />
+		<column name="description" type="longvarchar" size="1200" required="true" lazyLoad="true" />
+		<column name="need_car" type="boolean" defaultValue="false" required="true" />
+		<column name="creator_user_id" type="integer" required="true" />
+		<foreign-key foreignTable="user" phpName="Creator" refPhpName="Event">
+			<reference local="creator_user_id" foreign="user_id"/>
+		</foreign-key>
+	</table>
+
+	<table name="user" phpName="User">
+		<column name="user_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="first_name" type="varchar" size="50" required="true" />
+		<column name="last_name" type="varchar" size="50" required="true" />
+		<column name="email" type="varchar" size="50" required="true" />
+		<column name="permission_level" type="integer" required="true" />
+	</table>
+
+	<table name="event_interest" phpName="EventInterest">
+		<column name="event_interest_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="bringing_car" type="boolean" default="false" required="true" />
+		<column name="interested_user_id" type="integer" required="true" />
+		<foreign-key foreignTable="user" phpName="Interested" refPhpName="Interest">
+			<reference local="interested_user_id" foreign="user_id"/>
+		</foreign-key>
+	</table>
+
+	<table name="comment" phpName="Comment">
+		<column name="comment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="creation_date" type="timestamp" required="true" />
+		<column name="edit_date" type="timestamp" required="true" />
+		<column name="comment_text" type="longvarchar" size="1200" required="true" lazyLoad="true" />
+		<column name="author_user_id" type="integer" required="true" />
+		<foreign-key foreignTable="user" phpName="Author" refPhpName="Comment">
+			<reference local="author_user_id" foreign="user_id"/>
+		</foreign-key>
+		<column name="target_event_id" type="integer" required="true" />
+		<foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Comment">
+			<reference local="target_event_id" foreign="event_id"/>
+		</foreign-key>
+	</table>
+ </database>

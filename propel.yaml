@@ -1,0 +1,18 @@
+propel:
+  database:
+      connections:
+          RPIWannaHangOut:
+              adapter: mysql
+              classname: Propel\Runtime\Connection\ConnectionWrapper
+              dsn: "mysql:host=localhost;dbname=RPIWannaHangOut"
+              user: propel_user
+              password: HvwE49yK23wKmQ6
+              attributes:
+  runtime:
+      defaultConnection: RPIWannaHangOut
+      connections:
+          - RPIWannaHangOut
+  generator:
+      defaultConnection: RPIWannaHangOut
+      connections:
+          - RPIWannaHangOut
