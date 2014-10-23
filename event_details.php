@@ -1,25 +1,32 @@
 <?php
 
-require_once 'database_access.php';
+	require_once 'database_access.php';
 
-if(isset($_GET["event_id"])) {
-	$event_id = $_GET["event_id"];
-} else {
-	echo '<p class="error_message">Need an event ID</p>';
-}
+	if(isset($_GET["event_id"])) {
+		$event_id = $_GET["event_id"];
+	} else {
+		echo '<p class="error_message">Need an event ID</p>';
+	}
 
-$q = new EventQuery();
-$event = $q->findPk($event_id);
+	$q = new EventQuery();
+	$event = $q->findPk($event_id);
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
 	<?php include_once 'basic_includes/head_includes.php' ?>
+	<link rel="stylesheet" href="assets/css/style.css">
 	<title>Event: <?php echo $event->getTitle(); ?></title>
 </head>
 <body>
 	<?php include 'basic_includes/navbar.php' ?>
+	<?php if(isset($_GET["new"])) { ?>
+		<div class="alert alert-success alert-dismissible" role="alert">
+		  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		  <strong>YAY!</strong> New Event created successfully, here it is!
+		</div>
+	<?php } ?>
 
 	<div class="panel panel-default">
 		<div class="panel-heading">Event: <?php echo $event->getTitle(); ?></div>
