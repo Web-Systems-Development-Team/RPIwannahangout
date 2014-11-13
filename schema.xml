@@ -14,18 +14,16 @@
 		</foreign-key>
 
 		<behavior name="validate">
-		    <parameter name="title_exists" value="{column: title, validator: NotNull, }" />
 		    <parameter name="title_not_blank" value="{column: title, validator: NotBlank}" />
 		    <parameter name="title_length" value="{column: title, validator: Length, options: {max: 50}}" />
+		    <parameter name="start_time_not_blank" value="{column: start_time, validator: NotBlank}" />
 		    <parameter name="start_time_valid" value="{column: start_time, validator: SymfonyDateTime}" />
+		    <parameter name="end_time_not_blank" value="{column: end_time, validator: NotBlank}" />
 		    <parameter name="end_time_valid" value="{column: end_time, validator: SymfonyDateTime}" />
-		    <parameter name="location_exists" value="{column: location, validator: NotNull}" />
 		    <parameter name="location_not_blank" value="{column: location, validator: NotBlank}" />
 		    <parameter name="location_length" value="{column: location, validator: Length, options: {max: 255}}" />
-		    <parameter name="description_exists" value="{column: description, validator: NotNull}" />
 		    <parameter name="description_not_blank" value="{column: description, validator: NotBlank}" />
 		    <parameter name="description_length" value="{column: description, validator: Length, options: {max: 1200}}" />
-			<parameter name="creator_exists" value="{column: creator_user_id, validator: NotNull}" />
 			<parameter name="creator_not_blank" value="{column: creator_user_id, validator: NotBlank}" />
 			<parameter name="need_car_exists" value="{column: need_car, validator: NotNull}" />
   		</behavior>
