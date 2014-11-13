@@ -20,8 +20,8 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms n' Fun <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="http://websys.edu:8080/RPIWannaHangOut/forms/event_form.php">Event Input (real)</a></li>
-            <li><a href="http://websys.edu:8080/RPIWannaHangOut/event_list.php">Event List (real)</a></li>
+            <li><a href="/RPIWannaHangOut/events/create.php">Event Input (real)</a></li>
+            <li><a href="/RPIWannaHangOut/events/list.php">Event List (real)</a></li>
             <li class="divider"></li>
             <li><a href="#">Something else here</a></li>
             <li><a href="#">Separated link</a></li>
