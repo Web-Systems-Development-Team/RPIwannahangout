@@ -164,7 +164,7 @@ abstract class EventQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `EVENT_ID`, `TITLE`, `START_TIME`, `END_TIME`, `LOCATION`, `NEED_CAR`, `CREATOR_USER_ID` FROM `event` WHERE `EVENT_ID` = :p0';
+        $sql = 'SELECT event_id, title, start_time, end_time, location, need_car, creator_user_id FROM event WHERE event_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

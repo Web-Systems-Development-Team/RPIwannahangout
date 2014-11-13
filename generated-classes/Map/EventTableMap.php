@@ -72,44 +72,44 @@ class EventTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 7;
 
     /**
-     * the column name for the EVENT_ID field
+     * the column name for the event_id field
      */
-    const COL_EVENT_ID = 'event.EVENT_ID';
+    const COL_EVENT_ID = 'event.event_id';
 
     /**
-     * the column name for the TITLE field
+     * the column name for the title field
      */
-    const COL_TITLE = 'event.TITLE';
+    const COL_TITLE = 'event.title';
 
     /**
-     * the column name for the START_TIME field
+     * the column name for the start_time field
      */
-    const COL_START_TIME = 'event.START_TIME';
+    const COL_START_TIME = 'event.start_time';
 
     /**
-     * the column name for the END_TIME field
+     * the column name for the end_time field
      */
-    const COL_END_TIME = 'event.END_TIME';
+    const COL_END_TIME = 'event.end_time';
 
     /**
-     * the column name for the LOCATION field
+     * the column name for the location field
      */
-    const COL_LOCATION = 'event.LOCATION';
+    const COL_LOCATION = 'event.location';
 
     /**
-     * the column name for the DESCRIPTION field
+     * the column name for the description field
      */
-    const COL_DESCRIPTION = 'event.DESCRIPTION';
+    const COL_DESCRIPTION = 'event.description';
 
     /**
-     * the column name for the NEED_CAR field
+     * the column name for the need_car field
      */
-    const COL_NEED_CAR = 'event.NEED_CAR';
+    const COL_NEED_CAR = 'event.need_car';
 
     /**
-     * the column name for the CREATOR_USER_ID field
+     * the column name for the creator_user_id field
      */
-    const COL_CREATOR_USER_ID = 'event.CREATOR_USER_ID';
+    const COL_CREATOR_USER_ID = 'event.creator_user_id';
 
     /**
      * The default string format for model objects of the related table
@@ -126,7 +126,6 @@ class EventTableMap extends TableMap
         self::TYPE_PHPNAME       => array('EventId', 'Title', 'StartTime', 'EndTime', 'Location', 'Description', 'NeedCar', 'CreatorUserId', ),
         self::TYPE_CAMELNAME     => array('eventId', 'title', 'startTime', 'endTime', 'location', 'description', 'needCar', 'creatorUserId', ),
         self::TYPE_COLNAME       => array(EventTableMap::COL_EVENT_ID, EventTableMap::COL_TITLE, EventTableMap::COL_START_TIME, EventTableMap::COL_END_TIME, EventTableMap::COL_LOCATION, EventTableMap::COL_DESCRIPTION, EventTableMap::COL_NEED_CAR, EventTableMap::COL_CREATOR_USER_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_EVENT_ID', 'COL_TITLE', 'COL_START_TIME', 'COL_END_TIME', 'COL_LOCATION', 'COL_DESCRIPTION', 'COL_NEED_CAR', 'COL_CREATOR_USER_ID', ),
         self::TYPE_FIELDNAME     => array('event_id', 'title', 'start_time', 'end_time', 'location', 'description', 'need_car', 'creator_user_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
@@ -141,7 +140,6 @@ class EventTableMap extends TableMap
         self::TYPE_PHPNAME       => array('EventId' => 0, 'Title' => 1, 'StartTime' => 2, 'EndTime' => 3, 'Location' => 4, 'Description' => 5, 'NeedCar' => 6, 'CreatorUserId' => 7, ),
         self::TYPE_CAMELNAME     => array('eventId' => 0, 'title' => 1, 'startTime' => 2, 'endTime' => 3, 'location' => 4, 'description' => 5, 'needCar' => 6, 'creatorUserId' => 7, ),
         self::TYPE_COLNAME       => array(EventTableMap::COL_EVENT_ID => 0, EventTableMap::COL_TITLE => 1, EventTableMap::COL_START_TIME => 2, EventTableMap::COL_END_TIME => 3, EventTableMap::COL_LOCATION => 4, EventTableMap::COL_DESCRIPTION => 5, EventTableMap::COL_NEED_CAR => 6, EventTableMap::COL_CREATOR_USER_ID => 7, ),
-        self::TYPE_RAW_COLNAME   => array('COL_EVENT_ID' => 0, 'COL_TITLE' => 1, 'COL_START_TIME' => 2, 'COL_END_TIME' => 3, 'COL_LOCATION' => 4, 'COL_DESCRIPTION' => 5, 'COL_NEED_CAR' => 6, 'COL_CREATOR_USER_ID' => 7, ),
         self::TYPE_FIELDNAME     => array('event_id' => 0, 'title' => 1, 'start_time' => 2, 'end_time' => 3, 'location' => 4, 'description' => 5, 'need_car' => 6, 'creator_user_id' => 7, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
@@ -158,18 +156,19 @@ class EventTableMap extends TableMap
         // attributes
         $this->setName('event');
         $this->setPhpName('Event');
+        $this->setIdentifierQuoting(false);
         $this->setClassName('\\Event');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('EVENT_ID', 'EventId', 'INTEGER', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 50, null);
-        $this->addColumn('START_TIME', 'StartTime', 'TIMESTAMP', true, null, null);
-        $this->addColumn('END_TIME', 'EndTime', 'TIMESTAMP', true, null, null);
-        $this->addColumn('LOCATION', 'Location', 'VARCHAR', true, 255, null);
-        $this->addColumn('DESCRIPTION', 'Description', 'LONGVARCHAR', true, 1200, null);
-        $this->addColumn('NEED_CAR', 'NeedCar', 'BOOLEAN', true, 1, false);
-        $this->addForeignKey('CREATOR_USER_ID', 'CreatorUserId', 'INTEGER', 'user', 'USER_ID', true, null, null);
+        $this->addPrimaryKey('event_id', 'EventId', 'INTEGER', true, null, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 50, null);
+        $this->addColumn('start_time', 'StartTime', 'TIMESTAMP', true, null, null);
+        $this->addColumn('end_time', 'EndTime', 'TIMESTAMP', true, null, null);
+        $this->addColumn('location', 'Location', 'VARCHAR', true, 255, null);
+        $this->addColumn('description', 'Description', 'LONGVARCHAR', true, 1200, null);
+        $this->addColumn('need_car', 'NeedCar', 'BOOLEAN', true, 1, false);
+        $this->addForeignKey('creator_user_id', 'CreatorUserId', 'INTEGER', 'user', 'user_id', true, null, null);
     } // initialize()
 
     /**
@@ -343,13 +342,13 @@ class EventTableMap extends TableMap
             $criteria->addSelectColumn(EventTableMap::COL_NEED_CAR);
             $criteria->addSelectColumn(EventTableMap::COL_CREATOR_USER_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.EVENT_ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.START_TIME');
-            $criteria->addSelectColumn($alias . '.END_TIME');
-            $criteria->addSelectColumn($alias . '.LOCATION');
-            $criteria->addSelectColumn($alias . '.NEED_CAR');
-            $criteria->addSelectColumn($alias . '.CREATOR_USER_ID');
+            $criteria->addSelectColumn($alias . '.event_id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.start_time');
+            $criteria->addSelectColumn($alias . '.end_time');
+            $criteria->addSelectColumn($alias . '.location');
+            $criteria->addSelectColumn($alias . '.need_car');
+            $criteria->addSelectColumn($alias . '.creator_user_id');
         }
     }
 

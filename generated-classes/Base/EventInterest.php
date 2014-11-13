@@ -705,17 +705,17 @@ abstract class EventInterest implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(EventInterestTableMap::COL_EVENT_INTEREST_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`EVENT_INTEREST_ID`';
+            $modifiedColumns[':p' . $index++]  = 'event_interest_id';
         }
         if ($this->isColumnModified(EventInterestTableMap::COL_BRINGING_CAR)) {
-            $modifiedColumns[':p' . $index++]  = '`BRINGING_CAR`';
+            $modifiedColumns[':p' . $index++]  = 'bringing_car';
         }
         if ($this->isColumnModified(EventInterestTableMap::COL_INTERESTED_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`INTERESTED_USER_ID`';
+            $modifiedColumns[':p' . $index++]  = 'interested_user_id';
         }
 
         $sql = sprintf(
-            'INSERT INTO `event_interest` (%s) VALUES (%s)',
+            'INSERT INTO event_interest (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -724,13 +724,13 @@ abstract class EventInterest implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`EVENT_INTEREST_ID`':
+                    case 'event_interest_id':
                         $stmt->bindValue($identifier, $this->event_interest_id, PDO::PARAM_INT);
                         break;
-                    case '`BRINGING_CAR`':
+                    case 'bringing_car':
                         $stmt->bindValue($identifier, (int) $this->bringing_car, PDO::PARAM_INT);
                         break;
-                    case '`INTERESTED_USER_ID`':
+                    case 'interested_user_id':
                         $stmt->bindValue($identifier, $this->interested_user_id, PDO::PARAM_INT);
                         break;
                 }
@@ -946,19 +946,25 @@ abstract class EventInterest implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\EventInterest The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -997,7 +1003,7 @@ abstract class EventInterest implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(EventInterestTableMap::DATABASE_NAME);
+        $criteria = ChildEventInterestQuery::create();
         $criteria->add(EventInterestTableMap::COL_EVENT_INTEREST_ID, $this->event_interest_id);
 
         return $criteria;

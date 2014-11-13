@@ -72,29 +72,29 @@ class UserTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the USER_ID field
+     * the column name for the user_id field
      */
-    const COL_USER_ID = 'user.USER_ID';
+    const COL_USER_ID = 'user.user_id';
 
     /**
-     * the column name for the FIRST_NAME field
+     * the column name for the first_name field
      */
-    const COL_FIRST_NAME = 'user.FIRST_NAME';
+    const COL_FIRST_NAME = 'user.first_name';
 
     /**
-     * the column name for the LAST_NAME field
+     * the column name for the last_name field
      */
-    const COL_LAST_NAME = 'user.LAST_NAME';
+    const COL_LAST_NAME = 'user.last_name';
 
     /**
-     * the column name for the EMAIL field
+     * the column name for the email field
      */
-    const COL_EMAIL = 'user.EMAIL';
+    const COL_EMAIL = 'user.email';
 
     /**
-     * the column name for the PERMISSION_LEVEL field
+     * the column name for the permission_level field
      */
-    const COL_PERMISSION_LEVEL = 'user.PERMISSION_LEVEL';
+    const COL_PERMISSION_LEVEL = 'user.permission_level';
 
     /**
      * The default string format for model objects of the related table
@@ -111,7 +111,6 @@ class UserTableMap extends TableMap
         self::TYPE_PHPNAME       => array('UserId', 'FirstName', 'LastName', 'Email', 'PermissionLevel', ),
         self::TYPE_CAMELNAME     => array('userId', 'firstName', 'lastName', 'email', 'permissionLevel', ),
         self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID, UserTableMap::COL_FIRST_NAME, UserTableMap::COL_LAST_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_PERMISSION_LEVEL, ),
-        self::TYPE_RAW_COLNAME   => array('COL_USER_ID', 'COL_FIRST_NAME', 'COL_LAST_NAME', 'COL_EMAIL', 'COL_PERMISSION_LEVEL', ),
         self::TYPE_FIELDNAME     => array('user_id', 'first_name', 'last_name', 'email', 'permission_level', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
@@ -126,7 +125,6 @@ class UserTableMap extends TableMap
         self::TYPE_PHPNAME       => array('UserId' => 0, 'FirstName' => 1, 'LastName' => 2, 'Email' => 3, 'PermissionLevel' => 4, ),
         self::TYPE_CAMELNAME     => array('userId' => 0, 'firstName' => 1, 'lastName' => 2, 'email' => 3, 'permissionLevel' => 4, ),
         self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID => 0, UserTableMap::COL_FIRST_NAME => 1, UserTableMap::COL_LAST_NAME => 2, UserTableMap::COL_EMAIL => 3, UserTableMap::COL_PERMISSION_LEVEL => 4, ),
-        self::TYPE_RAW_COLNAME   => array('COL_USER_ID' => 0, 'COL_FIRST_NAME' => 1, 'COL_LAST_NAME' => 2, 'COL_EMAIL' => 3, 'COL_PERMISSION_LEVEL' => 4, ),
         self::TYPE_FIELDNAME     => array('user_id' => 0, 'first_name' => 1, 'last_name' => 2, 'email' => 3, 'permission_level' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
@@ -143,15 +141,16 @@ class UserTableMap extends TableMap
         // attributes
         $this->setName('user');
         $this->setPhpName('User');
+        $this->setIdentifierQuoting(false);
         $this->setClassName('\\User');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('USER_ID', 'UserId', 'INTEGER', true, null, null);
-        $this->addColumn('FIRST_NAME', 'FirstName', 'VARCHAR', true, 50, null);
-        $this->addColumn('LAST_NAME', 'LastName', 'VARCHAR', true, 50, null);
-        $this->addColumn('EMAIL', 'Email', 'VARCHAR', true, 50, null);
-        $this->addColumn('PERMISSION_LEVEL', 'PermissionLevel', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('user_id', 'UserId', 'INTEGER', true, null, null);
+        $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 50, null);
+        $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 50, null);
+        $this->addColumn('email', 'Email', 'VARCHAR', true, 50, null);
+        $this->addColumn('permission_level', 'PermissionLevel', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -311,11 +310,11 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
             $criteria->addSelectColumn(UserTableMap::COL_PERMISSION_LEVEL);
         } else {
-            $criteria->addSelectColumn($alias . '.USER_ID');
-            $criteria->addSelectColumn($alias . '.FIRST_NAME');
-            $criteria->addSelectColumn($alias . '.LAST_NAME');
-            $criteria->addSelectColumn($alias . '.EMAIL');
-            $criteria->addSelectColumn($alias . '.PERMISSION_LEVEL');
+            $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.first_name');
+            $criteria->addSelectColumn($alias . '.last_name');
+            $criteria->addSelectColumn($alias . '.email');
+            $criteria->addSelectColumn($alias . '.permission_level');
         }
     }
 

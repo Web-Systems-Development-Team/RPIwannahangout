@@ -72,34 +72,34 @@ class CommentTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the COMMENT_ID field
+     * the column name for the comment_id field
      */
-    const COL_COMMENT_ID = 'comment.COMMENT_ID';
+    const COL_COMMENT_ID = 'comment.comment_id';
 
     /**
-     * the column name for the CREATION_DATE field
+     * the column name for the creation_date field
      */
-    const COL_CREATION_DATE = 'comment.CREATION_DATE';
+    const COL_CREATION_DATE = 'comment.creation_date';
 
     /**
-     * the column name for the EDIT_DATE field
+     * the column name for the edit_date field
      */
-    const COL_EDIT_DATE = 'comment.EDIT_DATE';
+    const COL_EDIT_DATE = 'comment.edit_date';
 
     /**
-     * the column name for the COMMENT_TEXT field
+     * the column name for the comment_text field
      */
-    const COL_COMMENT_TEXT = 'comment.COMMENT_TEXT';
+    const COL_COMMENT_TEXT = 'comment.comment_text';
 
     /**
-     * the column name for the AUTHOR_USER_ID field
+     * the column name for the author_user_id field
      */
-    const COL_AUTHOR_USER_ID = 'comment.AUTHOR_USER_ID';
+    const COL_AUTHOR_USER_ID = 'comment.author_user_id';
 
     /**
-     * the column name for the TARGET_EVENT_ID field
+     * the column name for the target_event_id field
      */
-    const COL_TARGET_EVENT_ID = 'comment.TARGET_EVENT_ID';
+    const COL_TARGET_EVENT_ID = 'comment.target_event_id';
 
     /**
      * The default string format for model objects of the related table
@@ -116,7 +116,6 @@ class CommentTableMap extends TableMap
         self::TYPE_PHPNAME       => array('CommentId', 'CreationDate', 'EditDate', 'CommentText', 'AuthorUserId', 'TargetEventId', ),
         self::TYPE_CAMELNAME     => array('commentId', 'creationDate', 'editDate', 'commentText', 'authorUserId', 'targetEventId', ),
         self::TYPE_COLNAME       => array(CommentTableMap::COL_COMMENT_ID, CommentTableMap::COL_CREATION_DATE, CommentTableMap::COL_EDIT_DATE, CommentTableMap::COL_COMMENT_TEXT, CommentTableMap::COL_AUTHOR_USER_ID, CommentTableMap::COL_TARGET_EVENT_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_COMMENT_ID', 'COL_CREATION_DATE', 'COL_EDIT_DATE', 'COL_COMMENT_TEXT', 'COL_AUTHOR_USER_ID', 'COL_TARGET_EVENT_ID', ),
         self::TYPE_FIELDNAME     => array('comment_id', 'creation_date', 'edit_date', 'comment_text', 'author_user_id', 'target_event_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -131,7 +130,6 @@ class CommentTableMap extends TableMap
         self::TYPE_PHPNAME       => array('CommentId' => 0, 'CreationDate' => 1, 'EditDate' => 2, 'CommentText' => 3, 'AuthorUserId' => 4, 'TargetEventId' => 5, ),
         self::TYPE_CAMELNAME     => array('commentId' => 0, 'creationDate' => 1, 'editDate' => 2, 'commentText' => 3, 'authorUserId' => 4, 'targetEventId' => 5, ),
         self::TYPE_COLNAME       => array(CommentTableMap::COL_COMMENT_ID => 0, CommentTableMap::COL_CREATION_DATE => 1, CommentTableMap::COL_EDIT_DATE => 2, CommentTableMap::COL_COMMENT_TEXT => 3, CommentTableMap::COL_AUTHOR_USER_ID => 4, CommentTableMap::COL_TARGET_EVENT_ID => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_COMMENT_ID' => 0, 'COL_CREATION_DATE' => 1, 'COL_EDIT_DATE' => 2, 'COL_COMMENT_TEXT' => 3, 'COL_AUTHOR_USER_ID' => 4, 'COL_TARGET_EVENT_ID' => 5, ),
         self::TYPE_FIELDNAME     => array('comment_id' => 0, 'creation_date' => 1, 'edit_date' => 2, 'comment_text' => 3, 'author_user_id' => 4, 'target_event_id' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
@@ -148,16 +146,17 @@ class CommentTableMap extends TableMap
         // attributes
         $this->setName('comment');
         $this->setPhpName('Comment');
+        $this->setIdentifierQuoting(false);
         $this->setClassName('\\Comment');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('COMMENT_ID', 'CommentId', 'INTEGER', true, null, null);
-        $this->addColumn('CREATION_DATE', 'CreationDate', 'TIMESTAMP', true, null, null);
-        $this->addColumn('EDIT_DATE', 'EditDate', 'TIMESTAMP', true, null, null);
-        $this->addColumn('COMMENT_TEXT', 'CommentText', 'LONGVARCHAR', true, 1200, null);
-        $this->addForeignKey('AUTHOR_USER_ID', 'AuthorUserId', 'INTEGER', 'user', 'USER_ID', true, null, null);
-        $this->addForeignKey('TARGET_EVENT_ID', 'TargetEventId', 'INTEGER', 'event', 'EVENT_ID', true, null, null);
+        $this->addPrimaryKey('comment_id', 'CommentId', 'INTEGER', true, null, null);
+        $this->addColumn('creation_date', 'CreationDate', 'TIMESTAMP', true, null, null);
+        $this->addColumn('edit_date', 'EditDate', 'TIMESTAMP', true, null, null);
+        $this->addColumn('comment_text', 'CommentText', 'LONGVARCHAR', true, 1200, null);
+        $this->addForeignKey('author_user_id', 'AuthorUserId', 'INTEGER', 'user', 'user_id', true, null, null);
+        $this->addForeignKey('target_event_id', 'TargetEventId', 'INTEGER', 'event', 'event_id', true, null, null);
     } // initialize()
 
     /**
@@ -316,11 +315,11 @@ class CommentTableMap extends TableMap
             $criteria->addSelectColumn(CommentTableMap::COL_AUTHOR_USER_ID);
             $criteria->addSelectColumn(CommentTableMap::COL_TARGET_EVENT_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.COMMENT_ID');
-            $criteria->addSelectColumn($alias . '.CREATION_DATE');
-            $criteria->addSelectColumn($alias . '.EDIT_DATE');
-            $criteria->addSelectColumn($alias . '.AUTHOR_USER_ID');
-            $criteria->addSelectColumn($alias . '.TARGET_EVENT_ID');
+            $criteria->addSelectColumn($alias . '.comment_id');
+            $criteria->addSelectColumn($alias . '.creation_date');
+            $criteria->addSelectColumn($alias . '.edit_date');
+            $criteria->addSelectColumn($alias . '.author_user_id');
+            $criteria->addSelectColumn($alias . '.target_event_id');
         }
     }
 

@@ -883,26 +883,26 @@ abstract class Comment implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`COMMENT_ID`';
+            $modifiedColumns[':p' . $index++]  = 'comment_id';
         }
         if ($this->isColumnModified(CommentTableMap::COL_CREATION_DATE)) {
-            $modifiedColumns[':p' . $index++]  = '`CREATION_DATE`';
+            $modifiedColumns[':p' . $index++]  = 'creation_date';
         }
         if ($this->isColumnModified(CommentTableMap::COL_EDIT_DATE)) {
-            $modifiedColumns[':p' . $index++]  = '`EDIT_DATE`';
+            $modifiedColumns[':p' . $index++]  = 'edit_date';
         }
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
-            $modifiedColumns[':p' . $index++]  = '`COMMENT_TEXT`';
+            $modifiedColumns[':p' . $index++]  = 'comment_text';
         }
         if ($this->isColumnModified(CommentTableMap::COL_AUTHOR_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`AUTHOR_USER_ID`';
+            $modifiedColumns[':p' . $index++]  = 'author_user_id';
         }
         if ($this->isColumnModified(CommentTableMap::COL_TARGET_EVENT_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`TARGET_EVENT_ID`';
+            $modifiedColumns[':p' . $index++]  = 'target_event_id';
         }
 
         $sql = sprintf(
-            'INSERT INTO `comment` (%s) VALUES (%s)',
+            'INSERT INTO comment (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -911,22 +911,22 @@ abstract class Comment implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`COMMENT_ID`':
+                    case 'comment_id':
                         $stmt->bindValue($identifier, $this->comment_id, PDO::PARAM_INT);
                         break;
-                    case '`CREATION_DATE`':
+                    case 'creation_date':
                         $stmt->bindValue($identifier, $this->creation_date ? $this->creation_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case '`EDIT_DATE`':
+                    case 'edit_date':
                         $stmt->bindValue($identifier, $this->edit_date ? $this->edit_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case '`COMMENT_TEXT`':
+                    case 'comment_text':
                         $stmt->bindValue($identifier, $this->comment_text, PDO::PARAM_STR);
                         break;
-                    case '`AUTHOR_USER_ID`':
+                    case 'author_user_id':
                         $stmt->bindValue($identifier, $this->author_user_id, PDO::PARAM_INT);
                         break;
-                    case '`TARGET_EVENT_ID`':
+                    case 'target_event_id':
                         $stmt->bindValue($identifier, $this->target_event_id, PDO::PARAM_INT);
                         break;
                 }
@@ -1187,19 +1187,25 @@ abstract class Comment implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\Comment The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -1247,7 +1253,7 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(CommentTableMap::DATABASE_NAME);
+        $criteria = ChildCommentQuery::create();
         $criteria->add(CommentTableMap::COL_COMMENT_ID, $this->comment_id);
 
         return $criteria;

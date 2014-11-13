@@ -156,7 +156,7 @@ abstract class CommentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `COMMENT_ID`, `CREATION_DATE`, `EDIT_DATE`, `AUTHOR_USER_ID`, `TARGET_EVENT_ID` FROM `comment` WHERE `COMMENT_ID` = :p0';
+        $sql = 'SELECT comment_id, creation_date, edit_date, author_user_id, target_event_id FROM comment WHERE comment_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

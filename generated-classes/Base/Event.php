@@ -1040,32 +1040,32 @@ abstract class Event implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(EventTableMap::COL_EVENT_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`EVENT_ID`';
+            $modifiedColumns[':p' . $index++]  = 'event_id';
         }
         if ($this->isColumnModified(EventTableMap::COL_TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+            $modifiedColumns[':p' . $index++]  = 'title';
         }
         if ($this->isColumnModified(EventTableMap::COL_START_TIME)) {
-            $modifiedColumns[':p' . $index++]  = '`START_TIME`';
+            $modifiedColumns[':p' . $index++]  = 'start_time';
         }
         if ($this->isColumnModified(EventTableMap::COL_END_TIME)) {
-            $modifiedColumns[':p' . $index++]  = '`END_TIME`';
+            $modifiedColumns[':p' . $index++]  = 'end_time';
         }
         if ($this->isColumnModified(EventTableMap::COL_LOCATION)) {
-            $modifiedColumns[':p' . $index++]  = '`LOCATION`';
+            $modifiedColumns[':p' . $index++]  = 'location';
         }
         if ($this->isColumnModified(EventTableMap::COL_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`DESCRIPTION`';
+            $modifiedColumns[':p' . $index++]  = 'description';
         }
         if ($this->isColumnModified(EventTableMap::COL_NEED_CAR)) {
-            $modifiedColumns[':p' . $index++]  = '`NEED_CAR`';
+            $modifiedColumns[':p' . $index++]  = 'need_car';
         }
         if ($this->isColumnModified(EventTableMap::COL_CREATOR_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`CREATOR_USER_ID`';
+            $modifiedColumns[':p' . $index++]  = 'creator_user_id';
         }
 
         $sql = sprintf(
-            'INSERT INTO `event` (%s) VALUES (%s)',
+            'INSERT INTO event (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1074,28 +1074,28 @@ abstract class Event implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`EVENT_ID`':
+                    case 'event_id':
                         $stmt->bindValue($identifier, $this->event_id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
+                    case 'title':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`START_TIME`':
+                    case 'start_time':
                         $stmt->bindValue($identifier, $this->start_time ? $this->start_time->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case '`END_TIME`':
+                    case 'end_time':
                         $stmt->bindValue($identifier, $this->end_time ? $this->end_time->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case '`LOCATION`':
+                    case 'location':
                         $stmt->bindValue($identifier, $this->location, PDO::PARAM_STR);
                         break;
-                    case '`DESCRIPTION`':
+                    case 'description':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
-                    case '`NEED_CAR`':
+                    case 'need_car':
                         $stmt->bindValue($identifier, (int) $this->need_car, PDO::PARAM_INT);
                         break;
-                    case '`CREATOR_USER_ID`':
+                    case 'creator_user_id':
                         $stmt->bindValue($identifier, $this->creator_user_id, PDO::PARAM_INT);
                         break;
                 }
@@ -1376,19 +1376,25 @@ abstract class Event implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
+     * You can specify the key type of the array by additionally passing one
+     * of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     * The default key type is the column's TableMap::TYPE_PHPNAME.
+     *
      * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
+     * @param string $keyType The type of keys the array uses.
      *
      * @return $this|\Event The current object, for fluid interface
      */
-    public function importFrom($parser, $data)
+    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        $this->fromArray($parser->toArray($data), TableMap::TYPE_PHPNAME);
+        $this->fromArray($parser->toArray($data), $keyType);
 
         return $this;
     }
@@ -1442,7 +1448,7 @@ abstract class Event implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(EventTableMap::DATABASE_NAME);
+        $criteria = ChildEventQuery::create();
         $criteria->add(EventTableMap::COL_EVENT_ID, $this->event_id);
 
         return $criteria;

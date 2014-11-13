@@ -1,4 +1,6 @@
 <?php
+	require_once '../database_access.php';
+	
 	// a function to populate the form if it's been submitted already and is coming back
 	// likely because of invalid data
 	function getData($formName) {
@@ -6,6 +8,11 @@
 			return $_POST[$formName];
 		else
 			return "";
+	}
+	// checks if a validation specific CSS class should be applied
+	function getCSSClass($formName) {
+		if(isset($failures) && in_array($failures, $formName))
+			return ".has-error";
 	}
 
 	// set up vars to hold form info
@@ -39,9 +46,8 @@
 			$needcar = 0;
 		}
 		// set up event object
-		require_once '../database_access.php';
 		$event = new Event();
-		$event->setTitle($title);
+		$event->setTitle("this is a test");
 		$event->setStartTime($start_time);
 		$event->setEndTime($end_time);
 		$event->setLocation($location);
@@ -56,7 +62,7 @@
 			$failures = array();
 		    foreach ($event->getValidationFailures() as $failure) {
 		        echo '<p class="error_message">Property '.$failure->getPropertyPath().": ".$failure->getMessage()."</p>";
-		        array_push($failure, $failure->getPropertyPath());
+		        array_push($failures, $failure->getPropertyPath());
 		    }
 		}
 		else {
@@ -82,29 +88,29 @@
 		<div class="panel-heading">Event Creation Form</div>
 		<div class="panel-body">
 			<form role="form" id="event_creation_form" action="event_form.php" method="post">
-				<div class="form-group">
+				<div class="form-group <?php getCSSClass('title') ?>">
 					<label for="title">Title</label>
 					<input class="form-control" type="text" id="title" name="title" value="<?php getData('title') ?>" placeholder="Title">
 				</div>
-				<div class="form-group">
+				<div class="form-group <?php getCSSClass('start_time') ?>">
 					<label for="start_time">Start Time</label>
 					<input class="form-control" type="datetime-local" id="start_time" name="start_time" value="<?php getData('start_time') ?>">
 				</div>
-				<div class="form-group">
+				<div class="form-group <?php getCSSClass('end_time') ?>">
 					<label for="end_time">End Time</label>
 					<input class="form-control" type="datetime-local" id="end_time" name="end_time" value="<?php getData('end_time') ?>">
 				</div>
-				<div class="form-group">
+				<div class="form-group <?php getCSSClass('location') ?>">
 					<label for="location">Location</label>
-					<input class="form-control" type="text" id="location" name="location" placeholder="Location">
+					<input class="form-control" type="text" id="location" name="location" placeholder="Location" value="<?php getData('location') ?>">
 				</div>
-				<div class="checkbox">
+				<div class="checkbox <?php getCSSClass('need_car') ?>">
 					<label>
-						<input type="checkbox" name="need_car" value="1">Requires car
+						<input type="checkbox" name="need_car" value="1" <?php if(getData('need_car')) echo "checked"; ?> >Requires car
 					</label>
 					
 				</div>
-				<div class="form-group">
+				<div class="form-group <?php getCSSClass('description') ?>">
 					<label for="description">Description</label>
 					<textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"></textarea>
 				</div>

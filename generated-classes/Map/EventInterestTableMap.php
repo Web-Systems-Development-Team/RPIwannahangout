@@ -72,19 +72,19 @@ class EventInterestTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 3;
 
     /**
-     * the column name for the EVENT_INTEREST_ID field
+     * the column name for the event_interest_id field
      */
-    const COL_EVENT_INTEREST_ID = 'event_interest.EVENT_INTEREST_ID';
+    const COL_EVENT_INTEREST_ID = 'event_interest.event_interest_id';
 
     /**
-     * the column name for the BRINGING_CAR field
+     * the column name for the bringing_car field
      */
-    const COL_BRINGING_CAR = 'event_interest.BRINGING_CAR';
+    const COL_BRINGING_CAR = 'event_interest.bringing_car';
 
     /**
-     * the column name for the INTERESTED_USER_ID field
+     * the column name for the interested_user_id field
      */
-    const COL_INTERESTED_USER_ID = 'event_interest.INTERESTED_USER_ID';
+    const COL_INTERESTED_USER_ID = 'event_interest.interested_user_id';
 
     /**
      * The default string format for model objects of the related table
@@ -101,7 +101,6 @@ class EventInterestTableMap extends TableMap
         self::TYPE_PHPNAME       => array('EventInterestId', 'BringingCar', 'InterestedUserId', ),
         self::TYPE_CAMELNAME     => array('eventInterestId', 'bringingCar', 'interestedUserId', ),
         self::TYPE_COLNAME       => array(EventInterestTableMap::COL_EVENT_INTEREST_ID, EventInterestTableMap::COL_BRINGING_CAR, EventInterestTableMap::COL_INTERESTED_USER_ID, ),
-        self::TYPE_RAW_COLNAME   => array('COL_EVENT_INTEREST_ID', 'COL_BRINGING_CAR', 'COL_INTERESTED_USER_ID', ),
         self::TYPE_FIELDNAME     => array('event_interest_id', 'bringing_car', 'interested_user_id', ),
         self::TYPE_NUM           => array(0, 1, 2, )
     );
@@ -116,7 +115,6 @@ class EventInterestTableMap extends TableMap
         self::TYPE_PHPNAME       => array('EventInterestId' => 0, 'BringingCar' => 1, 'InterestedUserId' => 2, ),
         self::TYPE_CAMELNAME     => array('eventInterestId' => 0, 'bringingCar' => 1, 'interestedUserId' => 2, ),
         self::TYPE_COLNAME       => array(EventInterestTableMap::COL_EVENT_INTEREST_ID => 0, EventInterestTableMap::COL_BRINGING_CAR => 1, EventInterestTableMap::COL_INTERESTED_USER_ID => 2, ),
-        self::TYPE_RAW_COLNAME   => array('COL_EVENT_INTEREST_ID' => 0, 'COL_BRINGING_CAR' => 1, 'COL_INTERESTED_USER_ID' => 2, ),
         self::TYPE_FIELDNAME     => array('event_interest_id' => 0, 'bringing_car' => 1, 'interested_user_id' => 2, ),
         self::TYPE_NUM           => array(0, 1, 2, )
     );
@@ -133,13 +131,14 @@ class EventInterestTableMap extends TableMap
         // attributes
         $this->setName('event_interest');
         $this->setPhpName('EventInterest');
+        $this->setIdentifierQuoting(false);
         $this->setClassName('\\EventInterest');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('EVENT_INTEREST_ID', 'EventInterestId', 'INTEGER', true, null, null);
-        $this->addColumn('BRINGING_CAR', 'BringingCar', 'BOOLEAN', true, 1, false);
-        $this->addForeignKey('INTERESTED_USER_ID', 'InterestedUserId', 'INTEGER', 'user', 'USER_ID', true, null, null);
+        $this->addPrimaryKey('event_interest_id', 'EventInterestId', 'INTEGER', true, null, null);
+        $this->addColumn('bringing_car', 'BringingCar', 'BOOLEAN', true, 1, false);
+        $this->addForeignKey('interested_user_id', 'InterestedUserId', 'INTEGER', 'user', 'user_id', true, null, null);
     } // initialize()
 
     /**
@@ -295,9 +294,9 @@ class EventInterestTableMap extends TableMap
             $criteria->addSelectColumn(EventInterestTableMap::COL_BRINGING_CAR);
             $criteria->addSelectColumn(EventInterestTableMap::COL_INTERESTED_USER_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.EVENT_INTEREST_ID');
-            $criteria->addSelectColumn($alias . '.BRINGING_CAR');
-            $criteria->addSelectColumn($alias . '.INTERESTED_USER_ID');
+            $criteria->addSelectColumn($alias . '.event_interest_id');
+            $criteria->addSelectColumn($alias . '.bringing_car');
+            $criteria->addSelectColumn($alias . '.interested_user_id');
         }
     }
 

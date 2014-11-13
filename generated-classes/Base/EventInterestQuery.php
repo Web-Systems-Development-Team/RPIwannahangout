@@ -140,7 +140,7 @@ abstract class EventInterestQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT `EVENT_INTEREST_ID`, `BRINGING_CAR`, `INTERESTED_USER_ID` FROM `event_interest` WHERE `EVENT_INTEREST_ID` = :p0';
+        $sql = 'SELECT event_interest_id, bringing_car, interested_user_id FROM event_interest WHERE event_interest_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
