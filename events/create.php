@@ -5,14 +5,7 @@
 	// likely because of invalid data
 	function getData($formName) {
 		if(isset($_POST[$formName]))
-			return $_POST[$formName];
-		else
-			return "";
-	}
-	// checks if a validation specific CSS class should be applied
-	function getCSSClass($formName) {
-		if(isset($failures) && in_array($failures, $formName))
-			return ".has-error";
+			echo $_POST[$formName];
 	}
 
 	// set up vars to hold form info
@@ -59,17 +52,20 @@
 		$event->setCreator($user);
 
 		if (!$event->validate()) {
-			$failures = array();
+			$failure_messages = Array();
 		    foreach ($event->getValidationFailures() as $failure) {
-		        echo '<p class="error_message">Property '.$failure->getPropertyPath().": ".$failure->getMessage()."</p>";
-		        array_push($failures, $failure->getPropertyPath());
+		        $message = '<p><strong>Error in '.$failure->getPropertyPath().' field!</strong> '.$failure->getMessage().'</p>';
+		        array_push($failure_messages, $message);
+		        // clear out the bad data
+		        $_POST[$failure->getPropertyPath()] = '';
 		    }
+		    unset($message);
 		}
 		else {
 			$event->save();
 		    // echo "Everything's all right!";
 		    $event_id = $event->getEventId();
-		    header("Location:../event_details.php?event_id=$event_id&new=1");
+		    header("Location:../events/details.php?event_id=$event_id&new=1");
 		    // http_redirect("../event_details.php?event_id=$event_id");
 		}
 	} // end if for was submitted
@@ -83,36 +79,49 @@
 </head>
 <body>
 	<?php include '../basic_includes/navbar.php' ?>
+	<?php
+		if(isset($failure_messages)) {
+			foreach($failure_messages as $message) { ?>
+				<div class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+				  <?php echo $message; ?>
+				</div>
+			<?php }
+		}
+	?>
 
 	<div class="panel panel-default">
 		<div class="panel-heading">Event Creation Form</div>
 		<div class="panel-body">
-			<form role="form" id="event_creation_form" action="event_form.php" method="post">
-				<div class="form-group <?php getCSSClass('title') ?>">
+			<form role="form" id="event_creation_form" action="create.php" method="post">
+				<div class="form-group">
 					<label for="title">Title</label>
-					<input class="form-control" type="text" id="title" name="title" value="<?php getData('title') ?>" placeholder="Title">
+					<input class="form-control" type="text" id="title" name="title" value="<?php getData('title'); ?>" placeholder="Title">
 				</div>
-				<div class="form-group <?php getCSSClass('start_time') ?>">
+				<div class="form-group">
 					<label for="start_time">Start Time</label>
-					<input class="form-control" type="datetime-local" id="start_time" name="start_time" value="<?php getData('start_time') ?>">
+					<input class="form-control" type="datetime-local" id="start_time" name="start_time" value="<?php getData('start_time'); ?>">
 				</div>
-				<div class="form-group <?php getCSSClass('end_time') ?>">
+				<div class="form-group">
 					<label for="end_time">End Time</label>
-					<input class="form-control" type="datetime-local" id="end_time" name="end_time" value="<?php getData('end_time') ?>">
+					<input class="form-control" type="datetime-local" id="end_time" name="end_time" value="<?php getData('end_time'); ?>">
 				</div>
-				<div class="form-group <?php getCSSClass('location') ?>">
+				<div class="form-group">
 					<label for="location">Location</label>
-					<input class="form-control" type="text" id="location" name="location" placeholder="Location" value="<?php getData('location') ?>">
+					<input class="form-control" type="text" id="location" name="location" placeholder="Location" value="<?php getData('location'); ?>">
 				</div>
-				<div class="checkbox <?php getCSSClass('need_car') ?>">
+				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="need_car" value="1" <?php if(getData('need_car')) echo "checked"; ?> >Requires car
+						<input type="checkbox" name="need_car" value="1" <?php if(isset($_POST['need_car']) && $_POST['need_car'] == 1) echo "checked"; ?> >Requires car
 					</label>
 					
 				</div>
-				<div class="form-group <?php getCSSClass('description') ?>">
+				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"></textarea>
+					<textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"><?php getData('description'); ?></textarea>
 				</div>
 				<button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
 			</form>

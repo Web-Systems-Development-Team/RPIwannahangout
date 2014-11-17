@@ -1,17 +1,17 @@
 <?php
-	require_once 'database_access.php';
+	require_once '../database_access.php';
 	$q = new EventQuery();
 	$events = $q->orderByStartTime()->find();
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-	<?php include_once 'basic_includes/head_includes.php' ?>
-	<link rel="stylesheet" href="assets/css/style.css">
+	<?php include_once '../basic_includes/head_includes.php' ?>
+	<link rel="stylesheet" href="../assets/css/style.css">
 	<title>Event List</title>
 </head>
 <body>
-	<?php include 'basic_includes/navbar.php' ?>
+	<?php include '../basic_includes/navbar.php' ?>
 	<div class="panel panel-default">
 		<table class="table table-striped">
 			<thead>
@@ -33,7 +33,7 @@
 					<!-- <td><?php echo $event->getDescription(); ?></td> -->
 					<td><?php echo $event->getNeedCar(); ?></td>
 					<td>
-						<a href="http://websys.edu:8080/RPIWannaHangOut/event_details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
+						<a href="details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
 							<button type="button" class="btn btn-info btn-sm">
 							  View
 							</button>

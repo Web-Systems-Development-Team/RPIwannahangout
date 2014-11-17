@@ -1,4 +1,3 @@
-
 <?php
 	// setup the autoloading
 	require_once 'vendor/autoload.php';

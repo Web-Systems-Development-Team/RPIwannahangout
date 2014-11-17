@@ -21,16 +21,16 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildCommentQuery orderByCommentId($order = Criteria::ASC) Order by the comment_id column
+ * @method     ChildCommentQuery orderByCommentText($order = Criteria::ASC) Order by the comment_text column
  * @method     ChildCommentQuery orderByCreationDate($order = Criteria::ASC) Order by the creation_date column
  * @method     ChildCommentQuery orderByEditDate($order = Criteria::ASC) Order by the edit_date column
- * @method     ChildCommentQuery orderByCommentText($order = Criteria::ASC) Order by the comment_text column
  * @method     ChildCommentQuery orderByAuthorUserId($order = Criteria::ASC) Order by the author_user_id column
  * @method     ChildCommentQuery orderByTargetEventId($order = Criteria::ASC) Order by the target_event_id column
  *
  * @method     ChildCommentQuery groupByCommentId() Group by the comment_id column
+ * @method     ChildCommentQuery groupByCommentText() Group by the comment_text column
  * @method     ChildCommentQuery groupByCreationDate() Group by the creation_date column
  * @method     ChildCommentQuery groupByEditDate() Group by the edit_date column
- * @method     ChildCommentQuery groupByCommentText() Group by the comment_text column
  * @method     ChildCommentQuery groupByAuthorUserId() Group by the author_user_id column
  * @method     ChildCommentQuery groupByTargetEventId() Group by the target_event_id column
  *
@@ -52,17 +52,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment findOneOrCreate(ConnectionInterface $con = null) Return the first ChildComment matching the query, or a new ChildComment object populated from the query conditions when no match is found
  *
  * @method     ChildComment findOneByCommentId(int $comment_id) Return the first ChildComment filtered by the comment_id column
+ * @method     ChildComment findOneByCommentText(string $comment_text) Return the first ChildComment filtered by the comment_text column
  * @method     ChildComment findOneByCreationDate(string $creation_date) Return the first ChildComment filtered by the creation_date column
  * @method     ChildComment findOneByEditDate(string $edit_date) Return the first ChildComment filtered by the edit_date column
- * @method     ChildComment findOneByCommentText(string $comment_text) Return the first ChildComment filtered by the comment_text column
  * @method     ChildComment findOneByAuthorUserId(int $author_user_id) Return the first ChildComment filtered by the author_user_id column
  * @method     ChildComment findOneByTargetEventId(int $target_event_id) Return the first ChildComment filtered by the target_event_id column
  *
  * @method     ChildComment[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildComment objects based on current ModelCriteria
  * @method     ChildComment[]|ObjectCollection findByCommentId(int $comment_id) Return ChildComment objects filtered by the comment_id column
+ * @method     ChildComment[]|ObjectCollection findByCommentText(string $comment_text) Return ChildComment objects filtered by the comment_text column
  * @method     ChildComment[]|ObjectCollection findByCreationDate(string $creation_date) Return ChildComment objects filtered by the creation_date column
  * @method     ChildComment[]|ObjectCollection findByEditDate(string $edit_date) Return ChildComment objects filtered by the edit_date column
- * @method     ChildComment[]|ObjectCollection findByCommentText(string $comment_text) Return ChildComment objects filtered by the comment_text column
  * @method     ChildComment[]|ObjectCollection findByAuthorUserId(int $author_user_id) Return ChildComment objects filtered by the author_user_id column
  * @method     ChildComment[]|ObjectCollection findByTargetEventId(int $target_event_id) Return ChildComment objects filtered by the target_event_id column
  * @method     ChildComment[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -288,6 +288,35 @@ abstract class CommentQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the comment_text column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCommentText('fooValue');   // WHERE comment_text = 'fooValue'
+     * $query->filterByCommentText('%fooValue%'); // WHERE comment_text LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $commentText The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByCommentText($commentText = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($commentText)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $commentText)) {
+                $commentText = str_replace('*', '%', $commentText);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_COMMENT_TEXT, $commentText, $comparison);
+    }
+
+    /**
      * Filter the query on the creation_date column
      *
      * Example usage:
@@ -371,35 +400,6 @@ abstract class CommentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CommentTableMap::COL_EDIT_DATE, $editDate, $comparison);
-    }
-
-    /**
-     * Filter the query on the comment_text column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCommentText('fooValue');   // WHERE comment_text = 'fooValue'
-     * $query->filterByCommentText('%fooValue%'); // WHERE comment_text LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $commentText The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildCommentQuery The current query, for fluid interface
-     */
-    public function filterByCommentText($commentText = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($commentText)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $commentText)) {
-                $commentText = str_replace('*', '%', $commentText);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CommentTableMap::COL_COMMENT_TEXT, $commentText, $comparison);
     }
 
     /**

@@ -23,6 +23,19 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
+use Propel\Runtime\Validator\Constraints\SymfonyDateTime;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\DefaultTranslator;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\Validator\LegacyValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Base class that represents a row from the 'comment' table.
@@ -72,18 +85,6 @@ abstract class Comment implements ActiveRecordInterface
     protected $comment_id;
 
     /**
-     * The value for the creation_date field.
-     * @var        \DateTime
-     */
-    protected $creation_date;
-
-    /**
-     * The value for the edit_date field.
-     * @var        \DateTime
-     */
-    protected $edit_date;
-
-    /**
      * The value for the comment_text field.
      * @var        string
      */
@@ -95,6 +96,18 @@ abstract class Comment implements ActiveRecordInterface
      * @var boolean
      */
     protected $comment_text_isLoaded = false;
+
+    /**
+     * The value for the creation_date field.
+     * @var        \DateTime
+     */
+    protected $creation_date;
+
+    /**
+     * The value for the edit_date field.
+     * @var        \DateTime
+     */
+    protected $edit_date;
 
     /**
      * The value for the author_user_id field.
@@ -125,6 +138,23 @@ abstract class Comment implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
 
     /**
      * Initializes internal state of Base\Comment object.
@@ -354,46 +384,6 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [creation_date] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreationDate($format = NULL)
-    {
-        if ($format === null) {
-            return $this->creation_date;
-        } else {
-            return $this->creation_date instanceof \DateTime ? $this->creation_date->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [edit_date] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getEditDate($format = NULL)
-    {
-        if ($format === null) {
-            return $this->edit_date;
-        } else {
-            return $this->edit_date instanceof \DateTime ? $this->edit_date->format($format) : null;
-        }
-    }
-
-    /**
      * Get the [comment_text] column value.
      *
      * @param      ConnectionInterface $con An optional ConnectionInterface connection to use for fetching this lazy-loaded column.
@@ -437,6 +427,46 @@ abstract class Comment implements ActiveRecordInterface
         }
     }
     /**
+     * Get the [optionally formatted] temporal [creation_date] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getCreationDate($format = NULL)
+    {
+        if ($format === null) {
+            return $this->creation_date;
+        } else {
+            return $this->creation_date instanceof \DateTime ? $this->creation_date->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [edit_date] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getEditDate($format = NULL)
+    {
+        if ($format === null) {
+            return $this->edit_date;
+        } else {
+            return $this->edit_date instanceof \DateTime ? $this->edit_date->format($format) : null;
+        }
+    }
+
+    /**
      * Get the [author_user_id] column value.
      *
      * @return int
@@ -477,6 +507,32 @@ abstract class Comment implements ActiveRecordInterface
     } // setCommentId()
 
     /**
+     * Set the value of [comment_text] column.
+     *
+     * @param  string $v new value
+     * @return $this|\Comment The current object (for fluent API support)
+     */
+    public function setCommentText($v)
+    {
+        // explicitly set the is-loaded flag to true for this lazy load col;
+        // it doesn't matter if the value is actually set or not (logic below) as
+        // any attempt to set the value means that no db lookup should be performed
+        // when the getCommentText() method is called.
+        $this->comment_text_isLoaded = true;
+
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->comment_text !== $v) {
+            $this->comment_text = $v;
+            $this->modifiedColumns[CommentTableMap::COL_COMMENT_TEXT] = true;
+        }
+
+        return $this;
+    } // setCommentText()
+
+    /**
      * Sets the value of [creation_date] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
@@ -515,32 +571,6 @@ abstract class Comment implements ActiveRecordInterface
 
         return $this;
     } // setEditDate()
-
-    /**
-     * Set the value of [comment_text] column.
-     *
-     * @param  string $v new value
-     * @return $this|\Comment The current object (for fluent API support)
-     */
-    public function setCommentText($v)
-    {
-        // explicitly set the is-loaded flag to true for this lazy load col;
-        // it doesn't matter if the value is actually set or not (logic below) as
-        // any attempt to set the value means that no db lookup should be performed
-        // when the getCommentText() method is called.
-        $this->comment_text_isLoaded = true;
-
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->comment_text !== $v) {
-            $this->comment_text = $v;
-            $this->modifiedColumns[CommentTableMap::COL_COMMENT_TEXT] = true;
-        }
-
-        return $this;
-    } // setCommentText()
 
     /**
      * Set the value of [author_user_id] column.
@@ -885,14 +915,14 @@ abstract class Comment implements ActiveRecordInterface
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'comment_id';
         }
+        if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
+            $modifiedColumns[':p' . $index++]  = 'comment_text';
+        }
         if ($this->isColumnModified(CommentTableMap::COL_CREATION_DATE)) {
             $modifiedColumns[':p' . $index++]  = 'creation_date';
         }
         if ($this->isColumnModified(CommentTableMap::COL_EDIT_DATE)) {
             $modifiedColumns[':p' . $index++]  = 'edit_date';
-        }
-        if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
-            $modifiedColumns[':p' . $index++]  = 'comment_text';
         }
         if ($this->isColumnModified(CommentTableMap::COL_AUTHOR_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'author_user_id';
@@ -914,14 +944,14 @@ abstract class Comment implements ActiveRecordInterface
                     case 'comment_id':
                         $stmt->bindValue($identifier, $this->comment_id, PDO::PARAM_INT);
                         break;
+                    case 'comment_text':
+                        $stmt->bindValue($identifier, $this->comment_text, PDO::PARAM_STR);
+                        break;
                     case 'creation_date':
                         $stmt->bindValue($identifier, $this->creation_date ? $this->creation_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case 'edit_date':
                         $stmt->bindValue($identifier, $this->edit_date ? $this->edit_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'comment_text':
-                        $stmt->bindValue($identifier, $this->comment_text, PDO::PARAM_STR);
                         break;
                     case 'author_user_id':
                         $stmt->bindValue($identifier, $this->author_user_id, PDO::PARAM_INT);
@@ -995,13 +1025,13 @@ abstract class Comment implements ActiveRecordInterface
                 return $this->getCommentId();
                 break;
             case 1:
-                return $this->getCreationDate();
+                return $this->getCommentText();
                 break;
             case 2:
-                return $this->getEditDate();
+                return $this->getCreationDate();
                 break;
             case 3:
-                return $this->getCommentText();
+                return $this->getEditDate();
                 break;
             case 4:
                 return $this->getAuthorUserId();
@@ -1040,9 +1070,9 @@ abstract class Comment implements ActiveRecordInterface
         $keys = CommentTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getCommentId(),
-            $keys[1] => $this->getCreationDate(),
-            $keys[2] => $this->getEditDate(),
-            $keys[3] => ($includeLazyLoadColumns) ? $this->getCommentText() : null,
+            $keys[1] => ($includeLazyLoadColumns) ? $this->getCommentText() : null,
+            $keys[2] => $this->getCreationDate(),
+            $keys[3] => $this->getEditDate(),
             $keys[4] => $this->getAuthorUserId(),
             $keys[5] => $this->getTargetEventId(),
         );
@@ -1120,13 +1150,13 @@ abstract class Comment implements ActiveRecordInterface
                 $this->setCommentId($value);
                 break;
             case 1:
-                $this->setCreationDate($value);
+                $this->setCommentText($value);
                 break;
             case 2:
-                $this->setEditDate($value);
+                $this->setCreationDate($value);
                 break;
             case 3:
-                $this->setCommentText($value);
+                $this->setEditDate($value);
                 break;
             case 4:
                 $this->setAuthorUserId($value);
@@ -1164,13 +1194,13 @@ abstract class Comment implements ActiveRecordInterface
             $this->setCommentId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCreationDate($arr[$keys[1]]);
+            $this->setCommentText($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setEditDate($arr[$keys[2]]);
+            $this->setCreationDate($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCommentText($arr[$keys[3]]);
+            $this->setEditDate($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setAuthorUserId($arr[$keys[4]]);
@@ -1222,14 +1252,14 @@ abstract class Comment implements ActiveRecordInterface
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_ID)) {
             $criteria->add(CommentTableMap::COL_COMMENT_ID, $this->comment_id);
         }
+        if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
+            $criteria->add(CommentTableMap::COL_COMMENT_TEXT, $this->comment_text);
+        }
         if ($this->isColumnModified(CommentTableMap::COL_CREATION_DATE)) {
             $criteria->add(CommentTableMap::COL_CREATION_DATE, $this->creation_date);
         }
         if ($this->isColumnModified(CommentTableMap::COL_EDIT_DATE)) {
             $criteria->add(CommentTableMap::COL_EDIT_DATE, $this->edit_date);
-        }
-        if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
-            $criteria->add(CommentTableMap::COL_COMMENT_TEXT, $this->comment_text);
         }
         if ($this->isColumnModified(CommentTableMap::COL_AUTHOR_USER_ID)) {
             $criteria->add(CommentTableMap::COL_AUTHOR_USER_ID, $this->author_user_id);
@@ -1323,9 +1353,9 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setCommentText($this->getCommentText());
         $copyObj->setCreationDate($this->getCreationDate());
         $copyObj->setEditDate($this->getEditDate());
-        $copyObj->setCommentText($this->getCommentText());
         $copyObj->setAuthorUserId($this->getAuthorUserId());
         $copyObj->setTargetEventId($this->getTargetEventId());
         if ($makeNew) {
@@ -1472,10 +1502,10 @@ abstract class Comment implements ActiveRecordInterface
             $this->aTarget_Event->removeComment($this);
         }
         $this->comment_id = null;
-        $this->creation_date = null;
-        $this->edit_date = null;
         $this->comment_text = null;
         $this->comment_text_isLoaded = false;
+        $this->creation_date = null;
+        $this->edit_date = null;
         $this->author_user_id = null;
         $this->target_event_id = null;
         $this->alreadyInSave = false;
@@ -1510,6 +1540,101 @@ abstract class Comment implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(CommentTableMap::DEFAULT_STRING_FORMAT);
+    }
+
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('comment_text', new NotBlank());
+        $metadata->addPropertyConstraint('comment_text', new Length(array ('max' => 512,)));
+        $metadata->addPropertyConstraint('creation_date', new NotBlank());
+        $metadata->addPropertyConstraint('creation_date', new SymfonyDateTime());
+        $metadata->addPropertyConstraint('edit_date', new SymfonyDateTime());
+        $metadata->addPropertyConstraint('author_user_id', new NotNull());
+        $metadata->addPropertyConstraint('target_event_id', new NotNull());
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      object $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(ValidatorInterface $validator = null)
+    {
+        if (null === $validator) {
+            if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
+                $validator = new LegacyValidator(
+                            new ExecutionContextFactory(new DefaultTranslator()),
+                            new ClassMetaDataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory()
+                );
+            }else{
+                $validator = new Validator(
+                            new ClassMetadataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory(),
+                            new DefaultTranslator()
+                );
+            }
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aAuthor, 'validate')) {
+                if (!$this->aAuthor->validate($validator)) {
+                    $failureMap->addAll($this->aAuthor->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aTarget_Event, 'validate')) {
+                if (!$this->aTarget_Event->validate($validator)) {
+                    $failureMap->addAll($this->aTarget_Event->getValidationFailures());
+                }
+            }
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
     }
 
     /**

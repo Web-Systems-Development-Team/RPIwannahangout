@@ -14,18 +14,16 @@
 		</foreign-key>
 
 		<behavior name="validate">
-		    <parameter name="title_exists" value="{column: title, validator: NotNull, }" />
 		    <parameter name="title_not_blank" value="{column: title, validator: NotBlank}" />
 		    <parameter name="title_length" value="{column: title, validator: Length, options: {max: 50}}" />
+		    <parameter name="start_time_not_blank" value="{column: start_time, validator: NotBlank}" />
 		    <parameter name="start_time_valid" value="{column: start_time, validator: SymfonyDateTime}" />
+		    <parameter name="end_time_not_blank" value="{column: end_time, validator: NotBlank}" />
 		    <parameter name="end_time_valid" value="{column: end_time, validator: SymfonyDateTime}" />
-		    <parameter name="location_exists" value="{column: location, validator: NotNull}" />
 		    <parameter name="location_not_blank" value="{column: location, validator: NotBlank}" />
 		    <parameter name="location_length" value="{column: location, validator: Length, options: {max: 255}}" />
-		    <parameter name="description_exists" value="{column: description, validator: NotNull}" />
 		    <parameter name="description_not_blank" value="{column: description, validator: NotBlank}" />
 		    <parameter name="description_length" value="{column: description, validator: Length, options: {max: 1200}}" />
-			<parameter name="creator_exists" value="{column: creator_user_id, validator: NotNull}" />
 			<parameter name="creator_not_blank" value="{column: creator_user_id, validator: NotBlank}" />
 			<parameter name="need_car_exists" value="{column: need_car, validator: NotNull}" />
   		</behavior>
@@ -50,9 +48,9 @@
 
 	<table name="comment" phpName="Comment">
 		<column name="comment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-		<column name="creation_date" type="timestamp" required="true" />
-		<column name="edit_date" type="timestamp" required="true" />
 		<column name="comment_text" type="longvarchar" size="1200" required="true" lazyLoad="true" />
+		<column name="creation_date" type="timestamp" required="false" />
+		<column name="edit_date" type="timestamp" required="false" />
 		<column name="author_user_id" type="integer" required="true" />
 		<foreign-key foreignTable="user" phpName="Author" refPhpName="Comment">
 			<reference local="author_user_id" foreign="user_id"/>
@@ -61,5 +59,15 @@
 		<foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Comment">
 			<reference local="target_event_id" foreign="event_id"/>
 		</foreign-key>
+
+		<behavior name="validate">
+		    <parameter name="comment_text_not_blank" value="{column: comment_text, validator: NotBlank}" />
+		    <parameter name="comment_text_length" value="{column: comment_text, validator: Length, options: {max: 512}}" />
+		    <parameter name="creation_date_not_blank" value="{column: creation_date, validator: NotBlank}" />
+		    <parameter name="creation_date_valid" value="{column: creation_date, validator: SymfonyDateTime}" />
+		    <parameter name="edit_date_valid" value="{column: edit_date, validator: SymfonyDateTime}" />
+		    <parameter name="author_user_id_exists" value="{column: author_user_id, validator: NotNull}" />
+		    <parameter name="target_event_id_exists" value="{column: target_event_id, validator: NotNull}" />
+  		</behavior>
 	</table>
  </database>
