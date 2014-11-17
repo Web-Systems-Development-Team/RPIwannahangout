@@ -7,7 +7,6 @@ use \Event as ChildEvent;
 use \EventQuery as ChildEventQuery;
 use \User as ChildUser;
 use \UserQuery as ChildUserQuery;
-use \DateTime;
 use \Exception;
 use \PDO;
 use Map\CommentTableMap;
@@ -22,7 +21,6 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'comment' table.
@@ -70,18 +68,6 @@ abstract class Comment implements ActiveRecordInterface
      * @var        int
      */
     protected $comment_id;
-
-    /**
-     * The value for the creation_date field.
-     * @var        \DateTime
-     */
-    protected $creation_date;
-
-    /**
-     * The value for the edit_date field.
-     * @var        \DateTime
-     */
-    protected $edit_date;
 
     /**
      * The value for the comment_text field.
@@ -354,46 +340,6 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [creation_date] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreationDate($format = NULL)
-    {
-        if ($format === null) {
-            return $this->creation_date;
-        } else {
-            return $this->creation_date instanceof \DateTime ? $this->creation_date->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [edit_date] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getEditDate($format = NULL)
-    {
-        if ($format === null) {
-            return $this->edit_date;
-        } else {
-            return $this->edit_date instanceof \DateTime ? $this->edit_date->format($format) : null;
-        }
-    }
-
-    /**
      * Get the [comment_text] column value.
      *
      * @param      ConnectionInterface $con An optional ConnectionInterface connection to use for fetching this lazy-loaded column.
@@ -475,46 +421,6 @@ abstract class Comment implements ActiveRecordInterface
 
         return $this;
     } // setCommentId()
-
-    /**
-     * Sets the value of [creation_date] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Comment The current object (for fluent API support)
-     */
-    public function setCreationDate($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->creation_date !== null || $dt !== null) {
-            if ($dt !== $this->creation_date) {
-                $this->creation_date = $dt;
-                $this->modifiedColumns[CommentTableMap::COL_CREATION_DATE] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreationDate()
-
-    /**
-     * Sets the value of [edit_date] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Comment The current object (for fluent API support)
-     */
-    public function setEditDate($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->edit_date !== null || $dt !== null) {
-            if ($dt !== $this->edit_date) {
-                $this->edit_date = $dt;
-                $this->modifiedColumns[CommentTableMap::COL_EDIT_DATE] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setEditDate()
 
     /**
      * Set the value of [comment_text] column.
@@ -629,22 +535,10 @@ abstract class Comment implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CommentTableMap::translateFieldName('CommentId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->comment_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CommentTableMap::translateFieldName('CreationDate', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->creation_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CommentTableMap::translateFieldName('EditDate', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->edit_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CommentTableMap::translateFieldName('AuthorUserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CommentTableMap::translateFieldName('AuthorUserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->author_user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CommentTableMap::translateFieldName('TargetEventId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CommentTableMap::translateFieldName('TargetEventId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->target_event_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -654,7 +548,7 @@ abstract class Comment implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = CommentTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = CommentTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Comment'), 0, $e);
@@ -885,12 +779,6 @@ abstract class Comment implements ActiveRecordInterface
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'comment_id';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_CREATION_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'creation_date';
-        }
-        if ($this->isColumnModified(CommentTableMap::COL_EDIT_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'edit_date';
-        }
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
             $modifiedColumns[':p' . $index++]  = 'comment_text';
         }
@@ -913,12 +801,6 @@ abstract class Comment implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'comment_id':
                         $stmt->bindValue($identifier, $this->comment_id, PDO::PARAM_INT);
-                        break;
-                    case 'creation_date':
-                        $stmt->bindValue($identifier, $this->creation_date ? $this->creation_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'edit_date':
-                        $stmt->bindValue($identifier, $this->edit_date ? $this->edit_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case 'comment_text':
                         $stmt->bindValue($identifier, $this->comment_text, PDO::PARAM_STR);
@@ -995,18 +877,12 @@ abstract class Comment implements ActiveRecordInterface
                 return $this->getCommentId();
                 break;
             case 1:
-                return $this->getCreationDate();
-                break;
-            case 2:
-                return $this->getEditDate();
-                break;
-            case 3:
                 return $this->getCommentText();
                 break;
-            case 4:
+            case 2:
                 return $this->getAuthorUserId();
                 break;
-            case 5:
+            case 3:
                 return $this->getTargetEventId();
                 break;
             default:
@@ -1040,11 +916,9 @@ abstract class Comment implements ActiveRecordInterface
         $keys = CommentTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getCommentId(),
-            $keys[1] => $this->getCreationDate(),
-            $keys[2] => $this->getEditDate(),
-            $keys[3] => ($includeLazyLoadColumns) ? $this->getCommentText() : null,
-            $keys[4] => $this->getAuthorUserId(),
-            $keys[5] => $this->getTargetEventId(),
+            $keys[1] => ($includeLazyLoadColumns) ? $this->getCommentText() : null,
+            $keys[2] => $this->getAuthorUserId(),
+            $keys[3] => $this->getTargetEventId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1120,18 +994,12 @@ abstract class Comment implements ActiveRecordInterface
                 $this->setCommentId($value);
                 break;
             case 1:
-                $this->setCreationDate($value);
-                break;
-            case 2:
-                $this->setEditDate($value);
-                break;
-            case 3:
                 $this->setCommentText($value);
                 break;
-            case 4:
+            case 2:
                 $this->setAuthorUserId($value);
                 break;
-            case 5:
+            case 3:
                 $this->setTargetEventId($value);
                 break;
         } // switch()
@@ -1164,19 +1032,13 @@ abstract class Comment implements ActiveRecordInterface
             $this->setCommentId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCreationDate($arr[$keys[1]]);
+            $this->setCommentText($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setEditDate($arr[$keys[2]]);
+            $this->setAuthorUserId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCommentText($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setAuthorUserId($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setTargetEventId($arr[$keys[5]]);
+            $this->setTargetEventId($arr[$keys[3]]);
         }
     }
 
@@ -1221,12 +1083,6 @@ abstract class Comment implements ActiveRecordInterface
 
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_ID)) {
             $criteria->add(CommentTableMap::COL_COMMENT_ID, $this->comment_id);
-        }
-        if ($this->isColumnModified(CommentTableMap::COL_CREATION_DATE)) {
-            $criteria->add(CommentTableMap::COL_CREATION_DATE, $this->creation_date);
-        }
-        if ($this->isColumnModified(CommentTableMap::COL_EDIT_DATE)) {
-            $criteria->add(CommentTableMap::COL_EDIT_DATE, $this->edit_date);
         }
         if ($this->isColumnModified(CommentTableMap::COL_COMMENT_TEXT)) {
             $criteria->add(CommentTableMap::COL_COMMENT_TEXT, $this->comment_text);
@@ -1323,8 +1179,6 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setCreationDate($this->getCreationDate());
-        $copyObj->setEditDate($this->getEditDate());
         $copyObj->setCommentText($this->getCommentText());
         $copyObj->setAuthorUserId($this->getAuthorUserId());
         $copyObj->setTargetEventId($this->getTargetEventId());
@@ -1472,8 +1326,6 @@ abstract class Comment implements ActiveRecordInterface
             $this->aTarget_Event->removeComment($this);
         }
         $this->comment_id = null;
-        $this->creation_date = null;
-        $this->edit_date = null;
         $this->comment_text = null;
         $this->comment_text_isLoaded = false;
         $this->author_user_id = null;

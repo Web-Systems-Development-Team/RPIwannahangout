@@ -69,8 +69,6 @@ DROP TABLE IF EXISTS `comment`;
 CREATE TABLE `comment`
 (
     `comment_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `creation_date` DATETIME NOT NULL,
-    `edit_date` DATETIME NOT NULL,
     `comment_text` TEXT(1200) NOT NULL,
     `author_user_id` INTEGER NOT NULL,
     `target_event_id` INTEGER NOT NULL,

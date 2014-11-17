@@ -21,15 +21,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildCommentQuery orderByCommentId($order = Criteria::ASC) Order by the comment_id column
- * @method     ChildCommentQuery orderByCreationDate($order = Criteria::ASC) Order by the creation_date column
- * @method     ChildCommentQuery orderByEditDate($order = Criteria::ASC) Order by the edit_date column
  * @method     ChildCommentQuery orderByCommentText($order = Criteria::ASC) Order by the comment_text column
  * @method     ChildCommentQuery orderByAuthorUserId($order = Criteria::ASC) Order by the author_user_id column
  * @method     ChildCommentQuery orderByTargetEventId($order = Criteria::ASC) Order by the target_event_id column
  *
  * @method     ChildCommentQuery groupByCommentId() Group by the comment_id column
- * @method     ChildCommentQuery groupByCreationDate() Group by the creation_date column
- * @method     ChildCommentQuery groupByEditDate() Group by the edit_date column
  * @method     ChildCommentQuery groupByCommentText() Group by the comment_text column
  * @method     ChildCommentQuery groupByAuthorUserId() Group by the author_user_id column
  * @method     ChildCommentQuery groupByTargetEventId() Group by the target_event_id column
@@ -52,16 +48,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment findOneOrCreate(ConnectionInterface $con = null) Return the first ChildComment matching the query, or a new ChildComment object populated from the query conditions when no match is found
  *
  * @method     ChildComment findOneByCommentId(int $comment_id) Return the first ChildComment filtered by the comment_id column
- * @method     ChildComment findOneByCreationDate(string $creation_date) Return the first ChildComment filtered by the creation_date column
- * @method     ChildComment findOneByEditDate(string $edit_date) Return the first ChildComment filtered by the edit_date column
  * @method     ChildComment findOneByCommentText(string $comment_text) Return the first ChildComment filtered by the comment_text column
  * @method     ChildComment findOneByAuthorUserId(int $author_user_id) Return the first ChildComment filtered by the author_user_id column
  * @method     ChildComment findOneByTargetEventId(int $target_event_id) Return the first ChildComment filtered by the target_event_id column
  *
  * @method     ChildComment[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildComment objects based on current ModelCriteria
  * @method     ChildComment[]|ObjectCollection findByCommentId(int $comment_id) Return ChildComment objects filtered by the comment_id column
- * @method     ChildComment[]|ObjectCollection findByCreationDate(string $creation_date) Return ChildComment objects filtered by the creation_date column
- * @method     ChildComment[]|ObjectCollection findByEditDate(string $edit_date) Return ChildComment objects filtered by the edit_date column
  * @method     ChildComment[]|ObjectCollection findByCommentText(string $comment_text) Return ChildComment objects filtered by the comment_text column
  * @method     ChildComment[]|ObjectCollection findByAuthorUserId(int $author_user_id) Return ChildComment objects filtered by the author_user_id column
  * @method     ChildComment[]|ObjectCollection findByTargetEventId(int $target_event_id) Return ChildComment objects filtered by the target_event_id column
@@ -156,7 +148,7 @@ abstract class CommentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT comment_id, creation_date, edit_date, author_user_id, target_event_id FROM comment WHERE comment_id = :p0';
+        $sql = 'SELECT comment_id, author_user_id, target_event_id FROM comment WHERE comment_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -285,92 +277,6 @@ abstract class CommentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CommentTableMap::COL_COMMENT_ID, $commentId, $comparison);
-    }
-
-    /**
-     * Filter the query on the creation_date column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreationDate('2011-03-14'); // WHERE creation_date = '2011-03-14'
-     * $query->filterByCreationDate('now'); // WHERE creation_date = '2011-03-14'
-     * $query->filterByCreationDate(array('max' => 'yesterday')); // WHERE creation_date > '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $creationDate The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildCommentQuery The current query, for fluid interface
-     */
-    public function filterByCreationDate($creationDate = null, $comparison = null)
-    {
-        if (is_array($creationDate)) {
-            $useMinMax = false;
-            if (isset($creationDate['min'])) {
-                $this->addUsingAlias(CommentTableMap::COL_CREATION_DATE, $creationDate['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($creationDate['max'])) {
-                $this->addUsingAlias(CommentTableMap::COL_CREATION_DATE, $creationDate['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(CommentTableMap::COL_CREATION_DATE, $creationDate, $comparison);
-    }
-
-    /**
-     * Filter the query on the edit_date column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByEditDate('2011-03-14'); // WHERE edit_date = '2011-03-14'
-     * $query->filterByEditDate('now'); // WHERE edit_date = '2011-03-14'
-     * $query->filterByEditDate(array('max' => 'yesterday')); // WHERE edit_date > '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $editDate The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildCommentQuery The current query, for fluid interface
-     */
-    public function filterByEditDate($editDate = null, $comparison = null)
-    {
-        if (is_array($editDate)) {
-            $useMinMax = false;
-            if (isset($editDate['min'])) {
-                $this->addUsingAlias(CommentTableMap::COL_EDIT_DATE, $editDate['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($editDate['max'])) {
-                $this->addUsingAlias(CommentTableMap::COL_EDIT_DATE, $editDate['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(CommentTableMap::COL_EDIT_DATE, $editDate, $comparison);
     }
 
     /**

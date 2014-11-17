@@ -48,8 +48,6 @@
 
 	<table name="comment" phpName="Comment">
 		<column name="comment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-		<column name="creation_date" type="timestamp" required="true" />
-		<column name="edit_date" type="timestamp" required="true" />
 		<column name="comment_text" type="longvarchar" size="1200" required="true" lazyLoad="true" />
 		<column name="author_user_id" type="integer" required="true" />
 		<foreign-key foreignTable="user" phpName="Author" refPhpName="Comment">
