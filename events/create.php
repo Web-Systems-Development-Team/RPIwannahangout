@@ -96,7 +96,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Event Creation Form</div>
 		<div class="panel-body">
-			<form role="form" id="event_creation_form" action="event_form.php" method="post">
+			<form role="form" id="event_creation_form" action="create.php" method="post">
 				<div class="form-group">
 					<label for="title">Title</label>
 					<input class="form-control" type="text" id="title" name="title" value="<?php getData('title'); ?>" placeholder="Title">
