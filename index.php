@@ -14,6 +14,13 @@
 	<?php include 'basic_includes/navbar.php' ?>
 
 	<div class="panel panel-default">
+		<div class="panel-heading">Create a new event!</div>
+		<div class="panel-body">
+			<a href="events/create.php"><button class="btn btn-primary btn-lg">New Event!</button></a>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
 		<div class="panel-heading">What's going on now</div>
 		<table class="table table-striped">
 			<thead>
