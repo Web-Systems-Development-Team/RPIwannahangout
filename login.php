@@ -68,11 +68,6 @@ if($cas->is_authenticated()) {
 </head>
 <body>
   <?php include 'basic_includes/navbar.php' ?>
-  <p>Fake CAS page</p>
-  <form>
-    <input type="text" name="fname">
-    <input type="text" name="lname">
-    <input type="submit" value="submit">
-  </form>
+  <p>This HTML probably will not need to exist in the final product.</p>
 </body>
 </html>
