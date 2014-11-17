@@ -121,7 +121,7 @@
 				</div>
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"></textarea>
+					<textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"><?php getData('description'); ?></textarea>
 				</div>
 				<button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
 			</form>
