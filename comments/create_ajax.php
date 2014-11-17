@@ -25,8 +25,11 @@
 	}
 	else {
 		$comment->save();
-	    // echo "Everything's all right!";
-	    echo $comment->toJSON();
+		// add the author name and return the JSON
+	    $comment_json = json_decode($comment->toJSON());
+	    $author = UserQuery::create()->findPk($_POST['author_user_id']);
+	    $comment_json->authorName = $author->getFirstName();
+	    echo json_encode($comment_json);
 	}
 
 ?>

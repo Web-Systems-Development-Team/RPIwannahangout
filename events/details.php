@@ -50,7 +50,7 @@
 		<div class="panel-heading">Add Comment</div>
 		<div class="panel-body" >
 			<form role="form" id="comment_creation_form" action="../comments/create_ajax.php" method="post" class="comment-form">
-				<input class="form-control" type="datetime-local" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
+				<input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
 				<input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="1">
 				<input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
 				<div class="form-group">
@@ -80,12 +80,14 @@
 
 		$(function(){
 			// get a json of the comments and add them to the page
-			$.get("../comments/get_list_json.php", function(data, status) {
-				var comments = $.parseJSON(data).Comments;
-				
-				for(var i=0; i<comments.length; ++i) {
-					add_comment(comments[i]);
-				}
+			$.get("../comments/get_list_json.php",
+				{ event_id:<?php echo $event->getEventId(); ?>},
+				function(data, status) {
+					var comments = $.parseJSON(data).Comments;
+					
+					for(var i=0; i<comments.length; ++i) {
+						add_comment(comments[i]);
+					}
 			});
 
 			$(".comment-form").submit(function(event) {
