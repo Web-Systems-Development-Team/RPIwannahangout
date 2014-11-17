@@ -59,7 +59,7 @@ class CommentTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class CommentTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the comment_id field
@@ -80,6 +80,16 @@ class CommentTableMap extends TableMap
      * the column name for the comment_text field
      */
     const COL_COMMENT_TEXT = 'comment.comment_text';
+
+    /**
+     * the column name for the creation_date field
+     */
+    const COL_CREATION_DATE = 'comment.creation_date';
+
+    /**
+     * the column name for the edit_date field
+     */
+    const COL_EDIT_DATE = 'comment.edit_date';
 
     /**
      * the column name for the author_user_id field
@@ -103,11 +113,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('CommentId', 'CommentText', 'AuthorUserId', 'TargetEventId', ),
-        self::TYPE_CAMELNAME     => array('commentId', 'commentText', 'authorUserId', 'targetEventId', ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_COMMENT_ID, CommentTableMap::COL_COMMENT_TEXT, CommentTableMap::COL_AUTHOR_USER_ID, CommentTableMap::COL_TARGET_EVENT_ID, ),
-        self::TYPE_FIELDNAME     => array('comment_id', 'comment_text', 'author_user_id', 'target_event_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('CommentId', 'CommentText', 'CreationDate', 'EditDate', 'AuthorUserId', 'TargetEventId', ),
+        self::TYPE_CAMELNAME     => array('commentId', 'commentText', 'creationDate', 'editDate', 'authorUserId', 'targetEventId', ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_COMMENT_ID, CommentTableMap::COL_COMMENT_TEXT, CommentTableMap::COL_CREATION_DATE, CommentTableMap::COL_EDIT_DATE, CommentTableMap::COL_AUTHOR_USER_ID, CommentTableMap::COL_TARGET_EVENT_ID, ),
+        self::TYPE_FIELDNAME     => array('comment_id', 'comment_text', 'creation_date', 'edit_date', 'author_user_id', 'target_event_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -117,11 +127,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('CommentId' => 0, 'CommentText' => 1, 'AuthorUserId' => 2, 'TargetEventId' => 3, ),
-        self::TYPE_CAMELNAME     => array('commentId' => 0, 'commentText' => 1, 'authorUserId' => 2, 'targetEventId' => 3, ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_COMMENT_ID => 0, CommentTableMap::COL_COMMENT_TEXT => 1, CommentTableMap::COL_AUTHOR_USER_ID => 2, CommentTableMap::COL_TARGET_EVENT_ID => 3, ),
-        self::TYPE_FIELDNAME     => array('comment_id' => 0, 'comment_text' => 1, 'author_user_id' => 2, 'target_event_id' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('CommentId' => 0, 'CommentText' => 1, 'CreationDate' => 2, 'EditDate' => 3, 'AuthorUserId' => 4, 'TargetEventId' => 5, ),
+        self::TYPE_CAMELNAME     => array('commentId' => 0, 'commentText' => 1, 'creationDate' => 2, 'editDate' => 3, 'authorUserId' => 4, 'targetEventId' => 5, ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_COMMENT_ID => 0, CommentTableMap::COL_COMMENT_TEXT => 1, CommentTableMap::COL_CREATION_DATE => 2, CommentTableMap::COL_EDIT_DATE => 3, CommentTableMap::COL_AUTHOR_USER_ID => 4, CommentTableMap::COL_TARGET_EVENT_ID => 5, ),
+        self::TYPE_FIELDNAME     => array('comment_id' => 0, 'comment_text' => 1, 'creation_date' => 2, 'edit_date' => 3, 'author_user_id' => 4, 'target_event_id' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -143,6 +153,8 @@ class CommentTableMap extends TableMap
         // columns
         $this->addPrimaryKey('comment_id', 'CommentId', 'INTEGER', true, null, null);
         $this->addColumn('comment_text', 'CommentText', 'LONGVARCHAR', true, 1200, null);
+        $this->addColumn('creation_date', 'CreationDate', 'TIMESTAMP', false, null, null);
+        $this->addColumn('edit_date', 'EditDate', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('author_user_id', 'AuthorUserId', 'INTEGER', 'user', 'user_id', true, null, null);
         $this->addForeignKey('target_event_id', 'TargetEventId', 'INTEGER', 'event', 'event_id', true, null, null);
     } // initialize()
@@ -155,6 +167,19 @@ class CommentTableMap extends TableMap
         $this->addRelation('Author', '\\User', RelationMap::MANY_TO_ONE, array('author_user_id' => 'user_id', ), null, null);
         $this->addRelation('Target_Event', '\\Event', RelationMap::MANY_TO_ONE, array('target_event_id' => 'event_id', ), null, null);
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'validate' => array('comment_text_not_blank' => array ('column' => 'comment_text','validator' => 'NotBlank',), 'comment_text_length' => array ('column' => 'comment_text','validator' => 'Length','options' => array ('max' => 512,),), 'creation_date_not_blank' => array ('column' => 'creation_date','validator' => 'NotBlank',), 'creation_date_valid' => array ('column' => 'creation_date','validator' => 'SymfonyDateTime',), 'edit_date_valid' => array ('column' => 'edit_date','validator' => 'SymfonyDateTime',), 'author_user_id_exists' => array ('column' => 'author_user_id','validator' => 'NotNull',), 'target_event_id_exists' => array ('column' => 'target_event_id','validator' => 'NotNull',), ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -298,10 +323,14 @@ class CommentTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(CommentTableMap::COL_COMMENT_ID);
+            $criteria->addSelectColumn(CommentTableMap::COL_CREATION_DATE);
+            $criteria->addSelectColumn(CommentTableMap::COL_EDIT_DATE);
             $criteria->addSelectColumn(CommentTableMap::COL_AUTHOR_USER_ID);
             $criteria->addSelectColumn(CommentTableMap::COL_TARGET_EVENT_ID);
         } else {
             $criteria->addSelectColumn($alias . '.comment_id');
+            $criteria->addSelectColumn($alias . '.creation_date');
+            $criteria->addSelectColumn($alias . '.edit_date');
             $criteria->addSelectColumn($alias . '.author_user_id');
             $criteria->addSelectColumn($alias . '.target_event_id');
         }

@@ -1,7 +1,7 @@
 <?php
 
 	require_once '../database_access.php';
-	$q = new CommentQuery;
+	$q = new CommentQuery();
 	$q->join("Comment.Author")
 		->withColumn("Author.first_name", 'authorName');
 

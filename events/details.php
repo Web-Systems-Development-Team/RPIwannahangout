@@ -46,23 +46,26 @@
 		</div>
 	</div>
 
-   <!--  <div class="panel panel-default">
+    <div class="panel panel-default">
 		<div class="panel-heading">Add Comment</div>
 		<div class="panel-body" >
-			<?php ?>
+			<form role="form" id="comment_creation_form" action="../comments/create_ajax.php" method="post" class="comment-form">
+				<input class="form-control" type="datetime-local" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
+				<input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="1">
+				<input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
+				<div class="form-group">
+					<label for="comment_text">Comment Text</label>
+					<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
+				</div>
+				<button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
+			</form>
 		</div>
-	</div> -->
+	</div>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script>
-$(function(){
-	// can get "website.json" or "build_json.php"
-	$.get("../comments/get_list_json.php", function(data, status) {
-		var comments = $.parseJSON(data).Comments; // use with build_json.php
-		
-		for(var i=0; i<comments.length; ++i) {
-			var comment = comments[i];
+		function add_comment(comment) {
 			var comment_box = $("<div/>", {'class':'panel panel-default'});
 			comment_box.append($("<div/>", {
 				'class':'panel-heading',
@@ -74,28 +77,44 @@ $(function(){
 			}));
 			$("#comment_bin").append(comment_box);
 		}
-		
-	});
-});
 
-// function add_folders_to_menu(nav, folders, name) {
-// 	var menu_item_class = name + "_menu_item";
-// 	nav.append($('<li/>', {
-// 		'text':name,
-// 		'class':"ui-state-disabled menu_header"
-// 	}).on('click', function(){
-// 	    $("."+menu_item_class).each(function() {$(this).toggle();});
-// 	}).append($('<i class="fa fa-bars menu-icon"></i>')));
-// 	for(var i=0; i<folders.length; ++i) {
-// 		nav.append($('<li/>', {
-// 			'text':folders[i].name,
-// 			'href':folders[i].instructions,
-// 			'class':menu_item_class
-// 		}).on('click', function(){
-// 		    display_in_window($(this).attr("href"), this.outerText);
-// 		}));
-// 	}
-// }
+		$(function(){
+			// get a json of the comments and add them to the page
+			$.get("../comments/get_list_json.php", function(data, status) {
+				var comments = $.parseJSON(data).Comments;
+				
+				for(var i=0; i<comments.length; ++i) {
+					add_comment(comments[i]);
+				}
+			});
 
+			$(".comment-form").submit(function(event) {
+				event.preventDefault();
+				// check stuff is valid here
+				var form = event.currentTarget;
+				var ary = $(form).serializeArray();
+
+				for(var i=0; i<ary.length;i++){
+					console.log("("+ary[i].name+", "+ary[i].value+")");
+				}
+				
+				$.ajax({
+					url: "../comments/create_ajax.php",
+					data: ary,
+					type: "POST",
+					dataType:"JSON",
+					success: function( json ) {
+				        add_comment(json);
+				    },
+				    // if the request fails
+				    error: function( xhr, status, errorThrown ) {
+				        alert( "Sorry, there was a problem posting your comment! Please try again in a few moments." );
+				        console.log( "Error: " + errorThrown );
+				        console.log( "Status: " + status );
+				        console.dir( xhr );
+				    },
+				});
+			});
+		});
 	</script>
 </body>

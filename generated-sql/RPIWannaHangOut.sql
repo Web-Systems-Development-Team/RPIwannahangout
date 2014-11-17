@@ -70,6 +70,8 @@ CREATE TABLE `comment`
 (
     `comment_id` INTEGER NOT NULL AUTO_INCREMENT,
     `comment_text` TEXT(1200) NOT NULL,
+    `creation_date` DATETIME,
+    `edit_date` DATETIME,
     `author_user_id` INTEGER NOT NULL,
     `target_event_id` INTEGER NOT NULL,
     PRIMARY KEY (`comment_id`),
