@@ -31,6 +31,7 @@
 
 	<table name="user" phpName="User">
 		<column name="user_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="rcs_id" type="varchar" size="32" required="true" />
 		<column name="first_name" type="varchar" size="50" required="true" />
 		<column name="last_name" type="varchar" size="50" required="true" />
 		<column name="email" type="varchar" size="50" required="true" />
