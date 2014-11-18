@@ -34,7 +34,7 @@
 		<column name="first_name" type="varchar" size="50" required="true" />
 		<column name="last_name" type="varchar" size="50" required="true" />
 		<column name="email" type="varchar" size="50" required="true" />
-		<column name="permission_level" type="integer" required="true" />
+		<column name="permission_level" type="integer" required="false" default="1000" />
 	</table>
 
 	<table name="event_interest" phpName="EventInterest">
@@ -44,6 +44,15 @@
 		<foreign-key foreignTable="user" phpName="Interested" refPhpName="Interest">
 			<reference local="interested_user_id" foreign="user_id"/>
 		</foreign-key>
+		<column name="target_event_id" type="integer" required="true" />
+		<foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Interest">
+			<reference local="target_event_id" foreign="event_id"/>
+		</foreign-key>
+
+		<behavior name="validate">
+		    <parameter name="interested_user_id_exists" value="{column: interested_user_id, validator: NotNull}" />
+		    <parameter name="target_event_id_exists" value="{column: target_event_id, validator: NotNull}" />
+  		</behavior>
 	</table>
 
 	<table name="comment" phpName="Comment">

@@ -59,7 +59,7 @@ class EventInterestTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class EventInterestTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the event_interest_id field
@@ -87,6 +87,11 @@ class EventInterestTableMap extends TableMap
     const COL_INTERESTED_USER_ID = 'event_interest.interested_user_id';
 
     /**
+     * the column name for the target_event_id field
+     */
+    const COL_TARGET_EVENT_ID = 'event_interest.target_event_id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -98,11 +103,11 @@ class EventInterestTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('EventInterestId', 'BringingCar', 'InterestedUserId', ),
-        self::TYPE_CAMELNAME     => array('eventInterestId', 'bringingCar', 'interestedUserId', ),
-        self::TYPE_COLNAME       => array(EventInterestTableMap::COL_EVENT_INTEREST_ID, EventInterestTableMap::COL_BRINGING_CAR, EventInterestTableMap::COL_INTERESTED_USER_ID, ),
-        self::TYPE_FIELDNAME     => array('event_interest_id', 'bringing_car', 'interested_user_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('EventInterestId', 'BringingCar', 'InterestedUserId', 'TargetEventId', ),
+        self::TYPE_CAMELNAME     => array('eventInterestId', 'bringingCar', 'interestedUserId', 'targetEventId', ),
+        self::TYPE_COLNAME       => array(EventInterestTableMap::COL_EVENT_INTEREST_ID, EventInterestTableMap::COL_BRINGING_CAR, EventInterestTableMap::COL_INTERESTED_USER_ID, EventInterestTableMap::COL_TARGET_EVENT_ID, ),
+        self::TYPE_FIELDNAME     => array('event_interest_id', 'bringing_car', 'interested_user_id', 'target_event_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -112,11 +117,11 @@ class EventInterestTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('EventInterestId' => 0, 'BringingCar' => 1, 'InterestedUserId' => 2, ),
-        self::TYPE_CAMELNAME     => array('eventInterestId' => 0, 'bringingCar' => 1, 'interestedUserId' => 2, ),
-        self::TYPE_COLNAME       => array(EventInterestTableMap::COL_EVENT_INTEREST_ID => 0, EventInterestTableMap::COL_BRINGING_CAR => 1, EventInterestTableMap::COL_INTERESTED_USER_ID => 2, ),
-        self::TYPE_FIELDNAME     => array('event_interest_id' => 0, 'bringing_car' => 1, 'interested_user_id' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('EventInterestId' => 0, 'BringingCar' => 1, 'InterestedUserId' => 2, 'TargetEventId' => 3, ),
+        self::TYPE_CAMELNAME     => array('eventInterestId' => 0, 'bringingCar' => 1, 'interestedUserId' => 2, 'targetEventId' => 3, ),
+        self::TYPE_COLNAME       => array(EventInterestTableMap::COL_EVENT_INTEREST_ID => 0, EventInterestTableMap::COL_BRINGING_CAR => 1, EventInterestTableMap::COL_INTERESTED_USER_ID => 2, EventInterestTableMap::COL_TARGET_EVENT_ID => 3, ),
+        self::TYPE_FIELDNAME     => array('event_interest_id' => 0, 'bringing_car' => 1, 'interested_user_id' => 2, 'target_event_id' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,6 +144,7 @@ class EventInterestTableMap extends TableMap
         $this->addPrimaryKey('event_interest_id', 'EventInterestId', 'INTEGER', true, null, null);
         $this->addColumn('bringing_car', 'BringingCar', 'BOOLEAN', true, 1, false);
         $this->addForeignKey('interested_user_id', 'InterestedUserId', 'INTEGER', 'user', 'user_id', true, null, null);
+        $this->addForeignKey('target_event_id', 'TargetEventId', 'INTEGER', 'event', 'event_id', true, null, null);
     } // initialize()
 
     /**
@@ -147,7 +153,21 @@ class EventInterestTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Interested', '\\User', RelationMap::MANY_TO_ONE, array('interested_user_id' => 'user_id', ), null, null);
+        $this->addRelation('Target_Event', '\\Event', RelationMap::MANY_TO_ONE, array('target_event_id' => 'event_id', ), null, null);
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'validate' => array('interested_user_id_exists' => array ('column' => 'interested_user_id','validator' => 'NotNull',), 'target_event_id_exists' => array ('column' => 'target_event_id','validator' => 'NotNull',), ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -293,10 +313,12 @@ class EventInterestTableMap extends TableMap
             $criteria->addSelectColumn(EventInterestTableMap::COL_EVENT_INTEREST_ID);
             $criteria->addSelectColumn(EventInterestTableMap::COL_BRINGING_CAR);
             $criteria->addSelectColumn(EventInterestTableMap::COL_INTERESTED_USER_ID);
+            $criteria->addSelectColumn(EventInterestTableMap::COL_TARGET_EVENT_ID);
         } else {
             $criteria->addSelectColumn($alias . '.event_interest_id');
             $criteria->addSelectColumn($alias . '.bringing_car');
             $criteria->addSelectColumn($alias . '.interested_user_id');
+            $criteria->addSelectColumn($alias . '.target_event_id');
         }
     }
 

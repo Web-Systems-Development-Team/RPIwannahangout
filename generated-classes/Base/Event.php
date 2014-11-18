@@ -5,6 +5,8 @@ namespace Base;
 use \Comment as ChildComment;
 use \CommentQuery as ChildCommentQuery;
 use \Event as ChildEvent;
+use \EventInterest as ChildEventInterest;
+use \EventInterestQuery as ChildEventInterestQuery;
 use \EventQuery as ChildEventQuery;
 use \User as ChildUser;
 use \UserQuery as ChildUserQuery;
@@ -142,6 +144,12 @@ abstract class Event implements ActiveRecordInterface
     protected $aCreator;
 
     /**
+     * @var        ObjectCollection|ChildEventInterest[] Collection to store aggregation of ChildEventInterest objects.
+     */
+    protected $collInterests;
+    protected $collInterestsPartial;
+
+    /**
      * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
      */
     protected $collComments;
@@ -171,6 +179,12 @@ abstract class Event implements ActiveRecordInterface
      * @var     ConstraintViolationList
      */
     protected $validationFailures;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildEventInterest[]
+     */
+    protected $interestsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -872,6 +886,8 @@ abstract class Event implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCreator = null;
+            $this->collInterests = null;
+
             $this->collComments = null;
 
         } // if (deep)
@@ -994,6 +1010,23 @@ abstract class Event implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->interestsScheduledForDeletion !== null) {
+                if (!$this->interestsScheduledForDeletion->isEmpty()) {
+                    \EventInterestQuery::create()
+                        ->filterByPrimaryKeys($this->interestsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->interestsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collInterests !== null) {
+                foreach ($this->collInterests as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->commentsScheduledForDeletion !== null) {
@@ -1243,6 +1276,21 @@ abstract class Event implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aCreator->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collInterests) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'eventInterests';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'event_interests';
+                        break;
+                    default:
+                        $key = 'EventInterests';
+                }
+
+                $result[$key] = $this->collInterests->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collComments) {
 
@@ -1531,6 +1579,12 @@ abstract class Event implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getInterests() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addInterest($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getComments() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addComment($relObj->copy($deepCopy));
@@ -1629,9 +1683,255 @@ abstract class Event implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('Interest' == $relationName) {
+            return $this->initInterests();
+        }
         if ('Comment' == $relationName) {
             return $this->initComments();
         }
+    }
+
+    /**
+     * Clears out the collInterests collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addInterests()
+     */
+    public function clearInterests()
+    {
+        $this->collInterests = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collInterests collection loaded partially.
+     */
+    public function resetPartialInterests($v = true)
+    {
+        $this->collInterestsPartial = $v;
+    }
+
+    /**
+     * Initializes the collInterests collection.
+     *
+     * By default this just sets the collInterests collection to an empty array (like clearcollInterests());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initInterests($overrideExisting = true)
+    {
+        if (null !== $this->collInterests && !$overrideExisting) {
+            return;
+        }
+        $this->collInterests = new ObjectCollection();
+        $this->collInterests->setModel('\EventInterest');
+    }
+
+    /**
+     * Gets an array of ChildEventInterest objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildEvent is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildEventInterest[] List of ChildEventInterest objects
+     * @throws PropelException
+     */
+    public function getInterests(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collInterestsPartial && !$this->isNew();
+        if (null === $this->collInterests || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collInterests) {
+                // return empty collection
+                $this->initInterests();
+            } else {
+                $collInterests = ChildEventInterestQuery::create(null, $criteria)
+                    ->filterByTarget_Event($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collInterestsPartial && count($collInterests)) {
+                        $this->initInterests(false);
+
+                        foreach ($collInterests as $obj) {
+                            if (false == $this->collInterests->contains($obj)) {
+                                $this->collInterests->append($obj);
+                            }
+                        }
+
+                        $this->collInterestsPartial = true;
+                    }
+
+                    return $collInterests;
+                }
+
+                if ($partial && $this->collInterests) {
+                    foreach ($this->collInterests as $obj) {
+                        if ($obj->isNew()) {
+                            $collInterests[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collInterests = $collInterests;
+                $this->collInterestsPartial = false;
+            }
+        }
+
+        return $this->collInterests;
+    }
+
+    /**
+     * Sets a collection of ChildEventInterest objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $interests A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildEvent The current object (for fluent API support)
+     */
+    public function setInterests(Collection $interests, ConnectionInterface $con = null)
+    {
+        /** @var ChildEventInterest[] $interestsToDelete */
+        $interestsToDelete = $this->getInterests(new Criteria(), $con)->diff($interests);
+
+
+        $this->interestsScheduledForDeletion = $interestsToDelete;
+
+        foreach ($interestsToDelete as $interestRemoved) {
+            $interestRemoved->setTarget_Event(null);
+        }
+
+        $this->collInterests = null;
+        foreach ($interests as $interest) {
+            $this->addInterest($interest);
+        }
+
+        $this->collInterests = $interests;
+        $this->collInterestsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related EventInterest objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related EventInterest objects.
+     * @throws PropelException
+     */
+    public function countInterests(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collInterestsPartial && !$this->isNew();
+        if (null === $this->collInterests || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collInterests) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getInterests());
+            }
+
+            $query = ChildEventInterestQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByTarget_Event($this)
+                ->count($con);
+        }
+
+        return count($this->collInterests);
+    }
+
+    /**
+     * Method called to associate a ChildEventInterest object to this object
+     * through the ChildEventInterest foreign key attribute.
+     *
+     * @param  ChildEventInterest $l ChildEventInterest
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function addInterest(ChildEventInterest $l)
+    {
+        if ($this->collInterests === null) {
+            $this->initInterests();
+            $this->collInterestsPartial = true;
+        }
+
+        if (!$this->collInterests->contains($l)) {
+            $this->doAddInterest($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildEventInterest $interest The ChildEventInterest object to add.
+     */
+    protected function doAddInterest(ChildEventInterest $interest)
+    {
+        $this->collInterests[]= $interest;
+        $interest->setTarget_Event($this);
+    }
+
+    /**
+     * @param  ChildEventInterest $interest The ChildEventInterest object to remove.
+     * @return $this|ChildEvent The current object (for fluent API support)
+     */
+    public function removeInterest(ChildEventInterest $interest)
+    {
+        if ($this->getInterests()->contains($interest)) {
+            $pos = $this->collInterests->search($interest);
+            $this->collInterests->remove($pos);
+            if (null === $this->interestsScheduledForDeletion) {
+                $this->interestsScheduledForDeletion = clone $this->collInterests;
+                $this->interestsScheduledForDeletion->clear();
+            }
+            $this->interestsScheduledForDeletion[]= clone $interest;
+            $interest->setTarget_Event(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Event is new, it will return
+     * an empty collection; or if this Event has previously
+     * been saved, it will retrieve related Interests from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Event.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildEventInterest[] List of ChildEventInterest objects
+     */
+    public function getInterestsJoinInterested(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildEventInterestQuery::create(null, $criteria);
+        $query->joinWith('Interested', $joinBehavior);
+
+        return $this->getInterests($query, $con);
     }
 
     /**
@@ -1915,6 +2215,11 @@ abstract class Event implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collInterests) {
+                foreach ($this->collInterests as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collComments) {
                 foreach ($this->collComments as $o) {
                     $o->clearAllReferences($deep);
@@ -1922,6 +2227,7 @@ abstract class Event implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collInterests = null;
         $this->collComments = null;
         $this->aCreator = null;
     }
@@ -2008,6 +2314,15 @@ abstract class Event implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
+            if (null !== $this->collInterests) {
+                foreach ($this->collInterests as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
             if (null !== $this->collComments) {
                 foreach ($this->collComments as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
