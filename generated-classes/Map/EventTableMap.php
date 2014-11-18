@@ -177,6 +177,7 @@ class EventTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Creator', '\\User', RelationMap::MANY_TO_ONE, array('creator_user_id' => 'user_id', ), null, null);
+        $this->addRelation('Interest', '\\EventInterest', RelationMap::ONE_TO_MANY, array('event_id' => 'target_event_id', ), null, null, 'Interests');
         $this->addRelation('Comment', '\\Comment', RelationMap::ONE_TO_MANY, array('event_id' => 'target_event_id', ), null, null, 'Comments');
     } // buildRelations()
 

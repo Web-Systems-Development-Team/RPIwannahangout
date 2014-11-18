@@ -53,11 +53,16 @@ CREATE TABLE `event_interest`
     `event_interest_id` INTEGER NOT NULL AUTO_INCREMENT,
     `bringing_car` TINYINT(1) DEFAULT 0 NOT NULL,
     `interested_user_id` INTEGER NOT NULL,
+    `target_event_id` INTEGER NOT NULL,
     PRIMARY KEY (`event_interest_id`),
     INDEX `event_interest_fi_68c472` (`interested_user_id`),
+    INDEX `event_interest_fi_afb14a` (`target_event_id`),
     CONSTRAINT `event_interest_fk_68c472`
         FOREIGN KEY (`interested_user_id`)
-        REFERENCES `user` (`user_id`)
+        REFERENCES `user` (`user_id`),
+    CONSTRAINT `event_interest_fk_afb14a`
+        FOREIGN KEY (`target_event_id`)
+        REFERENCES `event` (`event_id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
