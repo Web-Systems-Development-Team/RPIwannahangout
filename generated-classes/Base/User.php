@@ -93,6 +93,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * The value for the permission_level field.
+     * Note: this column has a database default value of: 1000
      * @var        int
      */
     protected $permission_level;
@@ -142,10 +143,23 @@ abstract class User implements ActiveRecordInterface
     protected $commentsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->permission_level = 1000;
+    }
+
+    /**
      * Initializes internal state of Base\User object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -518,6 +532,10 @@ abstract class User implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->permission_level !== 1000) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -1773,6 +1791,31 @@ abstract class User implements ActiveRecordInterface
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Interests from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildEventInterest[] List of ChildEventInterest objects
+     */
+    public function getInterestsJoinTarget_Event(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildEventInterestQuery::create(null, $criteria);
+        $query->joinWith('Target_Event', $joinBehavior);
+
+        return $this->getInterests($query, $con);
+    }
+
     /**
      * Clears out the collComments collection
      *
@@ -2030,6 +2073,7 @@ abstract class User implements ActiveRecordInterface
         $this->permission_level = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

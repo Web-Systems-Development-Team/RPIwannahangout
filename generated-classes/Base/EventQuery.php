@@ -46,11 +46,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery rightJoinCreator($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Creator relation
  * @method     ChildEventQuery innerJoinCreator($relationAlias = null) Adds a INNER JOIN clause to the query using the Creator relation
  *
+ * @method     ChildEventQuery leftJoinInterest($relationAlias = null) Adds a LEFT JOIN clause to the query using the Interest relation
+ * @method     ChildEventQuery rightJoinInterest($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Interest relation
+ * @method     ChildEventQuery innerJoinInterest($relationAlias = null) Adds a INNER JOIN clause to the query using the Interest relation
+ *
  * @method     ChildEventQuery leftJoinComment($relationAlias = null) Adds a LEFT JOIN clause to the query using the Comment relation
  * @method     ChildEventQuery rightJoinComment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Comment relation
  * @method     ChildEventQuery innerJoinComment($relationAlias = null) Adds a INNER JOIN clause to the query using the Comment relation
  *
- * @method     \UserQuery|\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \UserQuery|\EventInterestQuery|\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildEvent findOne(ConnectionInterface $con = null) Return the first ChildEvent matching the query
  * @method     ChildEvent findOneOrCreate(ConnectionInterface $con = null) Return the first ChildEvent matching the query, or a new ChildEvent object populated from the query conditions when no match is found
@@ -613,6 +617,79 @@ abstract class EventQuery extends ModelCriteria
         return $this
             ->joinCreator($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Creator', '\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related \EventInterest object
+     *
+     * @param \EventInterest|ObjectCollection $eventInterest  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByInterest($eventInterest, $comparison = null)
+    {
+        if ($eventInterest instanceof \EventInterest) {
+            return $this
+                ->addUsingAlias(EventTableMap::COL_EVENT_ID, $eventInterest->getTargetEventId(), $comparison);
+        } elseif ($eventInterest instanceof ObjectCollection) {
+            return $this
+                ->useInterestQuery()
+                ->filterByPrimaryKeys($eventInterest->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByInterest() only accepts arguments of type \EventInterest or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Interest relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function joinInterest($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Interest');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Interest');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Interest relation EventInterest object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \EventInterestQuery A secondary query class using the current class as primary query
+     */
+    public function useInterestQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinInterest($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Interest', '\EventInterestQuery');
     }
 
     /**

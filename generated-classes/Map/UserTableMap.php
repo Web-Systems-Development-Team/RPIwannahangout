@@ -150,7 +150,7 @@ class UserTableMap extends TableMap
         $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 50, null);
         $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 50, null);
         $this->addColumn('email', 'Email', 'VARCHAR', true, 50, null);
-        $this->addColumn('permission_level', 'PermissionLevel', 'INTEGER', true, null, null);
+        $this->addColumn('permission_level', 'PermissionLevel', 'INTEGER', false, null, 1000);
     } // initialize()
 
     /**

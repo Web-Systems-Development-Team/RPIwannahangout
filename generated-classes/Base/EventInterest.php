@@ -2,7 +2,9 @@
 
 namespace Base;
 
+use \Event as ChildEvent;
 use \EventInterestQuery as ChildEventInterestQuery;
+use \EventQuery as ChildEventQuery;
 use \User as ChildUser;
 use \UserQuery as ChildUserQuery;
 use \Exception;
@@ -19,6 +21,16 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\DefaultTranslator;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\Validator\LegacyValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Base class that represents a row from the 'event_interest' table.
@@ -81,9 +93,20 @@ abstract class EventInterest implements ActiveRecordInterface
     protected $interested_user_id;
 
     /**
+     * The value for the target_event_id field.
+     * @var        int
+     */
+    protected $target_event_id;
+
+    /**
      * @var        ChildUser
      */
     protected $aInterested;
+
+    /**
+     * @var        ChildEvent
+     */
+    protected $aTarget_Event;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -92,6 +115,23 @@ abstract class EventInterest implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
 
     /**
      * Applies default values to this object.
@@ -364,6 +404,16 @@ abstract class EventInterest implements ActiveRecordInterface
     }
 
     /**
+     * Get the [target_event_id] column value.
+     *
+     * @return int
+     */
+    public function getTargetEventId()
+    {
+        return $this->target_event_id;
+    }
+
+    /**
      * Set the value of [event_interest_id] column.
      *
      * @param  int $v new value
@@ -436,6 +486,30 @@ abstract class EventInterest implements ActiveRecordInterface
     } // setInterestedUserId()
 
     /**
+     * Set the value of [target_event_id] column.
+     *
+     * @param  int $v new value
+     * @return $this|\EventInterest The current object (for fluent API support)
+     */
+    public function setTargetEventId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->target_event_id !== $v) {
+            $this->target_event_id = $v;
+            $this->modifiedColumns[EventInterestTableMap::COL_TARGET_EVENT_ID] = true;
+        }
+
+        if ($this->aTarget_Event !== null && $this->aTarget_Event->getEventId() !== $v) {
+            $this->aTarget_Event = null;
+        }
+
+        return $this;
+    } // setTargetEventId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -483,6 +557,9 @@ abstract class EventInterest implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : EventInterestTableMap::translateFieldName('InterestedUserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->interested_user_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : EventInterestTableMap::translateFieldName('TargetEventId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->target_event_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -491,7 +568,7 @@ abstract class EventInterest implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = EventInterestTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = EventInterestTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\EventInterest'), 0, $e);
@@ -515,6 +592,9 @@ abstract class EventInterest implements ActiveRecordInterface
     {
         if ($this->aInterested !== null && $this->interested_user_id !== $this->aInterested->getUserId()) {
             $this->aInterested = null;
+        }
+        if ($this->aTarget_Event !== null && $this->target_event_id !== $this->aTarget_Event->getEventId()) {
+            $this->aTarget_Event = null;
         }
     } // ensureConsistency
 
@@ -556,6 +636,7 @@ abstract class EventInterest implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aInterested = null;
+            $this->aTarget_Event = null;
         } // if (deep)
     }
 
@@ -667,6 +748,13 @@ abstract class EventInterest implements ActiveRecordInterface
                 $this->setInterested($this->aInterested);
             }
 
+            if ($this->aTarget_Event !== null) {
+                if ($this->aTarget_Event->isModified() || $this->aTarget_Event->isNew()) {
+                    $affectedRows += $this->aTarget_Event->save($con);
+                }
+                $this->setTarget_Event($this->aTarget_Event);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -713,6 +801,9 @@ abstract class EventInterest implements ActiveRecordInterface
         if ($this->isColumnModified(EventInterestTableMap::COL_INTERESTED_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'interested_user_id';
         }
+        if ($this->isColumnModified(EventInterestTableMap::COL_TARGET_EVENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'target_event_id';
+        }
 
         $sql = sprintf(
             'INSERT INTO event_interest (%s) VALUES (%s)',
@@ -732,6 +823,9 @@ abstract class EventInterest implements ActiveRecordInterface
                         break;
                     case 'interested_user_id':
                         $stmt->bindValue($identifier, $this->interested_user_id, PDO::PARAM_INT);
+                        break;
+                    case 'target_event_id':
+                        $stmt->bindValue($identifier, $this->target_event_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -804,6 +898,9 @@ abstract class EventInterest implements ActiveRecordInterface
             case 2:
                 return $this->getInterestedUserId();
                 break;
+            case 3:
+                return $this->getTargetEventId();
+                break;
             default:
                 return null;
                 break;
@@ -837,6 +934,7 @@ abstract class EventInterest implements ActiveRecordInterface
             $keys[0] => $this->getEventInterestId(),
             $keys[1] => $this->getBringingCar(),
             $keys[2] => $this->getInterestedUserId(),
+            $keys[3] => $this->getTargetEventId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -858,6 +956,21 @@ abstract class EventInterest implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aInterested->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aTarget_Event) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'event';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'event';
+                        break;
+                    default:
+                        $key = 'Event';
+                }
+
+                $result[$key] = $this->aTarget_Event->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -902,6 +1015,9 @@ abstract class EventInterest implements ActiveRecordInterface
             case 2:
                 $this->setInterestedUserId($value);
                 break;
+            case 3:
+                $this->setTargetEventId($value);
+                break;
         } // switch()
 
         return $this;
@@ -936,6 +1052,9 @@ abstract class EventInterest implements ActiveRecordInterface
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setInterestedUserId($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setTargetEventId($arr[$keys[3]]);
         }
     }
 
@@ -986,6 +1105,9 @@ abstract class EventInterest implements ActiveRecordInterface
         }
         if ($this->isColumnModified(EventInterestTableMap::COL_INTERESTED_USER_ID)) {
             $criteria->add(EventInterestTableMap::COL_INTERESTED_USER_ID, $this->interested_user_id);
+        }
+        if ($this->isColumnModified(EventInterestTableMap::COL_TARGET_EVENT_ID)) {
+            $criteria->add(EventInterestTableMap::COL_TARGET_EVENT_ID, $this->target_event_id);
         }
 
         return $criteria;
@@ -1075,6 +1197,7 @@ abstract class EventInterest implements ActiveRecordInterface
     {
         $copyObj->setBringingCar($this->getBringingCar());
         $copyObj->setInterestedUserId($this->getInterestedUserId());
+        $copyObj->setTargetEventId($this->getTargetEventId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setEventInterestId(NULL); // this is a auto-increment column, so set to default value
@@ -1155,6 +1278,57 @@ abstract class EventInterest implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildEvent object.
+     *
+     * @param  ChildEvent $v
+     * @return $this|\EventInterest The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setTarget_Event(ChildEvent $v = null)
+    {
+        if ($v === null) {
+            $this->setTargetEventId(NULL);
+        } else {
+            $this->setTargetEventId($v->getEventId());
+        }
+
+        $this->aTarget_Event = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildEvent object, it will not be re-added.
+        if ($v !== null) {
+            $v->addInterest($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildEvent object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildEvent The associated ChildEvent object.
+     * @throws PropelException
+     */
+    public function getTarget_Event(ConnectionInterface $con = null)
+    {
+        if ($this->aTarget_Event === null && ($this->target_event_id !== null)) {
+            $this->aTarget_Event = ChildEventQuery::create()->findPk($this->target_event_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aTarget_Event->addInterests($this);
+             */
+        }
+
+        return $this->aTarget_Event;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1164,9 +1338,13 @@ abstract class EventInterest implements ActiveRecordInterface
         if (null !== $this->aInterested) {
             $this->aInterested->removeInterest($this);
         }
+        if (null !== $this->aTarget_Event) {
+            $this->aTarget_Event->removeInterest($this);
+        }
         $this->event_interest_id = null;
         $this->bringing_car = null;
         $this->interested_user_id = null;
+        $this->target_event_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1189,6 +1367,7 @@ abstract class EventInterest implements ActiveRecordInterface
         } // if ($deep)
 
         $this->aInterested = null;
+        $this->aTarget_Event = null;
     }
 
     /**
@@ -1199,6 +1378,96 @@ abstract class EventInterest implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(EventInterestTableMap::DEFAULT_STRING_FORMAT);
+    }
+
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('interested_user_id', new NotNull());
+        $metadata->addPropertyConstraint('target_event_id', new NotNull());
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      object $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(ValidatorInterface $validator = null)
+    {
+        if (null === $validator) {
+            if(class_exists('Symfony\\Component\\Validator\\Validator\\LegacyValidator')){
+                $validator = new LegacyValidator(
+                            new ExecutionContextFactory(new DefaultTranslator()),
+                            new ClassMetaDataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory()
+                );
+            }else{
+                $validator = new Validator(
+                            new ClassMetadataFactory(new StaticMethodLoader()),
+                            new ConstraintValidatorFactory(),
+                            new DefaultTranslator()
+                );
+            }
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aInterested, 'validate')) {
+                if (!$this->aInterested->validate($validator)) {
+                    $failureMap->addAll($this->aInterested->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aTarget_Event, 'validate')) {
+                if (!$this->aTarget_Event->validate($validator)) {
+                    $failureMap->addAll($this->aTarget_Event->getValidationFailures());
+                }
+            }
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
     }
 
     /**
