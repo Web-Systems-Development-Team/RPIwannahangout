@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Link</a></li>
         <li><a href="#">Link</a></li>
-	<li><a href="/login.php">Log In</a></li>
+	<li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms n' Fun <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">

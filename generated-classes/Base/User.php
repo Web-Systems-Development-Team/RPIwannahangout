@@ -74,6 +74,12 @@ abstract class User implements ActiveRecordInterface
     protected $user_id;
 
     /**
+     * The value for the rcs_id field.
+     * @var        string
+     */
+    protected $rcs_id;
+
+    /**
      * The value for the first_name field.
      * @var        string
      */
@@ -369,6 +375,16 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [rcs_id] column value.
+     *
+     * @return string
+     */
+    public function getRcsId()
+    {
+        return $this->rcs_id;
+    }
+
+    /**
      * Get the [first_name] column value.
      *
      * @return string
@@ -427,6 +443,26 @@ abstract class User implements ActiveRecordInterface
 
         return $this;
     } // setUserId()
+
+    /**
+     * Set the value of [rcs_id] column.
+     *
+     * @param  string $v new value
+     * @return $this|\User The current object (for fluent API support)
+     */
+    public function setRcsId($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->rcs_id !== $v) {
+            $this->rcs_id = $v;
+            $this->modifiedColumns[UserTableMap::COL_RCS_ID] = true;
+        }
+
+        return $this;
+    } // setRcsId()
 
     /**
      * Set the value of [first_name] column.
@@ -547,16 +583,19 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('FirstName', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('RcsId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->rcs_id = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('FirstName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->first_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('LastName', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('LastName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->last_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('PermissionLevel', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('PermissionLevel', TableMap::TYPE_PHPNAME, $indexType)];
             $this->permission_level = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -566,7 +605,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\User'), 0, $e);
@@ -823,6 +862,9 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'user_id';
         }
+        if ($this->isColumnModified(UserTableMap::COL_RCS_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'rcs_id';
+        }
         if ($this->isColumnModified(UserTableMap::COL_FIRST_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'first_name';
         }
@@ -848,6 +890,9 @@ abstract class User implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'user_id':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                        break;
+                    case 'rcs_id':
+                        $stmt->bindValue($identifier, $this->rcs_id, PDO::PARAM_STR);
                         break;
                     case 'first_name':
                         $stmt->bindValue($identifier, $this->first_name, PDO::PARAM_STR);
@@ -927,15 +972,18 @@ abstract class User implements ActiveRecordInterface
                 return $this->getUserId();
                 break;
             case 1:
-                return $this->getFirstName();
+                return $this->getRcsId();
                 break;
             case 2:
-                return $this->getLastName();
+                return $this->getFirstName();
                 break;
             case 3:
-                return $this->getEmail();
+                return $this->getLastName();
                 break;
             case 4:
+                return $this->getEmail();
+                break;
+            case 5:
                 return $this->getPermissionLevel();
                 break;
             default:
@@ -969,10 +1017,11 @@ abstract class User implements ActiveRecordInterface
         $keys = UserTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getUserId(),
-            $keys[1] => $this->getFirstName(),
-            $keys[2] => $this->getLastName(),
-            $keys[3] => $this->getEmail(),
-            $keys[4] => $this->getPermissionLevel(),
+            $keys[1] => $this->getRcsId(),
+            $keys[2] => $this->getFirstName(),
+            $keys[3] => $this->getLastName(),
+            $keys[4] => $this->getEmail(),
+            $keys[5] => $this->getPermissionLevel(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1063,15 +1112,18 @@ abstract class User implements ActiveRecordInterface
                 $this->setUserId($value);
                 break;
             case 1:
-                $this->setFirstName($value);
+                $this->setRcsId($value);
                 break;
             case 2:
-                $this->setLastName($value);
+                $this->setFirstName($value);
                 break;
             case 3:
-                $this->setEmail($value);
+                $this->setLastName($value);
                 break;
             case 4:
+                $this->setEmail($value);
+                break;
+            case 5:
                 $this->setPermissionLevel($value);
                 break;
         } // switch()
@@ -1104,16 +1156,19 @@ abstract class User implements ActiveRecordInterface
             $this->setUserId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setFirstName($arr[$keys[1]]);
+            $this->setRcsId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setLastName($arr[$keys[2]]);
+            $this->setFirstName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setEmail($arr[$keys[3]]);
+            $this->setLastName($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setPermissionLevel($arr[$keys[4]]);
+            $this->setEmail($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setPermissionLevel($arr[$keys[5]]);
         }
     }
 
@@ -1158,6 +1213,9 @@ abstract class User implements ActiveRecordInterface
 
         if ($this->isColumnModified(UserTableMap::COL_USER_ID)) {
             $criteria->add(UserTableMap::COL_USER_ID, $this->user_id);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_RCS_ID)) {
+            $criteria->add(UserTableMap::COL_RCS_ID, $this->rcs_id);
         }
         if ($this->isColumnModified(UserTableMap::COL_FIRST_NAME)) {
             $criteria->add(UserTableMap::COL_FIRST_NAME, $this->first_name);
@@ -1257,6 +1315,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setRcsId($this->getRcsId());
         $copyObj->setFirstName($this->getFirstName());
         $copyObj->setLastName($this->getLastName());
         $copyObj->setEmail($this->getEmail());
@@ -2024,6 +2083,7 @@ abstract class User implements ActiveRecordInterface
     public function clear()
     {
         $this->user_id = null;
+        $this->rcs_id = null;
         $this->first_name = null;
         $this->last_name = null;
         $this->email = null;

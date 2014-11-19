@@ -52,7 +52,7 @@ if($cas->is_authenticated()) {
     //Check to see if the user already existed in the database.
     //If not, create a user account for them.
     $q = new UserQuery();
-    $user = $q->findPK($rcs_id);
+    $user = $q->findPk($rcs_id);
     var_dump($user);
 } else {
     echo "Not authenticated";
