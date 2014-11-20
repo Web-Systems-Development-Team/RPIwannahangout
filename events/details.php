@@ -106,7 +106,7 @@
 				'text':interest.authorName
 			}));
 			row.append($("<tr/>", {
-				'text':interest.BringingCar
+				'text':(interest.BringingCar ? "yes" : "no")
 			}));
 			$(".interest-table-body").append(row);
 		}
