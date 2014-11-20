@@ -31,7 +31,10 @@
 					<td><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></td>
 					<td><?php echo $event->getLocation(); ?></td>
 					<!-- <td><?php echo $event->getDescription(); ?></td> -->
-					<td><?php echo $event->getNeedCar(); ?></td>
+					<td><?php 
+		                        if($event->getNeedCar()==1) {echo "YES";}
+		                        else{echo "NO";}
+		                        ?></td>
 					<td>
 						<a href="details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
 							<button type="button" class="btn btn-info btn-sm">
