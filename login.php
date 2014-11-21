@@ -1,10 +1,11 @@
 <?php
 
-//Maybe we can put some PHP magic here to redirect to whatever page
-//they came from?
+//Redirects to the previous page, or to index.php if not specified in GET.
 function redirect() {
-    //echo "NOTE: Redirection here";
-    header("Location: index.php");
+    $prevpage = 'index.php';
+    if(isset($_GET['source'])) 
+        $prevpage = $_GET['source'];
+    header("Location:" . $prevpage);
 }
 
 //If user went to login.php but already has a session, redirect
