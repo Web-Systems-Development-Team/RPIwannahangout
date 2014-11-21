@@ -36,6 +36,13 @@
 		<column name="last_name" type="varchar" size="50" required="true" />
 		<column name="email" type="varchar" size="50" required="true" />
 		<column name="permission_level" type="integer" required="false" default="1000" />
+		<behavior name="validate">
+		  <parameter name="rcsid_not_blank" value="{column: rcs_id, validator:NotBlank}" />
+		  <parameter name="fname_not_blank" value="{column: first_name, validator:NotBlank}" />
+		  <parameter name="lname_not_blank" value="{column: last_name, validator:NotBlank}" />
+		  <parameter name="email_not_blank" value="{column: email, validator:NotBlank}" />
+		  
+		</behavior>
 	</table>
 
 	<table name="event_interest" phpName="EventInterest">

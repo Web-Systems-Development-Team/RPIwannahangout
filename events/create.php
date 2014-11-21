@@ -79,19 +79,7 @@
 </head>
 <body>
 	<?php include '../basic_includes/navbar.php' ?>
-	<?php
-		if(isset($failure_messages)) {
-			foreach($failure_messages as $message) { ?>
-				<div class="alert alert-danger alert-dismissible" role="alert">
-						<button type="button" class="close" data-dismiss="alert">
-							<span aria-hidden="true">&times;</span>
-							<span class="sr-only">Close</span>
-						</button>
-				  <?php echo $message; ?>
-				</div>
-			<?php }
-		}
-	?>
+    <?php include '../basic_includes/failurebox.php' ?>
 
 	<div class="panel panel-default">
 		<div class="panel-heading">Event Creation Form</div>

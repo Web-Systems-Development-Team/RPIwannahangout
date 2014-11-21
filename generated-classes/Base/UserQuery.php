@@ -21,12 +21,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildUserQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildUserQuery orderByRcsId($order = Criteria::ASC) Order by the rcs_id column
  * @method     ChildUserQuery orderByFirstName($order = Criteria::ASC) Order by the first_name column
  * @method     ChildUserQuery orderByLastName($order = Criteria::ASC) Order by the last_name column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByPermissionLevel($order = Criteria::ASC) Order by the permission_level column
  *
  * @method     ChildUserQuery groupByUserId() Group by the user_id column
+ * @method     ChildUserQuery groupByRcsId() Group by the rcs_id column
  * @method     ChildUserQuery groupByFirstName() Group by the first_name column
  * @method     ChildUserQuery groupByLastName() Group by the last_name column
  * @method     ChildUserQuery groupByEmail() Group by the email column
@@ -54,6 +56,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
  *
  * @method     ChildUser findOneByUserId(int $user_id) Return the first ChildUser filtered by the user_id column
+ * @method     ChildUser findOneByRcsId(string $rcs_id) Return the first ChildUser filtered by the rcs_id column
  * @method     ChildUser findOneByFirstName(string $first_name) Return the first ChildUser filtered by the first_name column
  * @method     ChildUser findOneByLastName(string $last_name) Return the first ChildUser filtered by the last_name column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
@@ -61,6 +64,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findByUserId(int $user_id) Return ChildUser objects filtered by the user_id column
+ * @method     ChildUser[]|ObjectCollection findByRcsId(string $rcs_id) Return ChildUser objects filtered by the rcs_id column
  * @method     ChildUser[]|ObjectCollection findByFirstName(string $first_name) Return ChildUser objects filtered by the first_name column
  * @method     ChildUser[]|ObjectCollection findByLastName(string $last_name) Return ChildUser objects filtered by the last_name column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
@@ -156,7 +160,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT user_id, first_name, last_name, email, permission_level FROM user WHERE user_id = :p0';
+        $sql = 'SELECT user_id, rcs_id, first_name, last_name, email, permission_level FROM user WHERE user_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -285,6 +289,35 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_USER_ID, $userId, $comparison);
+    }
+
+    /**
+     * Filter the query on the rcs_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRcsId('fooValue');   // WHERE rcs_id = 'fooValue'
+     * $query->filterByRcsId('%fooValue%'); // WHERE rcs_id LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $rcsId The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByRcsId($rcsId = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($rcsId)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $rcsId)) {
+                $rcsId = str_replace('*', '%', $rcsId);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_RCS_ID, $rcsId, $comparison);
     }
 
     /**
