@@ -11,7 +11,7 @@ $events = $q->orderByStartTime()->find();
   <title>RPI Wanna Hangout</title>
 </head>
 <body>
-	<?php include 'basic_includes/navbar.php' ?>
+	<?php include 'basic_includes/navbar.php' //create menu ?> 
 
 	<div class="panel panel-default">
 		<div class="panel-heading">Create a new event!</div>
@@ -20,7 +20,7 @@ $events = $q->orderByStartTime()->find();
 		</div>
 	</div>
 
-	<div class="panel panel-default">
+	<div id="footer"><div class="panel panel-default">
 		<div class="panel-heading">What's going on now</div>
 		<table class="table table-striped">
 			<thead>
@@ -40,7 +40,10 @@ $events = $q->orderByStartTime()->find();
 					<td><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></td>
 					<td><?php echo $event->getLocation(); ?></td>
 					<!-- <td><?php echo $event->getDescription(); ?></td> -->
-					<td><?php echo $event->getNeedCar(); ?></td>
+					<td><?php 
+                        if($event->getNeedCar()==1) {echo "YES";}
+                        else{echo "NO";}
+                        ?></td>
 					<td>
 						<a href="events/details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
 							<button type="button" class="btn btn-info btn-sm">
@@ -52,7 +55,8 @@ $events = $q->orderByStartTime()->find();
 				<?php } unset($event); ?>
 			</tbody>
 		</table>
-	</div>
+    </div>
+    </div>
 
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
