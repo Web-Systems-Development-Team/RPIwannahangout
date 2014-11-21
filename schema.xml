@@ -1,90 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="RPIWannaHangOut" defaultIdMethod="native" xmlns:smy="http://symfony.com/schema/dic/constraint-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
-	<table name="event" phpName="Event">
-		<column name="event_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-		<column name="title" type="varchar" size="50" required="true" />
-		<column name="start_time" type="timestamp" required="true" />
-		<column name="end_time" type="timestamp" required="true" />
-		<column name="location" type="varchar" size="255" required="true" />
-		<column name="description" type="longvarchar" size="1200" required="true" lazyLoad="true" />
-		<column name="need_car" type="boolean" defaultValue="false" required="true" />
-		<column name="creator_user_id" type="integer" required="true" />
-		<foreign-key foreignTable="user" phpName="Creator" refPhpName="Event">
-			<reference local="creator_user_id" foreign="user_id"/>
-		</foreign-key>
+  <table name="event" phpName="Event">
+    <column name="event_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="title" type="varchar" size="50" required="true" />
+    <column name="start_time" type="timestamp" required="true" />
+    <column name="end_time" type="timestamp" required="true" />
+    <column name="location" type="varchar" size="255" required="true" />
+    <column name="description" type="longvarchar" size="1200" required="true" lazyLoad="true" />
+    <column name="need_car" type="boolean" defaultValue="false" required="true" />
+    <column name="creator_user_id" type="integer" required="true" />
+    <foreign-key foreignTable="user" phpName="Creator" refPhpName="Event">
+      <reference local="creator_user_id" foreign="user_id"/>
+    </foreign-key>
 
-		<behavior name="validate">
-		    <parameter name="title_not_blank" value="{column: title, validator: NotBlank}" />
-		    <parameter name="title_length" value="{column: title, validator: Length, options: {max: 50}}" />
-		    <parameter name="start_time_not_blank" value="{column: start_time, validator: NotBlank}" />
-		    <parameter name="start_time_valid" value="{column: start_time, validator: SymfonyDateTime}" />
-		    <parameter name="end_time_not_blank" value="{column: end_time, validator: NotBlank}" />
-		    <parameter name="end_time_valid" value="{column: end_time, validator: SymfonyDateTime}" />
-		    <parameter name="location_not_blank" value="{column: location, validator: NotBlank}" />
-		    <parameter name="location_length" value="{column: location, validator: Length, options: {max: 255}}" />
-		    <parameter name="description_not_blank" value="{column: description, validator: NotBlank}" />
-		    <parameter name="description_length" value="{column: description, validator: Length, options: {max: 1200}}" />
-			<parameter name="creator_not_blank" value="{column: creator_user_id, validator: NotBlank}" />
-			<parameter name="need_car_exists" value="{column: need_car, validator: NotNull}" />
-  		</behavior>
-	</table>
+    <behavior name="validate">
+      <parameter name="title_not_blank" value="{column: title, validator: NotBlank}" />
+      <parameter name="title_length" value="{column: title, validator: Length, options: {max: 50}}" />
+      <parameter name="start_time_not_blank" value="{column: start_time, validator: NotBlank}" />
+      <parameter name="start_time_valid" value="{column: start_time, validator: SymfonyDateTime}" />
+      <parameter name="end_time_not_blank" value="{column: end_time, validator: NotBlank}" />
+      <parameter name="end_time_valid" value="{column: end_time, validator: SymfonyDateTime}" />
+      <parameter name="location_not_blank" value="{column: location, validator: NotBlank}" />
+      <parameter name="location_length" value="{column: location, validator: Length, options: {max: 255}}" />
+      <parameter name="description_not_blank" value="{column: description, validator: NotBlank}" />
+      <parameter name="description_length" value="{column: description, validator: Length, options: {max: 1200}}" />
+      <parameter name="creator_not_blank" value="{column: creator_user_id, validator: NotBlank}" />
+      <parameter name="need_car_exists" value="{column: need_car, validator: NotNull}" />
+    </behavior>
+  </table>
 
-	<table name="user" phpName="User">
-		<column name="user_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-		<column name="rcs_id" type="varchar" size="32" required="true" />
-		<column name="first_name" type="varchar" size="50" required="true" />
-		<column name="last_name" type="varchar" size="50" required="true" />
-		<column name="email" type="varchar" size="50" required="true" />
-		<column name="permission_level" type="integer" required="false" default="1000" />
-		<behavior name="validate">
-		  <parameter name="rcsid_not_blank" value="{column: rcs_id, validator:NotBlank}" />
-		  <parameter name="fname_not_blank" value="{column: first_name, validator:NotBlank}" />
-		  <parameter name="lname_not_blank" value="{column: last_name, validator:NotBlank}" />
-		  <parameter name="email_not_blank" value="{column: email, validator:NotBlank}" />
-		  
-		</behavior>
-	</table>
+  <table name="user" phpName="User">
+    <column name="user_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="rcs_id" type="varchar" size="32" required="true" />
+    <column name="first_name" type="varchar" size="50" required="true" />
+    <column name="last_name" type="varchar" size="50" required="true" />
+    <column name="email" type="varchar" size="50" required="true" />
+    <column name="permission_level" type="integer" required="false" default="1000" />
+    <behavior name="validate">
+      <parameter name="rcsid_not_blank" value="{column: rcs_id, validator:NotBlank}" />
+      <parameter name="fname_not_blank" value="{column: first_name, validator:NotBlank}" />
+      <parameter name="lname_not_blank" value="{column: last_name, validator:NotBlank}" />
+      <parameter name="email_not_blank" value="{column: email, validator:NotBlank}" />
+      
+    </behavior>
+  </table>
 
-	<table name="event_interest" phpName="EventInterest">
-		<column name="event_interest_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-		<column name="bringing_car" type="boolean" default="false" required="true" />
-		<column name="interested_user_id" type="integer" required="true" />
-		<foreign-key foreignTable="user" phpName="Interested" refPhpName="Interest">
-			<reference local="interested_user_id" foreign="user_id"/>
-		</foreign-key>
-		<column name="target_event_id" type="integer" required="true" />
-		<foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Interest">
-			<reference local="target_event_id" foreign="event_id"/>
-		</foreign-key>
+  <table name="event_interest" phpName="EventInterest">
+    <column name="event_interest_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="bringing_car" type="boolean" default="false" required="true" />
+    <column name="interested_user_id" type="integer" required="true" />
+    <foreign-key foreignTable="user" phpName="Interested" refPhpName="Interest">
+      <reference local="interested_user_id" foreign="user_id"/>
+    </foreign-key>
+    <column name="target_event_id" type="integer" required="true" />
+    <foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Interest">
+      <reference local="target_event_id" foreign="event_id"/>
+    </foreign-key>
 
-		<behavior name="validate">
-		    <parameter name="interested_user_id_exists" value="{column: interested_user_id, validator: NotNull}" />
-		    <parameter name="target_event_id_exists" value="{column: target_event_id, validator: NotNull}" />
-  		</behavior>
-	</table>
+    <behavior name="validate">
+      <parameter name="bringing_car_exists" value="{column: bringing_car, validator: NotNull}" />
+      <parameter name="interested_user_id_exists" value="{column: interested_user_id, validator: NotNull}" />
+      <parameter name="target_event_id_exists" value="{column: target_event_id, validator: NotNull}" />
+    </behavior>
+  </table>
 
-	<table name="comment" phpName="Comment">
-		<column name="comment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-		<column name="comment_text" type="longvarchar" size="1200" required="true" lazyLoad="true" />
-		<column name="creation_date" type="timestamp" required="false" />
-		<column name="edit_date" type="timestamp" required="false" />
-		<column name="author_user_id" type="integer" required="true" />
-		<foreign-key foreignTable="user" phpName="Author" refPhpName="Comment">
-			<reference local="author_user_id" foreign="user_id"/>
-		</foreign-key>
-		<column name="target_event_id" type="integer" required="true" />
-		<foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Comment">
-			<reference local="target_event_id" foreign="event_id"/>
-		</foreign-key>
+  <table name="comment" phpName="Comment">
+    <column name="comment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="comment_text" type="longvarchar" size="1200" required="true" lazyLoad="true" />
+    <column name="creation_date" type="timestamp" required="false" />
+    <column name="edit_date" type="timestamp" required="false" />
+    <column name="author_user_id" type="integer" required="true" />
+    <foreign-key foreignTable="user" phpName="Author" refPhpName="Comment">
+      <reference local="author_user_id" foreign="user_id"/>
+    </foreign-key>
+    <column name="target_event_id" type="integer" required="true" />
+    <foreign-key foreignTable="event" phpName="Target_Event" refPhpName="Comment">
+      <reference local="target_event_id" foreign="event_id"/>
+    </foreign-key>
 
-		<behavior name="validate">
-		    <parameter name="comment_text_not_blank" value="{column: comment_text, validator: NotBlank}" />
-		    <parameter name="comment_text_length" value="{column: comment_text, validator: Length, options: {max: 512}}" />
-		    <parameter name="creation_date_not_blank" value="{column: creation_date, validator: NotBlank}" />
-		    <parameter name="creation_date_valid" value="{column: creation_date, validator: SymfonyDateTime}" />
-		    <parameter name="edit_date_valid" value="{column: edit_date, validator: SymfonyDateTime}" />
-		    <parameter name="author_user_id_exists" value="{column: author_user_id, validator: NotNull}" />
-		    <parameter name="target_event_id_exists" value="{column: target_event_id, validator: NotNull}" />
-  		</behavior>
-	</table>
- </database>
+    <behavior name="validate">
+      <parameter name="comment_text_not_blank" value="{column: comment_text, validator: NotBlank}" />
+      <parameter name="comment_text_length" value="{column: comment_text, validator: Length, options: {max: 512}}" />
+      <parameter name="creation_date_not_blank" value="{column: creation_date, validator: NotBlank}" />
+      <parameter name="creation_date_valid" value="{column: creation_date, validator: SymfonyDateTime}" />
+      <parameter name="edit_date_valid" value="{column: edit_date, validator: SymfonyDateTime}" />
+      <parameter name="author_user_id_exists" value="{column: author_user_id, validator: NotNull}" />
+      <parameter name="target_event_id_exists" value="{column: target_event_id, validator: NotNull}" />
+    </behavior>
+  </table>
+</database>
