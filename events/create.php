@@ -40,7 +40,7 @@
 		}
 		// set up event object
 		$event = new Event();
-		$event->setTitle("this is a test");
+		$event->setTitle($title);
 		$event->setStartTime($start_time);
 		$event->setEndTime($end_time);
 		$event->setLocation($location);
