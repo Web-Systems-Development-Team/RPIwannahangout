@@ -1,5 +1,5 @@
 DATABASE_USER="root"
-DATABASE_PASSWORD=""
+DATABASE_PASSWORD="powerthrill123"
 
 # this sets up the database and database user
 mysql --user=$DATABASE_USER --password=$DATABASE_PASSWORD < setup_db_and_user.sql
