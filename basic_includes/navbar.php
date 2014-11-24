@@ -1,3 +1,16 @@
+<?php
+  
+  session_start();
+
+  if (isset($_SESSION['uid'])) {
+    //get user from uid
+    $q = new UserQuery();
+    $user = $q->findPk($_SESSION['uid']);
+  }
+  
+
+?>
+
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -17,7 +30,13 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Link</a></li>
         <li><a href="#">Link</a></li>
-	<li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
+
+        
+        <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
+        <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
+        <?php } else { ?>
+	      <li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
+        <?php } ?>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms n' Fun <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -30,6 +49,9 @@
             <li><a href="#">One more separated link</a></li>
           </ul>
         </li>
+        <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
+        <li><a>Welcome, <?php echo $user->getFirstName(); ?></a></li>
+        <?php } ?>
       </ul>
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
