@@ -165,7 +165,7 @@ class EventInterestTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'validate' => array('interested_user_id_exists' => array ('column' => 'interested_user_id','validator' => 'NotNull',), 'target_event_id_exists' => array ('column' => 'target_event_id','validator' => 'NotNull',), ),
+            'validate' => array('bringing_car_exists' => array ('column' => 'bringing_car','validator' => 'NotNull',), 'interested_user_id_exists' => array ('column' => 'interested_user_id','validator' => 'NotNull',), 'target_event_id_exists' => array ('column' => 'target_event_id','validator' => 'NotNull',), ),
         );
     } // getBehaviors()
 

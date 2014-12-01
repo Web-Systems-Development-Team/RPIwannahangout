@@ -1390,6 +1390,7 @@ abstract class EventInterest implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        $metadata->addPropertyConstraint('bringing_car', new NotNull());
         $metadata->addPropertyConstraint('interested_user_id', new NotNull());
         $metadata->addPropertyConstraint('target_event_id', new NotNull());
     }
