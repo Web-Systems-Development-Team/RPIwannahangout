@@ -75,22 +75,23 @@
 		<div class="list-group" id ="comment_bin">
 		</div>
 	</div>
-
-    <div class="panel panel-default">
-		<div class="panel-heading">Add Comment</div>
-		<div class="panel-body" >
-			<form role="form" id="comment_creation_form" action="../comments/create_ajax.php" method="post" class="comment-form">
-				<input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
-				<input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo 1; ?>">
-				<input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
-				<div class="form-group">
-					<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
-				</div>
-				<button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
-			</form>
-		</div>
+    <!-- Only show Add Comment when logged in -->
+	<?php if(isset($_SESSION['uid'])) { ?>
+	<div class="panel panel-default">
+	  <div class="panel-heading">Add Comment</div>
+	  <div class="panel-body" >
+	    <form role="form" id="comment_creation_form" action="../comments/create_comment_ajax.php" method="post" class="comment-form">
+	      <input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
+	      <input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo $_SESSION['uid']; ?>">
+	      <input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
+	      <div class="form-group">
+		<label for="comment_text">Comment Text</label>
+		<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
+	      </div>
+	      <button type="submit" name="comment" value="comment" class="btn btn-default">Submit</button>
+	    </form>
+	  </div>
 	</div>
-    
     <script>
         var geocoder;
         var map;
@@ -125,23 +126,6 @@
       <input type="button" value="Get Map" onclick="codeAddress()">
     </div>
     <div id="map-canvas"></div>
-	<!-- Only show Add Comment when logged in -->
-	<?php if(isset($_SESSION['uid'])) { ?>
-	<div class="panel panel-default">
-	  <div class="panel-heading">Add Comment</div>
-	  <div class="panel-body" >
-	    <form role="form" id="comment_creation_form" action="../comments/create_comment_ajax.php" method="post" class="comment-form">
-	      <input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
-	      <input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo $_SESSION['uid']; ?>">
-	      <input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
-	      <div class="form-group">
-		<label for="comment_text">Comment Text</label>
-		<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
-	      </div>
-	      <button type="submit" name="comment" value="comment" class="btn btn-default">Submit</button>
-	    </form>
-	  </div>
-	</div>
 	<?php } ?>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
