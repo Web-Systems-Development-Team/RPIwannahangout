@@ -2,6 +2,11 @@
 
 	require_once '../database_access.php';
 
+	//use session on this page
+	if (!isset($_SESSION)) {
+    	session_start();
+  	}
+
 	if(isset($_GET["event_id"])) {
 		$event_id = $_GET["event_id"];
 	} else {
@@ -37,16 +42,17 @@
 			<h3>Start Time:</h3><p><?php echo $event->getStartTime()->format('Y-m-d H:i');; ?></p>
 			<h3>End Time:</h3><p><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></p>
 			<h3>Location:</h3><p><?php echo $event->getLocation(); ?></p>
-			<h3>Requires Car:</h3><p><?php 
-                        if($event->getNeedCar()==1) {echo "Yes";}
-                        else{echo "No";}
-                        ?></p>
+			<!-- Print "Requires Car" only if the event actually requires a car. -->
+			<?php if($event->getNeedCar()) { ?><h3>Requires Car!</h3><?php } ?>
 			<h3>Description:</h3><p><?php echo $event->getDescription(); ?></p>
-			<form class="interested_form" action="../interest/create_ajax.php" method="post">
-				<input type="hidden" name="interested_user_id" value="<?php echo 1; ?>">
+			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
+			<?php if(isset($_SESSION['uid'])) { ?>
+			<form class="interested_form" action="../interest/create_interest_ajax.php" method="post">
+				<input type="hidden" name="interested_user_id" value="<?php echo $_SESSION['uid']; ?>">
 				<input type="hidden" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
-				<button class="btn btn-primary" type="submit" id="add_interest_button">I'm Interested!</button>
+				<button class="btn btn-primary" type="submit" name="interest" value="interest" id="add_interest_button">I'm Interested!</button>
 			</form>
+			<?php } ?>
 		</div>
 	</div>
 
@@ -119,6 +125,25 @@
       <input type="button" value="Get Map" onclick="codeAddress()">
     </div>
     <div id="map-canvas"></div>
+	<!-- Only show Add Comment when logged in -->
+	<?php if(isset($_SESSION['uid'])) { ?>
+	<div class="panel panel-default">
+	  <div class="panel-heading">Add Comment</div>
+	  <div class="panel-body" >
+	    <form role="form" id="comment_creation_form" action="../comments/create_comment_ajax.php" method="post" class="comment-form">
+	      <input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
+	      <input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo $_SESSION['uid']; ?>">
+	      <input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
+	      <div class="form-group">
+		<label for="comment_text">Comment Text</label>
+		<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
+	      </div>
+	      <button type="submit" name="comment" value="comment" class="btn btn-default">Submit</button>
+	    </form>
+	  </div>
+	</div>
+	<?php } ?>
+
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript"
@@ -130,7 +155,28 @@
 		function add_comment(comment) {
             //<div class="list-group">
             var d = new Date();
-			var comment_box = $("<div class= list-group-item>"+ comment.authorName + "<div class='date'> on " + d.toDateString()+  "</div><span class='badge'>"+ comment.CommentText +"</span></div>");
+			var comment_box = $("<div class= list-group-item>"+ comment.authorName + "<div class='date'> on " + d.toDateString()+  "</div><span class='badge'>"+ comment.CommentText +"</span></div>")
+
+			//delete button
+			if (comment.authorUserId == <?php $_SESSION['uid'] ?>) {
+				var delete_form = $("<form/>", {
+					'id' : 'delete_form',
+					'class' : 'delete-form',
+					'action' : '../comments/delete.php',
+					'method' : 'post'
+				});
+
+				delete_form.append($("<button/>", {
+					'type' : 'submit',
+					'name' : 'delete',
+					'value' : 'delete',
+					'id' : 'delete',
+					'class' : 'btn btn-default',
+					'text' : 'Delete Comment'
+				}));
+
+				comment_box.append(delete_form);
+			}
 			$("#comment_bin").append(comment_box);
 		}
         
@@ -146,7 +192,7 @@
 
 		$(function(){
 			// get a json of the comments and add them to the page
-			$.get("../comments/get_list_json.php",
+			$.get("../comments/get_comment_json.php",
 				{ event_id:<?php echo $event->getEventId(); ?>},
 				function(data, status) {
 					var comments = $.parseJSON(data).Comments;
@@ -162,7 +208,7 @@
 				var ary = $(form).serializeArray();
 
 				$.ajax({
-					url: "../comments/create_ajax.php",
+					url: "../comments/create_comment_ajax.php",
 					data: ary,
 					type: "POST",
 					dataType:"JSON",
@@ -179,7 +225,7 @@
 				});
 			});
 			// display interests
-			$.get("../interest/get_ajax.php",
+			$.get("../interest/get_interest_ajax.php",
 				{ event_id:<?php echo $event->getEventId(); ?>},
 				function(data, status) {
 					var eventInterests = $.parseJSON(data).EventInterests;
@@ -189,13 +235,14 @@
 			});
 			// set up the I'm interested submit button action
 			$(".interested_form").submit(function(event) {
+
 				event.preventDefault();
 				// check stuff is valid here
 				var form = event.currentTarget;
 				var ary = $(form).serializeArray();
 				
 				$.ajax({
-					url: "../interest/create_ajax.php",
+					url: "../interest/create_interest_ajax.php",
 					data: ary,
 					type: "POST",
 					dataType:"JSON",

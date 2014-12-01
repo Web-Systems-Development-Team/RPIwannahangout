@@ -1,6 +1,9 @@
 <?php
   
-  session_start();
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+  
 
   if (isset($_SESSION['uid'])) {
     //get user from uid
@@ -28,11 +31,9 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?> 
-        <li><a>Welcome, <?php echo $user->getFirstName(); ?></a></li>
-        <?php } ?>
-        <li><a href="/RPIWannaHangOut/events/create.php">Create an Event</a></li>
-        <li><a href="/RPIWannaHangOut/events/list.php">Find an Event</a></li>
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="/RPIWannaHangOut/about.php">About</a></li>
+
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
         <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
         <?php } else { ?>
