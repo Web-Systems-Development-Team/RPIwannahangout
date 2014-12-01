@@ -17,7 +17,7 @@
     <p>Easily find and share events occuring on or off campus. Connect with your classmates.</p>
         <p>Live. Learn. Experience.</p>
     <div class="btn-group" role="group" aria-label="...">
-        <a class="btn btn-info" type="button" href="#">Learn More</a>
+        <a class="btn btn-info" type="button" href="explore.php">Learn More</a>
         <a class="btn btn-info" type="button" href="events/create.php">Create an Event</a>
     </div>
     </div>

@@ -39,3 +39,30 @@ html, body, #map-canvas {
     color:#777;
     font-size: .9em;
 }
+.explore_info{
+    display:inline;
+}
+.block{
+    height: 10em;
+    color: white;
+}
+#step1{
+    background-color: #428bca;
+    font-size: 5em;
+    padding-left: 1em;
+}
+#step2{
+    background-color: #5cb85c;
+    font-size: 5em;
+    padding-left: 1em;
+}
+#step3{
+    background-color:  #5bc0de;
+    font-size: 5em;
+    padding-left: 1em;
+}
+#step4{
+    background-color: #f0ad4e;
+    font-size: 5em;
+    padding-left: 1em;
+}
