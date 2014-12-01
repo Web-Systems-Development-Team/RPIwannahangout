@@ -32,7 +32,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
+        <li><a href="/RPIWannaHangOut/about.php">About</a></li>
 
         
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
