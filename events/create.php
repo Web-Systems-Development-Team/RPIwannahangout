@@ -90,7 +90,6 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     </head>
     <body>
 <?php include '../basic_includes/navbar.php' ?>
-<?php include '../basic_includes/failurebox.php' ?>
 
 	<div class="panel panel-default">
     <div class="panel-heading">Event Creation Form</div>

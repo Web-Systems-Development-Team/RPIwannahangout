@@ -12,15 +12,17 @@
 </head>
 <body>
 	<?php include 'basic_includes/navbar.php' //create menu ?> 
+    <div class="jumbotron">
+    <h1>Let's Hangout!</h1>
+    <p>Easily find and share events occuring on or off campus. Connect with your classmates.</p>
+        <p>Live. Learn. Experience.</p>
+    <div class="btn-group" role="group" aria-label="...">
+        <a class="btn btn-info" type="button" href="#">Learn More</a>
+        <a class="btn btn-info" type="button" href="events/create.php">Create an Event</a>
+    </div>
+    </div>
 
-	<div class="panel panel-default">
-		<div class="panel-heading">Create a new event!</div>
-		<div class="panel-body">
-			<a href="events/create.php"><button class="btn btn-primary btn-lg">New Event!</button></a>
-		</div>
-	</div>
-
-	<div id="footer"><div class="panel panel-default">
+	<div id="side-bar"><div class="panel panel-default">
 		<div class="panel-heading">What's going on now</div>
 		<table class="table table-striped">
 			<thead>
@@ -57,10 +59,13 @@
 		</table>
     </div>
     </div>
-
+    <div id="footer">
+        <span>Contact Us: RPIhangout@gmail.com </span>
+    </div>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/easyticker/jquery.easy-ticker.js"></script>
 	<!-- <script src="assets/bootstrap/js/bootstrap.min.js"></script> -->
 </body>
 </html>

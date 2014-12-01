@@ -13,10 +13,8 @@
 
 	$interests = EventInterestQuery::create()
 		->find();
-
-
-
 ?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -39,7 +37,10 @@
 			<h3>Start Time:</h3><p><?php echo $event->getStartTime()->format('Y-m-d H:i');; ?></p>
 			<h3>End Time:</h3><p><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></p>
 			<h3>Location:</h3><p><?php echo $event->getLocation(); ?></p>
-			<h3>Requires Car:</h3><p><?php echo $event->getNeedCar(); ?></p>
+			<h3>Requires Car:</h3><p><?php 
+                        if($event->getNeedCar()==1) {echo "Yes";}
+                        else{echo "No";}
+                        ?></p>
 			<h3>Description:</h3><p><?php echo $event->getDescription(); ?></p>
 			<form class="interested_form" action="../interest/create_ajax.php" method="post">
 				<input type="hidden" name="interested_user_id" value="<?php echo 1; ?>">
@@ -65,7 +66,7 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading">Comments</div>
-		<div class="panel-body" id="comment_bin">
+		<div class="list-group" id ="comment_bin">
 		</div>
 	</div>
 
@@ -77,30 +78,62 @@
 				<input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo 1; ?>">
 				<input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
 				<div class="form-group">
-					<label for="comment_text">Comment Text</label>
 					<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
 				</div>
 				<button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
 			</form>
 		</div>
 	</div>
+    
+    <script>
+        var geocoder;
+        var map;
+        function initialize() {
+          geocoder = new google.maps.Geocoder();
+          var latlng = new google.maps.LatLng(-34.397, 150.644);
+          var mapOptions = {
+            zoom: 8,
+            center: latlng
+          }
+          map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        }
 
+        function codeAddress() {
+          var address = $event->getLocation();
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              map.setCenter(results[0].geometry.location);
+              var marker = new google.maps.Marker({
+                  map: map,
+                  position: results[0].geometry.location
+              });
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <div id="panel">
+      <input type="button" value="Get Map" onclick="codeAddress()">
+    </div>
+    <div id="map-canvas"></div>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASdHSlIDuGvVy8w55Oy5qreCQzZfNoj10">
+    </script>
 	<script>
+        
+        //add event comment
 		function add_comment(comment) {
-			var comment_box = $("<div/>", {'class':'panel panel-default'});
-			comment_box.append($("<div/>", {
-				'class':'panel-heading',
-				'text':comment.authorName
-			}));
-			comment_box.append($("<div/>", {
-				'class':'panel-body',
-				'text':comment.CommentText
-			}));
+            //<div class="list-group">
+            var d = new Date();
+			var comment_box = $("<div class= list-group-item>"+ comment.authorName + "<div class='date'> on " + d.toDateString()+  "</div><span class='badge'>"+ comment.CommentText +"</span></div>");
 			$("#comment_bin").append(comment_box);
 		}
-
+        
 		function add_interest(interest) {
 			var row = $("<tr/>").append($("<td/>", {
 				'text':interest.authorName
@@ -145,7 +178,6 @@
 				    },
 				});
 			});
-
 			// display interests
 			$.get("../interest/get_ajax.php",
 				{ event_id:<?php echo $event->getEventId(); ?>},
@@ -155,7 +187,6 @@
 						add_interest(eventInterests[i]);
 					}
 			});
-
 			// set up the I'm interested submit button action
 			$(".interested_form").submit(function(event) {
 				event.preventDefault();
@@ -182,5 +213,9 @@
 			});
 
 		}); // end of did load method
-	</script>
+    </script>
 </body>
+
+</html>
+
+

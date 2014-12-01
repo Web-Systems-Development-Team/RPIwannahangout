@@ -1,5 +1,5 @@
 .panel-default {
-	width: 600px;
+	width: 700px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -10,6 +10,32 @@
 }
 #footer {
     position: absolute;
-    bottom: 0;
     width: 100%;
+    text-align: center;
+}
+#side-bar{
+    
+}
+html, body, #map-canvas {
+    height: 100%;
+    margin: 0px;
+    padding: 0px
+}
+#panel {
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+}
+.btn.btn-info{
+    margin-right: 10px;
+}
+.badge{
+    background-color:#428bca;
+    height: 2em;
+    padding-top: .5em;
+}
+.date{
+    display:inline;
+    color:#777;
+    font-size: .9em;
 }

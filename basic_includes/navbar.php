@@ -28,29 +28,15 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-
-        
+        <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?> 
+        <li><a>Welcome, <?php echo $user->getFirstName(); ?></a></li>
+        <?php } ?>
+        <li><a href="/RPIWannaHangOut/events/create.php">Create an Event</a></li>
+        <li><a href="/RPIWannaHangOut/events/list.php">Find an Event</a></li>
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
         <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
         <?php } else { ?>
 	      <li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
-        <?php } ?>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms n' Fun <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="/RPIWannaHangOut/events/create.php">Event Input (real)</a></li>
-            <li><a href="/RPIWannaHangOut/events/list.php">Event List (real)</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Something else here</a></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-        <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
-        <li><a>Welcome, <?php echo $user->getFirstName(); ?></a></li>
         <?php } ?>
       </ul>
       <form class="navbar-form navbar-right" role="search">
