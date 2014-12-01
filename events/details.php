@@ -44,13 +44,17 @@
 			<h3>Start Time:</h3><p><?php echo $event->getStartTime()->format('Y-m-d H:i');; ?></p>
 			<h3>End Time:</h3><p><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></p>
 			<h3>Location:</h3><p><?php echo $event->getLocation(); ?></p>
-			<h3>Requires Car:</h3><p><?php echo $event->getNeedCar(); ?></p>
+			<!-- Print "Requires Car" only if the event actually requires a car. -->
+			<?php if($event->getNeedCar()) { ?><h3>Requires Car!</h3><?php } ?>
 			<h3>Description:</h3><p><?php echo $event->getDescription(); ?></p>
+			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
+			<?php if(isset($_SESSION['uid'])) { ?>
 			<form class="interested_form" action="../interest/create_interest_ajax.php" method="post">
-				<input type="hidden" name="interested_user_id" value="<?php echo 1; ?>">
+				<input type="hidden" name="interested_user_id" value="<?php echo $_SESSION['uid']; ?>">
 				<input type="hidden" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
 				<button class="btn btn-primary" type="submit" name="interest" value="interest" id="add_interest_button">I'm Interested!</button>
 			</form>
+			<?php } ?>
 		</div>
 	</div>
 
@@ -74,22 +78,25 @@
 		</div>
 	</div>
 
-    <div class="panel panel-default">
-		<div class="panel-heading">Add Comment</div>
-		<div class="panel-body" >
-			<form role="form" id="comment_creation_form" action="../comments/create_comment_ajax.php" method="post" class="comment-form">
-				<input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
-				<input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo 1; ?>">
-				<input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
-				<div class="form-group">
-					<label for="comment_text">Comment Text</label>
-					<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
-				</div>
-				<button type="submit" name="comment" value="comment" class="btn btn-default">Submit</button>
-			</form>
-		</div>
+	<!-- Only show Add Comment when logged in -->
+	<?php if(isset($_SESSION['uid'])) { ?>
+	<div class="panel panel-default">
+	  <div class="panel-heading">Add Comment</div>
+	  <div class="panel-body" >
+	    <form role="form" id="comment_creation_form" action="../comments/create_comment_ajax.php" method="post" class="comment-form">
+	      <input class="form-control" type="hidden" id="creation_date" name="creation_date" step="1" value="<?php $d = new DateTime(); echo $d->format('Y-m-d\TH:i:s'); ?>">
+	      <input class="form-control" type="hidden" id="author_user_id" name="author_user_id" value="<?php echo $_SESSION['uid']; ?>">
+	      <input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
+	      <div class="form-group">
+		<label for="comment_text">Comment Text</label>
+		<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
+	      </div>
+	      <button type="submit" name="comment" value="comment" class="btn btn-default">Submit</button>
+	    </form>
+	  </div>
 	</div>
-
+	<?php } ?>
+    
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script>
