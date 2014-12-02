@@ -59,7 +59,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Interested Users</div>
 		<table class="table table-striped">
-			<thead>
+			<thead id="interest_headers">
 				<th>Name</th>
 				<th>Bringing car?</th>
 			</thead>
@@ -141,8 +141,8 @@
             var d = new Date();
 			var comment_box = $("<div class= list-group-item>"+ comment.authorName + "<div class='date'> on " + d.toDateString()+  "</div><span class='badge'>"+ comment.CommentText +"</span></div>")
 
-			//delete button
-			if (comment.authorUserId == <?php $_SESSION['uid'] ?>) {
+			//delete button-temporarily commented out to allow comments to be added
+			/*if (comment.authorUserId == <//?php $_SESSION['uid'] ?>) {
 				var delete_form = $("<form/>", {
 					'id' : 'delete_form',
 					'class' : 'delete-form',
@@ -160,7 +160,7 @@
 				}));
 
 				comment_box.append(delete_form);
-			}
+			}*/
 			$("#comment_bin").append(comment_box);
 		}
         

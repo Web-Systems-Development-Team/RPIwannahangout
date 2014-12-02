@@ -1,5 +1,12 @@
-.panel-default {
-	width: 700px;
+.panel-default{
+    width:550px;
+    margin: auto;
+}
+#list_events{
+    width:900px;
+}
+#events {
+	width: 70em;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -7,14 +14,6 @@
 	width: 550px;
 	margin-left: auto;
 	margin-right: auto;
-}
-#footer {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-}
-#side-bar{
-    
 }
 html, body, #map-canvas {
     height: 100%;
@@ -34,35 +33,84 @@ html, body, #map-canvas {
     height: 2em;
     padding-top: .5em;
 }
+h3{
+    display: inline;
+}
 .date{
     display:inline;
     color:#777;
     font-size: .9em;
 }
-.explore_info{
-    display:inline;
+
+.newtable {width: 63em; 
+    height: 100%; 
+    margin: auto
 }
-.block{
-    height: 10em;
-    color: white;
+
+.row {
+    width: 100%; 
+    min-height: 1px; 
+    height: auto; 
+    margin: 0; 
+    padding-bottom: 1.2em;
+}
+
+.cell {
+    float: left; 
+    margin: 0; 
+    padding: 0; 
+    width: 9em; 
+    text-align: center;
+}
+
+.hcell {
+    float: left; 
+    margin: 0; 
+    padding: 0; 
+    width: 9em; 
+    text-align: center;
+    font-weight: bold;
+}
+
+<!-- Explore.php CSS -->
+.center{
+    margin: 0 auto; width: 400px;
 }
 #step1{
-    background-color: #428bca;
-    font-size: 5em;
-    padding-left: 1em;
+    text-align: center;
+    height: 50em;
+    padding-top: 1em;
+    background-color: #01569C;
+    font-size: 1.25em;
+    color: #F0F0F1;
 }
 #step2{
-    background-color: #5cb85c;
-    font-size: 5em;
-    padding-left: 1em;
+    text-align: center;
+    height: 10em;
+    padding-top: 4em;
+    background-color: #007ADF;
+    font-size: 1.25em;
+    color: #CECFD3;
 }
 #step3{
-    background-color:  #5bc0de;
-    font-size: 5em;
-    padding-left: 1em;
+    text-align: center;
+    height: 10em;
+    padding-top: 4em;
+    background-color: #239BFE;
+    font-size: 1.25em;
+    color: #696B70;
 }
 #step4{
-    background-color: #f0ad4e;
-    font-size: 5em;
-    padding-left: 1em;
+    text-align: center;
+    height: 10em;
+    padding-top: 4em;
+    background-color: #52AFFC;
+    font-size: 1.25em;
+    color: #303643;
 }
+video[poster]{
+    height:35em;
+    margin-top: 2em;
+    padding-bottom: 10em;
+}
+

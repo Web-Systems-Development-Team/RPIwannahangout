@@ -12,7 +12,7 @@
 </head>
 <body>
 	<?php include '../basic_includes/navbar.php' ?>
-	<div class="panel panel-default">
+	<div class="panel panel-default" id="list_events">
 		<table class="table table-striped">
 			<thead>
 				<th>Title</th>

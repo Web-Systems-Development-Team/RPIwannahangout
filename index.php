@@ -22,50 +22,64 @@
     </div>
     </div>
 
-	<div id="side-bar"><div class="panel panel-default">
+	<div class="panel panel-default" id="events">
 		<div class="panel-heading">What's going on now</div>
-		<table class="table table-striped">
-			<thead>
-				<th>Title</th>
-				<th>Start Time</th>
-				<th>End Time</th>
-				<th>Location</th>
-				<!-- <th>Description</th> -->
-				<th>Need Car</th>
-				<th>View</th>
-			</thead>
-			<tbody>
-				<?php foreach($events as &$event) { ?>
-				<tr>
-					<td><?php echo $event->getTitle(); ?></td>
-					<td><?php echo $event->getStartTime()->format('Y-m-d H:i'); ?></td>
-					<td><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></td>
-					<td><?php echo $event->getLocation(); ?></td>
-					<!-- <td><?php echo $event->getDescription(); ?></td> -->
-					<td><?php 
+		<div class="newtable">
+			<div class="row">
+				<div class="hcell">Title</div>
+				<div class="hcell">Start Time</div>
+				<div class="hcell">End Time</div>
+                <div class="hcell">Location</div>
+				<div class="hcell">Description</div>
+				<div class="hcell">Need Car</div>
+				<div class="hcell">View</div>
+			</div>
+            <div class="ticker1">
+            <div class="innerWrap">
+				<?php foreach($events as &$event) { ?> 
+                <div class="row">
+				<div class="list"><div class="cell"><?php echo $event->getTitle(); ?></div>
+				<div class="cell"><?php echo $event->getStartTime()->format('Y-m-d H:i'); ?></div>
+				<div class="cell"><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></div>
+				<div class="cell"><?php echo $event->getLocation(); ?></div>
+				<div class="cell"><?php echo $event->getDescription(); ?></div>
+				<div class="cell"><?php 
                         if($event->getNeedCar()==1) {echo "YES";}
                         else{echo "NO";}
-                        ?></td>
-					<td>
-						<a href="events/details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
+                    ?></div>
+					
+				<div class="cell"><a href="events/details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
 							<button type="button" class="btn btn-info btn-sm">
 							  View
 							</button>
-						</a>
-					</td>
-				</tr>
+                            </a></div>
+                </div>
+                </div>
 				<?php } unset($event); ?>
-			</tbody>
-		</table>
+        </div>
+        </div>
     </div>
-    </div>
-    <div id="footer">
-        <span>Contact Us: RPIhangout@gmail.com </span>
-    </div>
-
+    
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="/easyticker/jquery.easy-ticker.js"></script>
-	<!-- <script src="assets/bootstrap/js/bootstrap.min.js"></script> -->
+    <script src="/RPIwannahangout/easyticker/jquery.easy-ticker.js"></script>
+    <script> //apply easyTicker function on "what's going on now"
+        $('.ticker1').easyTicker({
+	       direction: 'up',
+	       easing: 'swing',
+	       speed: 'slow',
+	       interval: 2000,
+	       height: 'auto',
+	       visible: 3, //only show three events at a time
+	       mousePause: 1,
+	       controls: {
+		      up: '',
+		      down: '',
+		      toggle: '',
+		      playText: 'Play',
+		      stopText: 'Stop'
+	       }
+        });
+    </script>
 </body>
 </html>
