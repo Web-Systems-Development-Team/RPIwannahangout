@@ -56,7 +56,7 @@ h3{
 
 .newtable {
     width: 63em; 
-    height:20em; <!--arbitrary height...need to find a way to calculate the tallest the table will every need to be instead of constantly resizing -->
+    height:18em;
     margin: auto;
 }
 
@@ -81,6 +81,8 @@ h3{
     float: left; 
     margin: 0; 
     padding: 0; 
+    height:4em;
+    overflow: hidden;
     width: 9em; 
     text-align: center;
 }
@@ -100,9 +102,9 @@ h3{
 }
 #step1{
     text-align: center;
-    height: 50em;
+    height: 30em;
     padding-top: 1em;
-    background-color: #01569C;
+    background-color: #1993B6;
     font-size: 1.25em;
     color: #F0F0F1;
 }
@@ -110,7 +112,7 @@ h3{
     text-align: center;
     height: 10em;
     padding-top: 4em;
-    background-color: #007ADF;
+    background-color: #39ACCD;
     font-size: 1.25em;
     color: #CECFD3;
 }
@@ -118,7 +120,7 @@ h3{
     text-align: center;
     height: 10em;
     padding-top: 4em;
-    background-color: #239BFE;
+    background-color: #85D5EC;
     font-size: 1.25em;
     color: #696B70;
 }
@@ -126,7 +128,7 @@ h3{
     text-align: center;
     height: 10em;
     padding-top: 4em;
-    background-color: #52AFFC;
+    background-color: #BAEAF8;
     font-size: 1.25em;
     color: #303643;
 }

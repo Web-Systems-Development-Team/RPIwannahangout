@@ -12,12 +12,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">About Us</div>
     <div class="panel-body">
-      <p>
-        Created by Web Systems Development Team 2.
-      </p>
-      <p>
-        Max Llewellyn, Peter Matla, Mary Powathil, Aidan Pelisson, Cameroon Root, and Grace Wonaphotimuke
-      </p>
+      This page tells about us, the Web Systems Development Team (Group 2).
     </div>
   </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
