@@ -130,5 +130,8 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
 	<!-- <script src="assets/bootstrap/js/bootstrap.min.js"></script> -->
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    $("#createLink").addClass("active");
+    </script>
     </body>
     </html>
