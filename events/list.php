@@ -11,8 +11,8 @@
 	<title>Event List</title>
 </head>
 <body>
+    <div id="list_page">
 	<?php include '../basic_includes/navbar.php' ?>
-
 	<div class="panel panel-default" id="list_events">
 		<table class="table table-striped">
 			<thead>
@@ -67,3 +67,4 @@
     </script>
     </div>
 </body>
+</html>

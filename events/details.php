@@ -76,7 +76,7 @@
 		</table>
 		</div>
 	</div>
-	<div class="panel panel-default">
+	<div class="panel panel-default" id="comments">
 		<div class="panel-heading">Comments</div>
 		<div class="list-group" id ="comment_bin">
 		</div>
@@ -112,7 +112,7 @@
 		function add_comment(comment) {
             //<div class="list-group">
 		    var d = new Date();
-		    var comment_box = $("<div class= list-group-item>"+ comment.authorName + "<div class='date'> on " + d.toDateString()+  "</div><span class='badge'>"+ comment.CommentText +"</span></div>")
+		    var comment_box = $("<div class= list-group-item>"+ comment.authorName + "<div class='date'> on " + d.toDateString()+  "<p class='comment'>\""+ comment.CommentText +"\"</p></div>")
 		    
 		    //delete button
 		    if (comment.authorUserId == <?php echo $_SESSION['uid']; ?>) {
