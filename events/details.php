@@ -43,7 +43,7 @@
 			<h3>End Time:</h3><p><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></p>
 			<h3>Location:</h3><p><?php echo $event->getLocation(); ?></p>
 			<!-- Print "Requires Car" only if the event actually requires a car. -->
-			<?php if($event->getNeedCar()) { ?><h3>Requires Car!</h3><?php } ?>
+            <?php if($event->getNeedCar()) { ?><h3><p>Requires Car!</p></h3><?php } ?>
 			<h3>Description:</h3><p><?php echo $event->getDescription(); ?></p>
 			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
 			<?php if(isset($_SESSION['uid'])) { ?>
@@ -53,6 +53,17 @@
 				<button class="btn btn-primary" type="submit" name="interest" value="interest" id="add_interest_button">I''m Interested!</button>
 			</form>
 			<?php } ?>
+            <div id="calendar-wrapper"><a href="http://example.com/link-to-your-event" title="Add to Calendar" class="addthisevent"> <!--add event to calendar -->
+                Add to Calendar
+                <span class="_start"><?php echo $event->getStartTime()->format('d-m-Y H:i:s'); ?></span>
+                <span class="_end"><?php echo $event->getEndTime()->format('d-m-Y H:i:s'); ?></span>
+                <span class="_zonecode">15</span>
+                <span class="_summary"><?php echo $event->getTitle(); ?></span>
+                <span class="_description"><?php echo $event->getDescription(); ?> </span>
+                <span class="_location"><?php echo $event->getLocation(); ?></span>
+                <span class="_date_format">DD/MM/YYYY</span>
+                <span class="_alarm_reminder">15</span>
+        </a></div>
 		</div>
 	</div>
 
@@ -69,7 +80,6 @@
 		</table>
 		</div>
 	</div>
-
 	<div class="panel panel-default">
 		<div class="panel-heading">Comments</div>
 		<div class="list-group" id ="comment_bin">
@@ -92,46 +102,11 @@
 	    </form>
 	  </div>
 	</div>
-         <!--
-    <script type="text/javascript">
-         var geocoder;
-var map;
-function initialize() {
-    geocoder = new google.maps.Geocoder();
-    var latlng = new google.maps.LatLng(-34.397, 150.644);
-    var mapOptions = {
-        zoom: 8,
-        center: latlng
-    }
-    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-}
-
-function codeAddress() {
-    var address = <?php $event->getLocation(); ?>
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
-            });
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-    -->
-    <div id="panel">
-      <input type="button" value="Get Map" onclick="codeAddress()">
-    </div>
-    <div id="map-canvas"></div>
 	<?php } ?>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://addthisevent.com/libs/1.5.8/ate.min.js"></script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASdHSlIDuGvVy8w55Oy5qreCQzZfNoj10">
     </script>
@@ -166,91 +141,91 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		    $("#comment_bin").append(comment_box);
 		}
 
-function add_interest(interest) {
-    var row = $("<tr/>").append($("<td/>", {
-	'text':interest.authorName
-    }));
-    row.append($("<tr/>", {
-	'text':(interest.BringingCar ? "yes" : "no")
-    }));
-    $(".interest-table-body").append(row);
-}
+        function add_interest(interest) {
+            var row = $("<tr/>").append($("<td/>", {
+            'text':interest.authorName
+            }));
+            row.append($("<tr/>", {
+            'text':(interest.BringingCar ? "yes" : "no")
+            }));
+            $(".interest-table-body").append(row);
+        }
 
-// get a json of the comments and add them to the page
-$.get("../comments/get_comment_json.php",
-      { event_id:<?php echo $event->getEventId(); ?>},
-      function(data, status) {
-	  var comments = $.parseJSON(data).Comments;
-	  for(var i=0; i<comments.length; ++i) {
-	      add_comment(comments[i]);
-	  }
-      });
-// set up the comment form action
-$(".comment-form").submit(function(event) {
-    event.preventDefault();
-    // check stuff is valid here
-    var form = event.currentTarget;
-    var ary = $(form).serializeArray();
-    
-    $.ajax({
-	url: "../comments/create_comment_ajax.php",
-	data: ary,
-	type: "POST",
-	dataType:"JSON",
-	success: function( json ) {
-	    //No checking here because you CAN double-post comments if you want
-	    add_comment(json);
-	},
-	// if the request fails
-	error: function( xhr, status, errorThrown ) {
-	    alert( "Sorry, there was a problem posting your comment! Please try again in a few moments." );
-	    console.log( "Error: " + errorThrown );
-	    console.log( "Status: " + status );
-	    console.dir( xhr );
-	},
-    });
-});
-// display interests
-$.get("../interest/get_interest_ajax.php",
-      { event_id:<?php echo $event->getEventId(); ?>},
-      function(data, status) {
-	  var eventInterests = $.parseJSON(data).EventInterests;
-	  for(var i=0; i<eventInterests.length; ++i) {
-	      add_interest(eventInterests[i]);
-	  }
-      });
+        // get a json of the comments and add them to the page
+        $.get("../comments/get_comment_json.php",
+              { event_id:<?php echo $event->getEventId(); ?>},
+              function(data, status) {
+              var comments = $.parseJSON(data).Comments;
+              for(var i=0; i<comments.length; ++i) {
+                  add_comment(comments[i]);
+              }
+              });
+        // set up the comment form action
+        $(".comment-form").submit(function(event) {
+            event.preventDefault();
+            // check stuff is valid here
+            var form = event.currentTarget;
+            var ary = $(form).serializeArray();
 
-// set up the I'm interested submit button action
-$(".interested_form").submit(function(event) {
-    
-    event.preventDefault();
-    // check stuff is valid here
-    var form = event.currentTarget;
-    var ary = $(form).serializeArray();
-    
-    $.ajax({
-	url: "../interest/create_interest_ajax.php",
-	data: ary,
-	type: "POST",
-	dataType:"json",
-	success: function( json ) {
-	    //if already in database, json returned will be { "extant":1 }
-	    //and no new entry in event_interest will be created
-	    //this is to stop event interests from accumulating
-	    if(!json.hasOwnProperty('extant')) {
-		add_interest(json);
-	    }
-	},
-	    // if the request fails
-	error: function( xhr, status, errorThrown ) {
-	    alert( "Sorry, there was a problem adding your interest! Please try again in a few moments." );
-		console.log( "Error: " + errorThrown );
-	    console.log( "Status: " + status );
-	    console.dir( xhr );
-	},
-    });
-});
-</script>
+            $.ajax({
+            url: "../comments/create_comment_ajax.php",
+            data: ary,
+            type: "POST",
+            dataType:"JSON",
+            success: function( json ) {
+                //No checking here because you CAN double-post comments if you want
+                add_comment(json);
+            },
+            // if the request fails
+            error: function( xhr, status, errorThrown ) {
+                alert( "Sorry, there was a problem posting your comment! Please try again in a few moments." );
+                console.log( "Error: " + errorThrown );
+                console.log( "Status: " + status );
+                console.dir( xhr );
+            },
+            });
+        });
+        // display interests
+        $.get("../interest/get_interest_ajax.php",
+              { event_id:<?php echo $event->getEventId(); ?>},
+              function(data, status) {
+              var eventInterests = $.parseJSON(data).EventInterests;
+              for(var i=0; i<eventInterests.length; ++i) {
+                  add_interest(eventInterests[i]);
+              }
+              });
+
+        // set up the I'm interested submit button action
+        $(".interested_form").submit(function(event) {
+
+            event.preventDefault();
+            // check stuff is valid here
+            var form = event.currentTarget;
+            var ary = $(form).serializeArray();
+
+            $.ajax({
+            url: "../interest/create_interest_ajax.php",
+            data: ary,
+            type: "POST",
+            dataType:"json",
+            success: function( json ) {
+                //if already in database, json returned will be { "extant":1 }
+                //and no new entry in event_interest will be created
+                //this is to stop event interests from accumulating
+                if(!json.hasOwnProperty('extant')) {
+                add_interest(json);
+                }
+            },
+                // if the request fails
+            error: function( xhr, status, errorThrown ) {
+                alert( "Sorry, there was a problem adding your interest! Please try again in a few moments." );
+                console.log( "Error: " + errorThrown );
+                console.log( "Status: " + status );
+                console.dir( xhr );
+            },
+            });
+        });
+    </script>
 </body>
 
 </html>

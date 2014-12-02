@@ -47,6 +47,15 @@ h3{
     margin: auto
 }
 
+#calendar-wrapper{
+    width: 12em;
+    float: right;
+    display: inline;
+}
+#add_interest_button{
+    width: 10em;
+    float:left;
+}
 .row {
     width: 100%; 
     min-height: 1px; 
