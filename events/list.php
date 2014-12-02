@@ -11,26 +11,28 @@
 	<title>Event List</title>
 </head>
 <body>
-    <div id="listing">
 	<?php include '../basic_includes/navbar.php' ?>
+
 	<div class="panel panel-default" id="list_events">
 		<table class="table table-striped">
 			<thead>
-				<th>Title</th>
-				<th>Start Time</th>
-				<th>End Time</th>
-				<th>Location</th>
+				<th class="sort" data-sort="title">Title</th>
+				<th class="sort" data-sort="start_time">Start Time</th>
+				<th class="sort" data-sort="end_time">End Time</th>
+				<th class="sort" data-sort="location">Location</th>
 				<!-- <th>Description</th> -->
 				<th>Need Car</th>
-				<th>View</th>
+				<th colspan="2">
+		          <input type="text" class="search" placeholder="Search" />
+		        </th>
 			</thead>
-			<tbody>
+			<tbody class="list">
 				<?php foreach($events as &$event) { ?>
 				<tr>
-					<td><?php echo $event->getTitle(); ?></td>
-					<td><?php echo $event->getStartTime()->format('Y-m-d H:i'); ?></td>
-					<td><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></td>
-					<td><?php echo $event->getLocation(); ?></td>
+					<td class="title"><?php echo $event->getTitle(); ?></td>
+					<td class="start_time"><?php echo $event->getStartTime()->format('Y-m-d H:i'); ?></td>
+					<td class="end_time"><?php echo $event->getEndTime()->format('Y-m-d H:i'); ?></td>
+					<td class="location"><?php echo $event->getLocation(); ?></td>
 					<!-- <td><?php echo $event->getDescription(); ?></td> -->
 					<td><?php 
 		                        if($event->getNeedCar()==1) {echo "YES";}
@@ -48,6 +50,15 @@
 			</tbody>
 		</table>
 	</div>
+	<script src="http://listjs.com/no-cdn/list.js"></script>
+	<script type="text/javascript">
+		var options = {
+		  valueNames: [ 'title', 'start_time', 'end_time', 'location' ]
+		};
+
+		var userList = new List('list_events', options);
+
+	</script>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
