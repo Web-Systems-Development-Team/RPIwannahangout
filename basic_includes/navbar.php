@@ -37,6 +37,7 @@
         <li id="findLink"><a href="/RPIWannaHangOut/events/list.php">Find Event</a></li>
           <li id="aboutLink"><a href="/RPIWannaHangOut/about.php">About</a></li>
         <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
+        <li><a>Welcome, <?php echo $user->getFirstName(); ?></a></li>
         <?php } else { ?>
         <li id="findLink"><a href="/RPIWannaHangOut/events/list.php">Find Event</a></li>
         <li id="aboutLink"><a href="/RPIWannaHangOut/about.php">About</a></li>
