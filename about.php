@@ -13,7 +13,7 @@
     <div class="panel-heading">About Us</div>
     <div class="panel-body">
       Created by Web Systems Development Team 2:<br/>
-      Max LLewellyn, Aidan Pelisson, Mary Powathil, Peter Matla, Cameron Root, Grace Wonaphotimuke
+      Max Llewellyn, Aidan Pelisson, Mary Powathil, Peter Matla, Cameron Root, Grace Wonaphotimuke
     </div>
   </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
