@@ -14,7 +14,8 @@
 	}
 
 	$ei->join('EventInterest.Interested');
-	$ei->withColumn('Interested.FirstName', 'authorName');
+	$ei->withColumn('Interested.FirstName', 'authorFirstName');
+$ei->withColumn('Interested.LastName', 'authorLastName'); 
 	echo $ei->find()->toJson();
 
 ?>

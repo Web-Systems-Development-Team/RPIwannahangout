@@ -70,10 +70,6 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Interested Users</div>
 		<table class="table table-striped">
-			<thead id="interest_headers">
-				<th>Name</th>
-				<th>Bringing car?</th>
-			</thead>
 			<tbody class="interest-table-body">
 				<!-- This will be filled by AJAX -->
 			</tbody>
@@ -143,10 +139,7 @@
 
         function add_interest(interest) {
             var row = $("<tr/>").append($("<td/>", {
-            'text':interest.authorName
-            }));
-            row.append($("<tr/>", {
-            'text':(interest.BringingCar ? "yes" : "no")
+              'text':(interest.authorFirstName + " " + interest.authorLastName)
             }));
             $(".interest-table-body").append(row);
         }
