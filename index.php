@@ -14,7 +14,7 @@
 <body>
     <div id="index">
 	<?php include 'basic_includes/navbar.php' //create menu ?> 
-    <div class="jumbotron">
+    <div class="jumbotron jBack">
     <h1>Let's Hangout!</h1>
     <p>Easily find and share events occuring on or off campus. Connect with your classmates.</p>
         <p>Live. Learn. Experience.</p>

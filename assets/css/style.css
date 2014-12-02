@@ -8,6 +8,19 @@
     width:540px;
     margin: auto;
 }
+.jBack{
+  background-color: rgba(210,210,210, 0.4);
+  color: inherit;
+}
+h1{
+    opacity: 1;
+}
+p{
+    opacity: 1;
+}
+.glyphicon-sort{
+    color:#777;
+}
 #list_events{
     width:900px;
 }
