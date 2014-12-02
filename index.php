@@ -9,8 +9,10 @@
   <?php include_once 'basic_includes/head_includes.php' ?>
   <link rel="stylesheet" href="assets/css/style.css">
   <title>RPI Wanna Hangout</title>
+
 </head>
 <body>
+    <div id="index">
 	<?php include 'basic_includes/navbar.php' //create menu ?> 
     <div class="jumbotron">
     <h1>Let's Hangout!</h1>
@@ -59,7 +61,6 @@
         </div>
         </div>
     </div>
-    
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="/RPIwannahangout/easyticker/jquery.easy-ticker.js"></script>
@@ -81,5 +82,6 @@
 	       }
         });
     </script>
+    </div>
 </body>
 </html>

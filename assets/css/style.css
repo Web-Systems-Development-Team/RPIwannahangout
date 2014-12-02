@@ -1,12 +1,23 @@
+#index{
+    min-height: 100%; 
+    background-image: url("/RPIwannahangout/background-pics/home.JPG");
+    background-position: 0 -40px;
+    padding-bottom: 3em;
+}
 .panel-default{
-    width:550px;
+    width:540px;
     margin: auto;
 }
 #list_events{
     width:900px;
 }
+#create_event{
+    min-height: 100%; 
+    
+    padding-bottom: 3em;
+}
 #events {
-	width: 70em;
+	width: 64em;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -18,13 +29,14 @@
 html, body, #map-canvas {
     height: 100%;
     margin: 0px;
-    padding: 0px
+    padding: 0px;
 }
 #panel {
     background-color: #fff;
     padding: 5px;
     border: 1px solid #999;
 }
+
 .btn.btn-info{
     margin-right: 10px;
 }
@@ -42,9 +54,10 @@ h3{
     font-size: .9em;
 }
 
-.newtable {width: 63em; 
-    height: 100%; 
-    margin: auto
+.newtable {
+    width: 63em; 
+    height:20em; <!--arbitrary height...need to find a way to calculate the tallest the table will every need to be instead of constantly resizing -->
+    margin: auto;
 }
 
 #calendar-wrapper{

@@ -89,6 +89,7 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     <title>RPI Wanna Hangout</title>
     </head>
     <body>
+    <div id="create_event">
 <?php include '../basic_includes/navbar.php' ?>
 
 	<div class="panel panel-default">
@@ -133,5 +134,6 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     <script type="text/javascript">
     $("#createLink").addClass("active");
     </script>
+        </div>
     </body>
     </html>

@@ -11,6 +11,7 @@
 	<title>Event List</title>
 </head>
 <body>
+    <div id="listing">
 	<?php include '../basic_includes/navbar.php' ?>
 	<div class="panel panel-default" id="list_events">
 		<table class="table table-striped">
@@ -53,4 +54,5 @@
     <script type="text/javascript">
     $("#findLink").addClass("active");
     </script>
+    </div>
 </body>
