@@ -87,8 +87,8 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
 <?php include_once '../basic_includes/head_includes.php' ?>
 <link rel="stylesheet" href="../assets/css/style.css">
     <title>RPI Wanna Hangout</title>
-    </head>
-    <body>
+</head>
+<body>
 <?php include '../basic_includes/navbar.php' ?>
 
 	<div class="panel panel-default">
@@ -114,14 +114,14 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     <div class="checkbox">
     <label>
     <input type="checkbox" name="need_car" value="1" <?php if(isset($_POST['need_car']) && $_POST['need_car'] == 1) echo "checked"; ?> >Requires car
-</label>
-					
-</div>
-<div class="form-group">
-    <label for="description">Description</label>
-    <textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"><?php getData('description'); ?></textarea>
-</div>
-<button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
+    </label>
+    					
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" rows="3" name="description" placeholder="Description" form="event_creation_form"><?php getData('description'); ?></textarea>
+    </div>
+    <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
 	</div>
@@ -130,5 +130,6 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
 	<!-- <script src="assets/bootstrap/js/bootstrap.min.js"></script> -->
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
     </body>
     </html>

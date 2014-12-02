@@ -32,7 +32,7 @@
 	<?php if(isset($_GET["new"])) { ?>
 		<div class="alert alert-success alert-dismissible" role="alert">
 		  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-		  <strong>YAY!</strong> New Event created successfully, here it is!
+		  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <strong>YAY!</strong> New Event created successfully, here it is!
 		</div>
 	<?php } ?>
 

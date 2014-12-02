@@ -25,29 +25,30 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/RPIWannaHangOut/index.php">RPIWannaHangOut</a>
+      <a class="navbar-brand" href="/index.php">
+        <img alt="Brand" src="../logo-small.png"> RPIWannaHangOut</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="/RPIWannaHangOut/explore.php">Explore the Site</a></li>
+        <li><a href="/explore.php">Explore the Site</a></li>
 
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
-        <li><a href="/RPIWannaHangOut/events/create.php">Create an Event</a></li>
-        <li><a href="/RPIWannaHangOut/events/list.php">Find an Event</a></li>
-          <li><a href="/RPIWannaHangOut/about.php">About Us</a></li>
-        <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
+        <li><a href="/events/create.php">Create an Event</a></li>
+        <li><a href="/events/list.php">Find an Event</a></li>
+          <li><a href="/about.php">About Us</a></li>
+        <li><a href="/logout.php">Log Out</a></li>
         <?php } else { ?>
-          <li><a href="/RPIWannaHangOut/about.php">About Us</a></li>
-	      <li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
+          <li><a href="/about.php">About Us</a></li>
+	      <li><a href="/login.php">Log In</a></li>
         <?php } ?>
       </ul>
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
+        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Submit</button>
       </form>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
