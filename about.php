@@ -12,7 +12,8 @@
   <div class="panel panel-default">
     <div class="panel-heading">About Us</div>
     <div class="panel-body">
-      This page tells about us, the Web Systems Development Team (Group 2).
+      Created by Web Systems Development Team 2:<br/>
+      Max LLewellyn, Aidan Pelisson, Mary Powathil, Peter Matla, Cameron Root, Grace Wonaphotimuke
     </div>
   </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
