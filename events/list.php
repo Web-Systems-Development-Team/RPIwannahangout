@@ -11,15 +11,15 @@
 	<title>Event List</title>
 </head>
 <body>
+    <div id="list_page">
 	<?php include '../basic_includes/navbar.php' ?>
-
 	<div class="panel panel-default" id="list_events">
 		<table class="table table-striped">
 			<thead>
-				<th class="sort" data-sort="title">Title</th>
-				<th class="sort" data-sort="start_time">Start Time</th>
-				<th class="sort" data-sort="end_time">End Time</th>
-				<th class="sort" data-sort="location">Location</th>
+				<th class="sort" data-sort="title">Title <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort" data-sort="start_time">Start Time <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort" data-sort="end_time">End Time <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort" data-sort="location">Location <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
 				<!-- <th>Description</th> -->
 				<th>Need Car</th>
 				<th colspan="2">
@@ -67,3 +67,4 @@
     </script>
     </div>
 </body>
+</html>

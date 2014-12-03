@@ -1,19 +1,41 @@
 #index{
     min-height: 100%; 
-    background-image: url("/RPIwannahangout/background-pics/home.JPG");
-    background-position: 0 -40px;
+    background: url("/RPIwannahangout/background-pics/home.JPG")no-repeat center center fixed; 
+    background-size: cover;
+    background-position: 0 2px;
     padding-bottom: 3em;
 }
 .panel-default{
     width:540px;
     margin: auto;
 }
+.jBack{
+  background-color: rgba(210,210,210, 0.4);
+  color: inherit;
+}
+h1{
+    opacity: 1;
+}
+p{
+    opacity: 1;
+}
+.glyphicon-sort{
+    color:#777;
+}
 #list_events{
-    width:900px;
+    width: 900px;
+}
+#list_page{
+    min-height: 100%; 
+    background: url("/RPIwannahangout/background-pics/campus2.JPG")no-repeat center center fixed; 
+    background-size: cover;
+    background-position: 0 10px;
+    padding-bottom: 3em;
 }
 #create_event{
     min-height: 100%; 
-    
+    background: url("/RPIwannahangout/background-pics/campus1.JPG")no-repeat center center fixed; 
+    background-size: cover;
     padding-bottom: 3em;
 }
 #events {
@@ -40,10 +62,12 @@ html, body, #map-canvas {
 .btn.btn-info{
     margin-right: 10px;
 }
-.badge{
-    background-color:#428bca;
-    height: 2em;
-    padding-top: .5em;
+.comment{
+    color:#428bca;
+    margin-left: 10px;
+}
+#comments{
+    margin-top: 21px;
 }
 h3{
     display: inline;

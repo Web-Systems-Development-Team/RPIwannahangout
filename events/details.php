@@ -76,7 +76,7 @@
 		</table>
 		</div>
 	</div>
-	<div class="panel panel-default">
+	<div class="panel panel-default" id="comments">
 		<div class="panel-heading">Comments</div>
 		<div class="list-group" id ="comment_bin">
 		</div>
@@ -110,7 +110,6 @@
     
 //add event comment
 function add_comment(comment) {
-    var d = new Date();
     var comment_head = "<div class=comment-head>"+ comment.authorFirstName + " " + comment.authorLastName + "<div class='date'> on " + comment.CreationDate.date + "</div>";
     
     //delete button
