@@ -10,6 +10,7 @@
     margin: auto;
 }
 .jBack{
+  padding-left: 2em;
   background-color: rgba(210,210,210, 0.4);
   color: inherit;
 }
@@ -39,7 +40,7 @@ p{
     padding-bottom: 3em;
 }
 #events {
-	width: 64em;
+	width: 68em;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -78,7 +79,7 @@ h3{
 }
 
 .newtable {
-    width: 63em; 
+    width: 80em; 
     height:18em;
     margin: auto;
 }
@@ -113,12 +114,15 @@ h3{
 .hcell {
     float: left; 
     margin: 0; 
-    padding: 0; 
+    padding-top: .5em; 
     width: 9em; 
     text-align: center;
     font-weight: bold;
 }
-
+.bcell {
+    float: left; 
+    margin: 0;  
+}
 <!-- Explore.php CSS -->
 .center{
     margin: 0 auto; width: 400px;
