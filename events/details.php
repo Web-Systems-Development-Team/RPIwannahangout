@@ -57,12 +57,6 @@
                 <div class="col-md-4"><h4>Attendance:</h4></div>
                 <div class="col-md-8 event-detail"><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></div>
             </div>
-			<!--h4>Date:</h4><p><?php echo $event->getDate()->format('M-d');; ?></p>
-			<h4>Start Time:</h4><p><?php echo $event->getStartTime()->format('H:i');; ?></p>
-			<h4>End Time:</h4><p><?php echo $event->getEndTime()->format('H:i'); ?></p>
-			<h4>Location:</h4><p><?php echo $event->getLocation(); ?></p>
-			<h4>Description:</h4><p><?php echo $event->getDescription(); ?></p>
-			<h4>Attendance:</h4><p><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></p-->
 			
 			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
 			<?php if(isset($_SESSION['uid'])) { ?>
@@ -114,7 +108,7 @@
 	      <input class="form-control" type="hidden" id="target_event_id" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
 	      <div class="form-group">
 		<label for="comment_text">Comment Text</label>
-		<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form"></textarea>
+		<textarea class="form-control" rows="3" name="comment_text" placeholder="Comment Text" form="comment_creation_form" id="comment-detail"></textarea>
 	      </div>
 	      <button type="submit" name="comment" value="comment" class="btn btn-default">Submit</button>
 	    </form>
@@ -131,11 +125,11 @@
     
 //add event comment
 function add_comment(comment) {
-    var comment_head = "<div class=comment-head>"+ comment.authorFirstName + " " + comment.authorLastName + "<div class='date'> on " + comment.CreationDate.date + "</div>";
+    var comment_head = '<div class="comment-head highlight"">' + comment.authorFirstName + " " + comment.authorLastName + "<div class='date'> on " + comment.CreationDate.date + "</div>";
     
     //delete button
     if (comment.AuthorUserId == <?php echo $_SESSION['uid']; ?>) {
-	comment_head += "<span class=\"glyphicon glyphicon-remove\"></span>";
+	   comment_head += "<span class=\"glyphicon glyphicon-remove\"></span>";
     }
     comment_head += "</div>";
     $("#comment_bin").append("<div class=list-group-item commentid=" + comment.CommentId + ">" + comment_head + comment.CommentText +"</div></div>");
@@ -176,10 +170,12 @@ $(".comment-form").submit(function(event) {
         success: function( json ) {
             //No checking here because you CAN double-post comments if you want
             add_comment(json);
+            // reset value of comment textarea after posting
+            $("#comment-detail").val('');
         },
         // if the request fails
         error: function( xhr, status, errorThrown ) {
-            alert( "Sorry, there was a problem posting your comment! Please try again in a few moments." );
+            sweetAlert("Oops...", "Sorry, there was a problem posting your comment! Please try again in a few moments.", "error");
             console.log( "Error: " + errorThrown );
             console.log( "Status: " + status );
             console.dir( xhr );

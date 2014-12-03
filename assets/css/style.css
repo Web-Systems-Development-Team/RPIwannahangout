@@ -174,6 +174,7 @@ video[poster]{
 }
 div.comment-head {
     display:block;
+    
 }
 .glyphicon-remove {
     display:inline;
@@ -188,4 +189,8 @@ div.comment-head {
 
 .event-detail {
     padding-top: 7px;
+}
+
+.highlight {
+    color: #5bc0de;
 }

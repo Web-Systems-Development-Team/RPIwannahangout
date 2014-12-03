@@ -7,11 +7,13 @@
 <link rel="stylesheet" type="text/css" href="/RPIWannaHangOut/components/bootstrap-datepicker/css/datepicker3.css">
 <link rel="stylesheet" type="text/css" href="/RPIWannaHangOut/assets/css/bootstrap-responsive.css" />
 <link rel="stylesheet" type="text/css" href="/RPIWannaHangOut/assets/css/bootstrap-timepicker.min.css" />
+<link rel="stylesheet" type="text/css" href="/RPIWannaHangOut/assets/css/sweet-alert.css" />
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="/RPIWannaHangOut/components/bootstrap-datepicker/bootstrap-datepicker-built.js"></script>
 <script src="/RPIWannaHangOut/assets/js/bootstrap-timepicker.min.js"></script>
+<script src="/RPIWannaHangOut/assets/js/sweet-alert.min.js"></script>
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -21,6 +23,6 @@
 
 <!-- Our scripts and sheets -->
 <link rel="stylesheet" type="text/css" href="/RPIWannaHangOut/assets/css/style.css">
-<link rel="icon" type="image/png" href="logo1-20.png">
+<link rel="icon" type="image/png" href="/RPIWannaHangout/logo1-20.png">
 
 <!-- "jdewit/bootstrap-timepicker": "0.2.3" -->
