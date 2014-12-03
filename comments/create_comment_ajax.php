@@ -28,7 +28,8 @@
 		// add the author name and return the JSON
 	    $comment_json = json_decode($comment->toJSON());
 	    $author = $comment->getAuthor();
-	    $comment_json->authorName = $author->getFirstName();
+	    $comment_json->authorFirstName = $author->getFirstName();
+	    $comment_json->authorLastName = $author->getLastName();
 	    echo json_encode($comment_json);
 	}
 

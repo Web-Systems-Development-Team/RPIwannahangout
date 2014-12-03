@@ -125,14 +125,26 @@
     
 //add event comment
 function add_comment(comment) {
-    var comment_head = '<div class="comment-head highlight"">' + comment.authorFirstName + " " + comment.authorLastName + "<div class='date'> on " + comment.CreationDate.date + "</div>";
+    var comment_head = $('<div class="comment-head highlight"">' + comment.authorFirstName + " " + comment.authorLastName + "<div class='date'> on " + comment.CreationDate.date + "</div>");
     
     //delete button
     if (comment.AuthorUserId == <?php echo $_SESSION['uid']; ?>) {
-	   comment_head += "<span class=\"glyphicon glyphicon-remove\"></span>";
+        //set up the comment delete button action
+        var del_button = $('<span/>', { class: "glyphicon glyphicon-remove comment_delete_button" });
+        $(del_button).click(function() {
+            com_id = $(this).parent().parent().attr("commentid");
+            $.post("../comments/delete.php", { comment_id : com_id },
+                function(data) { $("div[commentid='"+com_id+"']").remove(); },
+                "text");
+        });
+	   comment_head.append(del_button);
     }
-    comment_head += "</div>";
-    $("#comment_bin").append("<div class=list-group-item commentid=" + comment.CommentId + ">" + comment_head + comment.CommentText +"</div></div>");
+
+    var com_obj = $("<div class=list-group-item commentid="+ comment.CommentId +">");
+    com_obj.append(comment_head);
+    com_obj.append("</div>" + comment.CommentText +"</div></div>");
+
+    $("#comment_bin").append(com_obj);
 }
 
 // get a json of the comments and add them to the page
@@ -143,16 +155,6 @@ $.get("../comments/get_comment_json.php",
           for(var i=0; i<comments.length; ++i) {
               add_comment(comments[i]);
           }
-	  //set up the comment delete button action
-	  $(".glyphicon-remove").click(function() {
-	      $.post("../comments/delete.php",
-		     { comment_id:$(this).parent().parent().attr("commentid") },
-		     function(data) {
-			 //comment deleted: reload page
-			location.reload();
-		     },
-		    "text");
-	  });
       });
 
 // set up the comment form action

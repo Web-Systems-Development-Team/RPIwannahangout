@@ -33,7 +33,8 @@ else {
         // add the author name and return the JSON
         $ei_json = json_decode($ei->toJSON());
         $author = $ei->getInterested();
-        $ei_json->authorName = $author->getFirstName();
+        $ei_json->authorFirstName = $author->getFirstName();
+        $ei_json->authorLastName = $author->getLastName();
         echo json_encode($ei_json);
     }
 }
