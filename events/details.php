@@ -55,7 +55,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4"><h4>Attendance:</h4></div>
-                <div class="col-md-8 event-detail"><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></div>
+                <div class="col-md-8 event-detail"><span id="interest_count"><?php echo $event->countInterests(); ?></span>/<?php echo $event->getMaxAttendance(); ?></div>
             </div>
 			
 			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
@@ -221,6 +221,8 @@ $(".interested_form").submit(function(event) {
             //this is to stop event interests from accumulating
             if(!json.hasOwnProperty('extant')) {
                 add_interest(json);
+                var cur = parseInt($("#interest_count").text());
+                $("#interest_count").text(cur+1);
             }
         },
         // if the request fails
