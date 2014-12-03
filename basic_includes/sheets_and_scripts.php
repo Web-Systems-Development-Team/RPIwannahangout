@@ -21,6 +21,6 @@
 
 <!-- Our scripts and sheets -->
 <link rel="stylesheet" type="text/css" href="/RPIWannaHangOut/assets/css/style.css">
-<link rel="icon" type="image/png" href="bullet.jpg">
+<link rel="icon" type="image/png" href="logo1-20.png">
 
 <!-- "jdewit/bootstrap-timepicker": "0.2.3" -->

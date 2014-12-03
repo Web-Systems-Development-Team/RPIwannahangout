@@ -106,7 +106,7 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
                 <label for="start_time">Date</label>
                 <div class="input-group date">
                   <input type="text" class="form-control" id="date" name="date" value="<?php getData('date'); ?>">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
             </div>
             <div class="form-group">

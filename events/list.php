@@ -14,16 +14,16 @@
     <div id="list_page">
 	<?php include '../basic_includes/navbar.php' ?>
 	<div class="panel panel-default" id="list_events">
-		<table class="table table-striped">
+		<table class="table table-hover">
 			<thead>
-				<th class="sort" data-sort="title">Title</th>
-				<th class="sort" data-sort="date">Date</th>
-				<th class="sort" data-sort="start_time">Start Time</th>
-				<th class="sort" data-sort="end_time">End Time</th>
-				<th class="sort" data-sort="location">Location</th>
-				<th class="sort" data-sort="attending">Attending</th>
-				<th class="sort" data-sort="max_attendance">Max Attendance</th>
-				<th class="sort" data-sort="open_spots">Open Spots</th>
+				<th class="sort col-md-3" data-sort="title">Title</th>
+				<th class="sort col-md-1" data-sort="date">Date</th>
+				<th class="sort col-md-1" data-sort="start_time">Start Time</th>
+				<th class="sort col-md-1" data-sort="end_time">End Time</th>
+				<th class="sort col-md-2" data-sort="location">Location</th>
+				<th class="sort col-md-1" data-sort="attending">Attending</th>
+				<th class="sort col-md-1" data-sort="max_attendance">Max Attendance</th>
+				<th class="sort col-md-1" data-sort="open_spots">Open Spots</th>
 				<th colspan="2">
 		          <input type="text" class="search" placeholder="Search" />
 		        </th>

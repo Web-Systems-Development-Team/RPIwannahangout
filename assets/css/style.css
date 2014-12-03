@@ -12,6 +12,7 @@
 .jBack{
   background-color: rgba(210,210,210, 0.4);
   color: inherit;
+  width: 100%;
 }
 h1{
     opacity: 1;
@@ -24,6 +25,7 @@ p{
 }
 #list_events{
     width: 900px;
+    padding: 1em;
 }
 #list_page{
     min-height: 100%; 
@@ -38,8 +40,14 @@ p{
     background-size: cover;
     padding-bottom: 3em;
 }
+#detail_page {
+    min-height: 100%;
+    background: url("/RPIwannahangout/background-pics/icons-asphalt.JPG")fixed; 
+    padding-bottom: 3em;
+}
 #events {
-	width: 64em;
+	width: 70em;
+    height: 100%;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -69,17 +77,20 @@ html, body, #map-canvas {
 #comments{
     margin-top: 21px;
 }
+#interested-users{
+    margin-top: 21px;
+}
 h3{
     display: inline;
 }
 .date{
     color:#777;
-    font-size: .9em;
+    font-size: .95em;
 }
 
 .newtable {
     width: 63em; 
-    height:18em;
+    height:100%;
     margin: auto;
 }
 
@@ -119,7 +130,7 @@ h3{
     font-weight: bold;
 }
 
-<!-- Explore.php CSS -->
+/*<!-- Explore.php CSS -->*/
 .center{
     margin: 0 auto; width: 400px;
 }
@@ -167,4 +178,13 @@ div.comment-head {
     display:inline;
     float: right;
     color: #777;
+}
+
+.innerWrap > div {
+    display: inline-block;
+    vertical-align: center;
+}
+
+.event-detail {
+    padding-top: 7px;
 }

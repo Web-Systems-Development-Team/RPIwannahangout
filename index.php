@@ -6,14 +6,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <?php include_once 'basic_includes/sheets_and_scripts.php' ?>
+  <?php include_once '/basic_includes/sheets_and_scripts.php' ?>
   <title>RPI Wanna Hangout</title>
 
 </head>
 <body>
     <div id="index">
-	<?php include 'basic_includes/navbar.php' ?> 
+	<?php include '/basic_includes/navbar.php' ?> 
     <div class="jumbotron jBack">
+    <div class="container">
     <h1>Let's Hangout!</h1>
     <p>Easily find and share events occuring on or off campus. Connect with your classmates.</p>
         <p>Live. Learn. Experience.</p>
@@ -21,8 +22,9 @@
         <a class="btn btn-info" type="button" href="explore.php">Learn More</a>
         <a class="btn btn-info" type="button" href="events/create.php">Create an Event</a>
     </div>
+	</div>
     </div>
-
+	<div id="container">
 	<div class="panel panel-default" id="events">
 		<div class="panel-heading">What's going on now</div>
 			<div class="newtable">
@@ -59,6 +61,7 @@
         </div>
     </div>
     </div>
+    </div>
 
     <script src="/RPIwannahangout/easyticker/jquery.easy-ticker.js"></script>
     <script> //apply easyTicker function on "what's going on now"
@@ -66,7 +69,7 @@
 	       direction: 'up',
 	       easing: 'swing',
 	       speed: 'slow',
-	       interval: 3000,
+	       interval: 2000,
 	       height: 'auto',
 	       visible: 3, //only show three events at a time
 	       mousePause: 1,

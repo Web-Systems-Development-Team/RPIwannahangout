@@ -27,17 +27,42 @@
 	<title>Event: <?php echo $event->getTitle(); ?></title>
 </head>
 <body>
+    <div id="detail_page">
 	<?php include '../basic_includes/navbar.php' ?>
-
+    
 	<div class="panel panel-default">
-		<div class="panel-heading">Event: <?php echo $event->getTitle(); ?></div>
+		<div class="panel-heading"><h4>Event: <?php echo $event->getTitle(); ?><h4></div>
 		<div class="panel-body">
-			<h3>Date:</h3><p><?php echo $event->getDate()->format('M-d');; ?></p>
-			<h3>Start Time:</h3><p><?php echo $event->getStartTime()->format('H:i');; ?></p>
-			<h3>End Time:</h3><p><?php echo $event->getEndTime()->format('H:i'); ?></p>
-			<h3>Location:</h3><p><?php echo $event->getLocation(); ?></p>
-			<h3>Description:</h3><p><?php echo $event->getDescription(); ?></p>
-			<h3>Attendance:</h3><p><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></p>
+            <div class="row">
+                <div class="col-md-4"><h4>Date:</h4></div>
+                <div class="col-md-8 event-detail"><?php echo $event->getDate()->format('M-d');; ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><h4>Start Time:</h4></div>
+                <div class="col-md-8 event-detail"><?php echo $event->getStartTime()->format('H:i');; ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><h4>End Time:</h4></div>
+                <div class="col-md-8 event-detail"><?php echo $event->getEndTime()->format('H:i'); ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><h4>Location:</h4></div>
+                <div class="col-md-8 event-detail"><?php echo $event->getLocation(); ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><h4>Description:</h4></div>
+                <div class="col-md-8 event-detail"><?php echo $event->getDescription(); ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><h4>Attendance:</h4></div>
+                <div class="col-md-8 event-detail"><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></div>
+            </div>
+			<!--h4>Date:</h4><p><?php echo $event->getDate()->format('M-d');; ?></p>
+			<h4>Start Time:</h4><p><?php echo $event->getStartTime()->format('H:i');; ?></p>
+			<h4>End Time:</h4><p><?php echo $event->getEndTime()->format('H:i'); ?></p>
+			<h4>Location:</h4><p><?php echo $event->getLocation(); ?></p>
+			<h4>Description:</h4><p><?php echo $event->getDescription(); ?></p>
+			<h4>Attendance:</h4><p><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></p-->
 			
 			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
 			<?php if(isset($_SESSION['uid'])) { ?>
@@ -66,23 +91,21 @@
 		</div>
 	</div>
 
-	<div class="panel panel-default">
+	<div class="panel panel-default" id="interested-users">
 		<div class="panel-heading">Interested Users</div>
 		<table class="table table-striped">
 			<tbody class="interest-table-body">
 				<!-- This will be filled by AJAX -->
 			</tbody>
 		</table>
-		</div>
 	</div>
 	<div class="panel panel-default" id="comments">
 		<div class="panel-heading">Comments</div>
-		<div class="list-group" id ="comment_bin">
-		</div>
+		<div class="list-group" id ="comment_bin"></div>
 	</div>
     <!-- Only show Add Comment when logged in -->
 	<?php if(isset($_SESSION['uid'])) { ?>
-	<div class="panel panel-default">
+	<div class="panel panel-default" id="comments">
 	  <div class="panel-heading">Add Comment</div>
 	  <div class="panel-body" >
 	    <form role="form" id="comment_creation_form" method="post" class="comment-form">
@@ -97,6 +120,7 @@
 	    </form>
 	  </div>
 	</div>
+    
 	<?php } ?>
 
     <script type="text/javascript" src="https://addthisevent.com/libs/1.5.8/ate.min.js"></script>
@@ -211,6 +235,7 @@ $(".interested_form").submit(function(event) {
     });
 });
     </script>
+    </div>
 </body>
 
 </html>
