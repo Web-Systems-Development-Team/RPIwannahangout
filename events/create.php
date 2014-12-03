@@ -55,15 +55,10 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     $event->setLocation($location);
     $event->setDescription($description);
     $event->setNeedCar($needcar);
-    /*
-    // this is just a cludge for now until sessions and users are set up
-    $user_query = new UserQuery();
-    $user = $user_query->findPk(1); //this is the test user
-    */
     $event->setCreatorUserId($_SESSION['uid']);
-
+    
+    $failure_messages = Array();
     if (!$event->validate()) {
-        $failure_messages = Array();
         foreach ($event->getValidationFailures() as $failure) {
             $message = '<p><strong>Error in '.$failure->getPropertyPath().' field!</strong> '.$failure->getMessage().'</p>';
             array_push($failure_messages, $message);
@@ -73,12 +68,23 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
         unset($message);
     }
     else {
-        $event->save();
-        // echo "Everything's all right!";
-        $event_id = $event->getEventId();
-        header("Location:../events/details.php?event_id=$event_id&new=1");
-        // http_redirect("../event_details.php?event_id=$event_id");
+
+        // validate date fields
+        $now = new DateTime('now');
+        $st = DateTime::createFromFormat("Y-m-d\TH:i",$start_time);
+        $et = DateTime::createFromFormat("Y-m-d\TH:i",$end_time);
+
+        if($now > $st) {
+            array_push($failure_messages, "<p><strong>Error:</strong> You cannot create an event that has already started</p>");
+        } else if ($st > $et) {
+            array_push($failure_messages, "<p><strong>Time paradox:</strong> You cannot have an event which ends before it starts.</p>");
+        } else {
+            //$event->save();
+            $event_id = $event->getEventId();
+            //header("Location:../events/details.php?event_id=$event_id&new=1");
+        }
     }
+    var_dump($failure_messages);
 } // end if for was submitted
 ?>
 <!DOCTYPE html>
