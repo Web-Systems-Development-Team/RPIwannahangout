@@ -1,1 +1,4 @@
 database_propel_magic.sh
+vendor
+components
+generated-classes/Base

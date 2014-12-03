@@ -59,7 +59,7 @@ class EventTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class EventTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the event_id field
@@ -80,6 +80,11 @@ class EventTableMap extends TableMap
      * the column name for the title field
      */
     const COL_TITLE = 'event.title';
+
+    /**
+     * the column name for the date field
+     */
+    const COL_DATE = 'event.date';
 
     /**
      * the column name for the start_time field
@@ -102,9 +107,9 @@ class EventTableMap extends TableMap
     const COL_DESCRIPTION = 'event.description';
 
     /**
-     * the column name for the need_car field
+     * the column name for the max_attendance field
      */
-    const COL_NEED_CAR = 'event.need_car';
+    const COL_MAX_ATTENDANCE = 'event.max_attendance';
 
     /**
      * the column name for the creator_user_id field
@@ -123,11 +128,11 @@ class EventTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('EventId', 'Title', 'StartTime', 'EndTime', 'Location', 'Description', 'NeedCar', 'CreatorUserId', ),
-        self::TYPE_CAMELNAME     => array('eventId', 'title', 'startTime', 'endTime', 'location', 'description', 'needCar', 'creatorUserId', ),
-        self::TYPE_COLNAME       => array(EventTableMap::COL_EVENT_ID, EventTableMap::COL_TITLE, EventTableMap::COL_START_TIME, EventTableMap::COL_END_TIME, EventTableMap::COL_LOCATION, EventTableMap::COL_DESCRIPTION, EventTableMap::COL_NEED_CAR, EventTableMap::COL_CREATOR_USER_ID, ),
-        self::TYPE_FIELDNAME     => array('event_id', 'title', 'start_time', 'end_time', 'location', 'description', 'need_car', 'creator_user_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('EventId', 'Title', 'Date', 'StartTime', 'EndTime', 'Location', 'Description', 'MaxAttendance', 'CreatorUserId', ),
+        self::TYPE_CAMELNAME     => array('eventId', 'title', 'date', 'startTime', 'endTime', 'location', 'description', 'maxAttendance', 'creatorUserId', ),
+        self::TYPE_COLNAME       => array(EventTableMap::COL_EVENT_ID, EventTableMap::COL_TITLE, EventTableMap::COL_DATE, EventTableMap::COL_START_TIME, EventTableMap::COL_END_TIME, EventTableMap::COL_LOCATION, EventTableMap::COL_DESCRIPTION, EventTableMap::COL_MAX_ATTENDANCE, EventTableMap::COL_CREATOR_USER_ID, ),
+        self::TYPE_FIELDNAME     => array('event_id', 'title', 'date', 'start_time', 'end_time', 'location', 'description', 'max_attendance', 'creator_user_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -137,11 +142,11 @@ class EventTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('EventId' => 0, 'Title' => 1, 'StartTime' => 2, 'EndTime' => 3, 'Location' => 4, 'Description' => 5, 'NeedCar' => 6, 'CreatorUserId' => 7, ),
-        self::TYPE_CAMELNAME     => array('eventId' => 0, 'title' => 1, 'startTime' => 2, 'endTime' => 3, 'location' => 4, 'description' => 5, 'needCar' => 6, 'creatorUserId' => 7, ),
-        self::TYPE_COLNAME       => array(EventTableMap::COL_EVENT_ID => 0, EventTableMap::COL_TITLE => 1, EventTableMap::COL_START_TIME => 2, EventTableMap::COL_END_TIME => 3, EventTableMap::COL_LOCATION => 4, EventTableMap::COL_DESCRIPTION => 5, EventTableMap::COL_NEED_CAR => 6, EventTableMap::COL_CREATOR_USER_ID => 7, ),
-        self::TYPE_FIELDNAME     => array('event_id' => 0, 'title' => 1, 'start_time' => 2, 'end_time' => 3, 'location' => 4, 'description' => 5, 'need_car' => 6, 'creator_user_id' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('EventId' => 0, 'Title' => 1, 'Date' => 2, 'StartTime' => 3, 'EndTime' => 4, 'Location' => 5, 'Description' => 6, 'MaxAttendance' => 7, 'CreatorUserId' => 8, ),
+        self::TYPE_CAMELNAME     => array('eventId' => 0, 'title' => 1, 'date' => 2, 'startTime' => 3, 'endTime' => 4, 'location' => 5, 'description' => 6, 'maxAttendance' => 7, 'creatorUserId' => 8, ),
+        self::TYPE_COLNAME       => array(EventTableMap::COL_EVENT_ID => 0, EventTableMap::COL_TITLE => 1, EventTableMap::COL_DATE => 2, EventTableMap::COL_START_TIME => 3, EventTableMap::COL_END_TIME => 4, EventTableMap::COL_LOCATION => 5, EventTableMap::COL_DESCRIPTION => 6, EventTableMap::COL_MAX_ATTENDANCE => 7, EventTableMap::COL_CREATOR_USER_ID => 8, ),
+        self::TYPE_FIELDNAME     => array('event_id' => 0, 'title' => 1, 'date' => 2, 'start_time' => 3, 'end_time' => 4, 'location' => 5, 'description' => 6, 'max_attendance' => 7, 'creator_user_id' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -163,11 +168,12 @@ class EventTableMap extends TableMap
         // columns
         $this->addPrimaryKey('event_id', 'EventId', 'INTEGER', true, null, null);
         $this->addColumn('title', 'Title', 'VARCHAR', true, 50, null);
-        $this->addColumn('start_time', 'StartTime', 'TIMESTAMP', true, null, null);
-        $this->addColumn('end_time', 'EndTime', 'TIMESTAMP', true, null, null);
+        $this->addColumn('date', 'Date', 'DATE', true, null, null);
+        $this->addColumn('start_time', 'StartTime', 'TIME', true, null, null);
+        $this->addColumn('end_time', 'EndTime', 'TIME', true, null, null);
         $this->addColumn('location', 'Location', 'VARCHAR', true, 255, null);
         $this->addColumn('description', 'Description', 'LONGVARCHAR', true, 1200, null);
-        $this->addColumn('need_car', 'NeedCar', 'BOOLEAN', true, 1, false);
+        $this->addColumn('max_attendance', 'MaxAttendance', 'INTEGER', true, null, null);
         $this->addForeignKey('creator_user_id', 'CreatorUserId', 'INTEGER', 'user', 'user_id', true, null, null);
     } // initialize()
 
@@ -190,7 +196,7 @@ class EventTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'validate' => array('title_not_blank' => array ('column' => 'title','validator' => 'NotBlank',), 'title_length' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 50,),), 'start_time_not_blank' => array ('column' => 'start_time','validator' => 'NotBlank',), 'start_time_valid' => array ('column' => 'start_time','validator' => 'SymfonyDateTime',), 'end_time_not_blank' => array ('column' => 'end_time','validator' => 'NotBlank',), 'end_time_valid' => array ('column' => 'end_time','validator' => 'SymfonyDateTime',), 'location_not_blank' => array ('column' => 'location','validator' => 'NotBlank',), 'location_length' => array ('column' => 'location','validator' => 'Length','options' => array ('max' => 255,),), 'description_not_blank' => array ('column' => 'description','validator' => 'NotBlank',), 'description_length' => array ('column' => 'description','validator' => 'Length','options' => array ('max' => 1200,),), 'creator_not_blank' => array ('column' => 'creator_user_id','validator' => 'NotBlank',), 'need_car_exists' => array ('column' => 'need_car','validator' => 'NotNull',), ),
+            'validate' => array('title_not_blank' => array ('column' => 'title','validator' => 'NotBlank',), 'title_length' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 50,),), 'start_time_not_blank' => array ('column' => 'start_time','validator' => 'NotBlank',), 'start_time_valid' => array ('column' => 'start_time','validator' => 'SymfonyDateTime',), 'end_time_not_blank' => array ('column' => 'end_time','validator' => 'NotBlank',), 'end_time_valid' => array ('column' => 'end_time','validator' => 'SymfonyDateTime',), 'location_not_blank' => array ('column' => 'location','validator' => 'NotBlank',), 'location_length' => array ('column' => 'location','validator' => 'Length','options' => array ('max' => 255,),), 'description_not_blank' => array ('column' => 'description','validator' => 'NotBlank',), 'description_length' => array ('column' => 'description','validator' => 'Length','options' => array ('max' => 1200,),), 'creator_not_blank' => array ('column' => 'creator_user_id','validator' => 'NotBlank',), 'max_attendance_not_blank' => array ('column' => 'max_attendance','validator' => 'NotBlank',), ),
         );
     } // getBehaviors()
 
@@ -337,18 +343,20 @@ class EventTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(EventTableMap::COL_EVENT_ID);
             $criteria->addSelectColumn(EventTableMap::COL_TITLE);
+            $criteria->addSelectColumn(EventTableMap::COL_DATE);
             $criteria->addSelectColumn(EventTableMap::COL_START_TIME);
             $criteria->addSelectColumn(EventTableMap::COL_END_TIME);
             $criteria->addSelectColumn(EventTableMap::COL_LOCATION);
-            $criteria->addSelectColumn(EventTableMap::COL_NEED_CAR);
+            $criteria->addSelectColumn(EventTableMap::COL_MAX_ATTENDANCE);
             $criteria->addSelectColumn(EventTableMap::COL_CREATOR_USER_ID);
         } else {
             $criteria->addSelectColumn($alias . '.event_id');
             $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.date');
             $criteria->addSelectColumn($alias . '.start_time');
             $criteria->addSelectColumn($alias . '.end_time');
             $criteria->addSelectColumn($alias . '.location');
-            $criteria->addSelectColumn($alias . '.need_car');
+            $criteria->addSelectColumn($alias . '.max_attendance');
             $criteria->addSelectColumn($alias . '.creator_user_id');
         }
     }

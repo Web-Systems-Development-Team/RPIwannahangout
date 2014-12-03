@@ -22,20 +22,22 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildEventQuery orderByEventId($order = Criteria::ASC) Order by the event_id column
  * @method     ChildEventQuery orderByTitle($order = Criteria::ASC) Order by the title column
+ * @method     ChildEventQuery orderByDate($order = Criteria::ASC) Order by the date column
  * @method     ChildEventQuery orderByStartTime($order = Criteria::ASC) Order by the start_time column
  * @method     ChildEventQuery orderByEndTime($order = Criteria::ASC) Order by the end_time column
  * @method     ChildEventQuery orderByLocation($order = Criteria::ASC) Order by the location column
  * @method     ChildEventQuery orderByDescription($order = Criteria::ASC) Order by the description column
- * @method     ChildEventQuery orderByNeedCar($order = Criteria::ASC) Order by the need_car column
+ * @method     ChildEventQuery orderByMaxAttendance($order = Criteria::ASC) Order by the max_attendance column
  * @method     ChildEventQuery orderByCreatorUserId($order = Criteria::ASC) Order by the creator_user_id column
  *
  * @method     ChildEventQuery groupByEventId() Group by the event_id column
  * @method     ChildEventQuery groupByTitle() Group by the title column
+ * @method     ChildEventQuery groupByDate() Group by the date column
  * @method     ChildEventQuery groupByStartTime() Group by the start_time column
  * @method     ChildEventQuery groupByEndTime() Group by the end_time column
  * @method     ChildEventQuery groupByLocation() Group by the location column
  * @method     ChildEventQuery groupByDescription() Group by the description column
- * @method     ChildEventQuery groupByNeedCar() Group by the need_car column
+ * @method     ChildEventQuery groupByMaxAttendance() Group by the max_attendance column
  * @method     ChildEventQuery groupByCreatorUserId() Group by the creator_user_id column
  *
  * @method     ChildEventQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -61,21 +63,23 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildEvent findOneByEventId(int $event_id) Return the first ChildEvent filtered by the event_id column
  * @method     ChildEvent findOneByTitle(string $title) Return the first ChildEvent filtered by the title column
+ * @method     ChildEvent findOneByDate(string $date) Return the first ChildEvent filtered by the date column
  * @method     ChildEvent findOneByStartTime(string $start_time) Return the first ChildEvent filtered by the start_time column
  * @method     ChildEvent findOneByEndTime(string $end_time) Return the first ChildEvent filtered by the end_time column
  * @method     ChildEvent findOneByLocation(string $location) Return the first ChildEvent filtered by the location column
  * @method     ChildEvent findOneByDescription(string $description) Return the first ChildEvent filtered by the description column
- * @method     ChildEvent findOneByNeedCar(boolean $need_car) Return the first ChildEvent filtered by the need_car column
+ * @method     ChildEvent findOneByMaxAttendance(int $max_attendance) Return the first ChildEvent filtered by the max_attendance column
  * @method     ChildEvent findOneByCreatorUserId(int $creator_user_id) Return the first ChildEvent filtered by the creator_user_id column
  *
  * @method     ChildEvent[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildEvent objects based on current ModelCriteria
  * @method     ChildEvent[]|ObjectCollection findByEventId(int $event_id) Return ChildEvent objects filtered by the event_id column
  * @method     ChildEvent[]|ObjectCollection findByTitle(string $title) Return ChildEvent objects filtered by the title column
+ * @method     ChildEvent[]|ObjectCollection findByDate(string $date) Return ChildEvent objects filtered by the date column
  * @method     ChildEvent[]|ObjectCollection findByStartTime(string $start_time) Return ChildEvent objects filtered by the start_time column
  * @method     ChildEvent[]|ObjectCollection findByEndTime(string $end_time) Return ChildEvent objects filtered by the end_time column
  * @method     ChildEvent[]|ObjectCollection findByLocation(string $location) Return ChildEvent objects filtered by the location column
  * @method     ChildEvent[]|ObjectCollection findByDescription(string $description) Return ChildEvent objects filtered by the description column
- * @method     ChildEvent[]|ObjectCollection findByNeedCar(boolean $need_car) Return ChildEvent objects filtered by the need_car column
+ * @method     ChildEvent[]|ObjectCollection findByMaxAttendance(int $max_attendance) Return ChildEvent objects filtered by the max_attendance column
  * @method     ChildEvent[]|ObjectCollection findByCreatorUserId(int $creator_user_id) Return ChildEvent objects filtered by the creator_user_id column
  * @method     ChildEvent[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -168,7 +172,7 @@ abstract class EventQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT event_id, title, start_time, end_time, location, need_car, creator_user_id FROM event WHERE event_id = :p0';
+        $sql = 'SELECT event_id, title, date, start_time, end_time, location, max_attendance, creator_user_id FROM event WHERE event_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -329,6 +333,49 @@ abstract class EventQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the date column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDate('2011-03-14'); // WHERE date = '2011-03-14'
+     * $query->filterByDate('now'); // WHERE date = '2011-03-14'
+     * $query->filterByDate(array('max' => 'yesterday')); // WHERE date > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $date The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByDate($date = null, $comparison = null)
+    {
+        if (is_array($date)) {
+            $useMinMax = false;
+            if (isset($date['min'])) {
+                $this->addUsingAlias(EventTableMap::COL_DATE, $date['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($date['max'])) {
+                $this->addUsingAlias(EventTableMap::COL_DATE, $date['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_DATE, $date, $comparison);
+    }
+
+    /**
      * Filter the query on the start_time column
      *
      * Example usage:
@@ -473,30 +520,44 @@ abstract class EventQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the need_car column
+     * Filter the query on the max_attendance column
      *
      * Example usage:
      * <code>
-     * $query->filterByNeedCar(true); // WHERE need_car = true
-     * $query->filterByNeedCar('yes'); // WHERE need_car = true
+     * $query->filterByMaxAttendance(1234); // WHERE max_attendance = 1234
+     * $query->filterByMaxAttendance(array(12, 34)); // WHERE max_attendance IN (12, 34)
+     * $query->filterByMaxAttendance(array('min' => 12)); // WHERE max_attendance > 12
      * </code>
      *
-     * @param     boolean|string $needCar The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     mixed $maxAttendance The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildEventQuery The current query, for fluid interface
      */
-    public function filterByNeedCar($needCar = null, $comparison = null)
+    public function filterByMaxAttendance($maxAttendance = null, $comparison = null)
     {
-        if (is_string($needCar)) {
-            $needCar = in_array(strtolower($needCar), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_array($maxAttendance)) {
+            $useMinMax = false;
+            if (isset($maxAttendance['min'])) {
+                $this->addUsingAlias(EventTableMap::COL_MAX_ATTENDANCE, $maxAttendance['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($maxAttendance['max'])) {
+                $this->addUsingAlias(EventTableMap::COL_MAX_ATTENDANCE, $maxAttendance['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
-        return $this->addUsingAlias(EventTableMap::COL_NEED_CAR, $needCar, $comparison);
+        return $this->addUsingAlias(EventTableMap::COL_MAX_ATTENDANCE, $maxAttendance, $comparison);
     }
 
     /**

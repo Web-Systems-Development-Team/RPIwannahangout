@@ -21,12 +21,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildEventInterestQuery orderByEventInterestId($order = Criteria::ASC) Order by the event_interest_id column
- * @method     ChildEventInterestQuery orderByBringingCar($order = Criteria::ASC) Order by the bringing_car column
  * @method     ChildEventInterestQuery orderByInterestedUserId($order = Criteria::ASC) Order by the interested_user_id column
  * @method     ChildEventInterestQuery orderByTargetEventId($order = Criteria::ASC) Order by the target_event_id column
  *
  * @method     ChildEventInterestQuery groupByEventInterestId() Group by the event_interest_id column
- * @method     ChildEventInterestQuery groupByBringingCar() Group by the bringing_car column
  * @method     ChildEventInterestQuery groupByInterestedUserId() Group by the interested_user_id column
  * @method     ChildEventInterestQuery groupByTargetEventId() Group by the target_event_id column
  *
@@ -48,13 +46,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventInterest findOneOrCreate(ConnectionInterface $con = null) Return the first ChildEventInterest matching the query, or a new ChildEventInterest object populated from the query conditions when no match is found
  *
  * @method     ChildEventInterest findOneByEventInterestId(int $event_interest_id) Return the first ChildEventInterest filtered by the event_interest_id column
- * @method     ChildEventInterest findOneByBringingCar(boolean $bringing_car) Return the first ChildEventInterest filtered by the bringing_car column
  * @method     ChildEventInterest findOneByInterestedUserId(int $interested_user_id) Return the first ChildEventInterest filtered by the interested_user_id column
  * @method     ChildEventInterest findOneByTargetEventId(int $target_event_id) Return the first ChildEventInterest filtered by the target_event_id column
  *
  * @method     ChildEventInterest[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildEventInterest objects based on current ModelCriteria
  * @method     ChildEventInterest[]|ObjectCollection findByEventInterestId(int $event_interest_id) Return ChildEventInterest objects filtered by the event_interest_id column
- * @method     ChildEventInterest[]|ObjectCollection findByBringingCar(boolean $bringing_car) Return ChildEventInterest objects filtered by the bringing_car column
  * @method     ChildEventInterest[]|ObjectCollection findByInterestedUserId(int $interested_user_id) Return ChildEventInterest objects filtered by the interested_user_id column
  * @method     ChildEventInterest[]|ObjectCollection findByTargetEventId(int $target_event_id) Return ChildEventInterest objects filtered by the target_event_id column
  * @method     ChildEventInterest[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -148,7 +144,7 @@ abstract class EventInterestQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT event_interest_id, bringing_car, interested_user_id, target_event_id FROM event_interest WHERE event_interest_id = :p0';
+        $sql = 'SELECT event_interest_id, interested_user_id, target_event_id FROM event_interest WHERE event_interest_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -277,33 +273,6 @@ abstract class EventInterestQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(EventInterestTableMap::COL_EVENT_INTEREST_ID, $eventInterestId, $comparison);
-    }
-
-    /**
-     * Filter the query on the bringing_car column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByBringingCar(true); // WHERE bringing_car = true
-     * $query->filterByBringingCar('yes'); // WHERE bringing_car = true
-     * </code>
-     *
-     * @param     boolean|string $bringingCar The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildEventInterestQuery The current query, for fluid interface
-     */
-    public function filterByBringingCar($bringingCar = null, $comparison = null)
-    {
-        if (is_string($bringingCar)) {
-            $bringingCar = in_array(strtolower($bringingCar), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-        }
-
-        return $this->addUsingAlias(EventInterestTableMap::COL_BRINGING_CAR, $bringingCar, $comparison);
     }
 
     /**

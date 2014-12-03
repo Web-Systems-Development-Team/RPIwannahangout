@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <?php include_once 'basic_includes/head_includes.php' ?>
+  <?php include_once 'basic_includes/sheets_and_scripts.php' ?>
   <link rel="stylesheet" href="assets/css/style.css">
   <title>RPI Wanna Hangout</title>
 </head>
