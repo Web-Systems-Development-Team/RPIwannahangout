@@ -6,13 +6,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <?php include_once '/basic_includes/sheets_and_scripts.php' ?>
+  <?php include_once 'basic_includes/sheets_and_scripts.php' ?>
   <title>RPI Wanna Hangout</title>
 
 </head>
 <body>
     <div id="index">
-	<?php include '/basic_includes/navbar.php' ?> 
+	<?php include 'basic_includes/navbar.php' ?> 
     <div class="jumbotron jBack">
     <div class="container">
     <h1>Let's Hangout!</h1>

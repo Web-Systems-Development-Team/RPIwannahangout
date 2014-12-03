@@ -30,18 +30,23 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+        <li><a href="/RPIWannaHangOut/explore.php">Explore</a></li>
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
-          <li><a>Welcome, <?php echo $user->getFirstName(); ?></a></li>
-          <li><a href="/RPIWannaHangOut/explore.php">Explore</a></li>
-        <li id="createLink"><a href="/RPIWannaHangOut/events/create.php">Create Event</a></li>
-        <li id="findLink"><a href="/RPIWannaHangOut/events/list.php">Find Event</a></li>
-        <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
+          <li id="createLink"><a href="/RPIWannaHangOut/events/create.php">Create Event</a></li>
         <?php } else { ?>
-          <li><a href="/RPIWannaHangOut/explore.php">Explore</a></li>
-        <li id="findLink"><a href="/RPIWannaHangOut/events/list.php">Find Event</a></li>
-	      <li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
+          <li id="createLink"><a href="/RPIWannaHangOut/login.php">Create Event</a></li>
         <?php } ?>
+
+        <li id="findLink"><a href="/RPIWannaHangOut/events/list.php">Find Event</a></li>
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+      <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
+          <p class="navbar-text">Welcome, <?php echo $user->getFirstName(); ?></p>
+          <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
+        <?php } else { ?>
+        <li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
+        <?php } ?> 
+      </ul>  
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
