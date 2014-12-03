@@ -36,7 +36,6 @@
 	                <div class="hcell">Location</div>
 					<div class="hcell">Description</div>
 					<div class="hcell">Attendance</div>
-					<!-- <div class="hcell">View</div> -->
 				</div>
 	            <div class="ticker1">
 		            <div class="innerWrap">
@@ -49,7 +48,7 @@
 						<div class="cell"><?php echo $event->getLocation(); ?></div>
 						<div class="cell"><?php echo $event->getDescription(); ?></div>
 						<div class="cell"><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></div>
-						<div class="cell">
+						<div class="bcell">
 							<a href="events/details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >
 								<button type="button" class="btn btn-info btn-sm">View</button>
 		                    </a>

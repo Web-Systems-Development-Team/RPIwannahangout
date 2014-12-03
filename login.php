@@ -68,10 +68,8 @@ if(!isset($_POST['submit'])) {
         if(empty($q)) {
             //No rcsid found in database, so we need to add a new user
             //The form will be displayed, so just fall through
-            echo "NO RCSID FOUND!";
         }
         else {
-            echo "RCSID FOUND!";
             $uid = $q->getUserId();
             //rcsid found in database   
         
@@ -138,10 +136,9 @@ if(!isset($_POST['submit'])) {
 </head>
 <body>
   <?php include 'basic_includes/navbar.php' ?>
-  <?php /*include 'basic_includes/failurebox.php'*/ ?>
-
+  
   <div class="panel panel-default">
-    <div class="panel-heading">New User Creation</div>
+    <div class="panel-heading">Please Register</div>
     <div class="panel-body">
       <form role="form" id="user_creation_form" action="login.php" method="post">
     <input type="hidden" name="rcsid" value="<?php echo $rcs_id; ?>">
