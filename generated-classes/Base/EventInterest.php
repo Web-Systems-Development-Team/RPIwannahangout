@@ -80,13 +80,6 @@ abstract class EventInterest implements ActiveRecordInterface
     protected $event_interest_id;
 
     /**
-     * The value for the bringing_car field.
-     * Note: this column has a database default value of: false
-     * @var        boolean
-     */
-    protected $bringing_car;
-
-    /**
      * The value for the interested_user_id field.
      * @var        int
      */
@@ -134,23 +127,10 @@ abstract class EventInterest implements ActiveRecordInterface
     protected $validationFailures;
 
     /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues()
-    {
-        $this->bringing_car = false;
-    }
-
-    /**
      * Initializes internal state of Base\EventInterest object.
-     * @see applyDefaults()
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -374,26 +354,6 @@ abstract class EventInterest implements ActiveRecordInterface
     }
 
     /**
-     * Get the [bringing_car] column value.
-     *
-     * @return boolean
-     */
-    public function getBringingCar()
-    {
-        return $this->bringing_car;
-    }
-
-    /**
-     * Get the [bringing_car] column value.
-     *
-     * @return boolean
-     */
-    public function isBringingCar()
-    {
-        return $this->getBringingCar();
-    }
-
-    /**
      * Get the [interested_user_id] column value.
      *
      * @return int
@@ -432,34 +392,6 @@ abstract class EventInterest implements ActiveRecordInterface
 
         return $this;
     } // setEventInterestId()
-
-    /**
-     * Sets the value of the [bringing_car] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param  boolean|integer|string $v The new value
-     * @return $this|\EventInterest The current object (for fluent API support)
-     */
-    public function setBringingCar($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->bringing_car !== $v) {
-            $this->bringing_car = $v;
-            $this->modifiedColumns[EventInterestTableMap::COL_BRINGING_CAR] = true;
-        }
-
-        return $this;
-    } // setBringingCar()
 
     /**
      * Set the value of [interested_user_id] column.
@@ -519,10 +451,6 @@ abstract class EventInterest implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->bringing_car !== false) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -552,13 +480,10 @@ abstract class EventInterest implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : EventInterestTableMap::translateFieldName('EventInterestId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->event_interest_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : EventInterestTableMap::translateFieldName('BringingCar', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->bringing_car = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : EventInterestTableMap::translateFieldName('InterestedUserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : EventInterestTableMap::translateFieldName('InterestedUserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->interested_user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : EventInterestTableMap::translateFieldName('TargetEventId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : EventInterestTableMap::translateFieldName('TargetEventId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->target_event_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -568,7 +493,7 @@ abstract class EventInterest implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = EventInterestTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = EventInterestTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\EventInterest'), 0, $e);
@@ -795,9 +720,6 @@ abstract class EventInterest implements ActiveRecordInterface
         if ($this->isColumnModified(EventInterestTableMap::COL_EVENT_INTEREST_ID)) {
             $modifiedColumns[':p' . $index++]  = 'event_interest_id';
         }
-        if ($this->isColumnModified(EventInterestTableMap::COL_BRINGING_CAR)) {
-            $modifiedColumns[':p' . $index++]  = 'bringing_car';
-        }
         if ($this->isColumnModified(EventInterestTableMap::COL_INTERESTED_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'interested_user_id';
         }
@@ -817,9 +739,6 @@ abstract class EventInterest implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'event_interest_id':
                         $stmt->bindValue($identifier, $this->event_interest_id, PDO::PARAM_INT);
-                        break;
-                    case 'bringing_car':
-                        $stmt->bindValue($identifier, (int) $this->bringing_car, PDO::PARAM_INT);
                         break;
                     case 'interested_user_id':
                         $stmt->bindValue($identifier, $this->interested_user_id, PDO::PARAM_INT);
@@ -893,12 +812,9 @@ abstract class EventInterest implements ActiveRecordInterface
                 return $this->getEventInterestId();
                 break;
             case 1:
-                return $this->getBringingCar();
-                break;
-            case 2:
                 return $this->getInterestedUserId();
                 break;
-            case 3:
+            case 2:
                 return $this->getTargetEventId();
                 break;
             default:
@@ -932,9 +848,8 @@ abstract class EventInterest implements ActiveRecordInterface
         $keys = EventInterestTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getEventInterestId(),
-            $keys[1] => $this->getBringingCar(),
-            $keys[2] => $this->getInterestedUserId(),
-            $keys[3] => $this->getTargetEventId(),
+            $keys[1] => $this->getInterestedUserId(),
+            $keys[2] => $this->getTargetEventId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1010,12 +925,9 @@ abstract class EventInterest implements ActiveRecordInterface
                 $this->setEventInterestId($value);
                 break;
             case 1:
-                $this->setBringingCar($value);
-                break;
-            case 2:
                 $this->setInterestedUserId($value);
                 break;
-            case 3:
+            case 2:
                 $this->setTargetEventId($value);
                 break;
         } // switch()
@@ -1048,13 +960,10 @@ abstract class EventInterest implements ActiveRecordInterface
             $this->setEventInterestId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setBringingCar($arr[$keys[1]]);
+            $this->setInterestedUserId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setInterestedUserId($arr[$keys[2]]);
-        }
-        if (array_key_exists($keys[3], $arr)) {
-            $this->setTargetEventId($arr[$keys[3]]);
+            $this->setTargetEventId($arr[$keys[2]]);
         }
     }
 
@@ -1099,9 +1008,6 @@ abstract class EventInterest implements ActiveRecordInterface
 
         if ($this->isColumnModified(EventInterestTableMap::COL_EVENT_INTEREST_ID)) {
             $criteria->add(EventInterestTableMap::COL_EVENT_INTEREST_ID, $this->event_interest_id);
-        }
-        if ($this->isColumnModified(EventInterestTableMap::COL_BRINGING_CAR)) {
-            $criteria->add(EventInterestTableMap::COL_BRINGING_CAR, $this->bringing_car);
         }
         if ($this->isColumnModified(EventInterestTableMap::COL_INTERESTED_USER_ID)) {
             $criteria->add(EventInterestTableMap::COL_INTERESTED_USER_ID, $this->interested_user_id);
@@ -1195,7 +1101,6 @@ abstract class EventInterest implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setBringingCar($this->getBringingCar());
         $copyObj->setInterestedUserId($this->getInterestedUserId());
         $copyObj->setTargetEventId($this->getTargetEventId());
         if ($makeNew) {
@@ -1342,12 +1247,10 @@ abstract class EventInterest implements ActiveRecordInterface
             $this->aTarget_Event->removeInterest($this);
         }
         $this->event_interest_id = null;
-        $this->bringing_car = null;
         $this->interested_user_id = null;
         $this->target_event_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1390,7 +1293,6 @@ abstract class EventInterest implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addPropertyConstraint('bringing_car', new NotNull());
         $metadata->addPropertyConstraint('interested_user_id', new NotNull());
         $metadata->addPropertyConstraint('target_event_id', new NotNull());
     }

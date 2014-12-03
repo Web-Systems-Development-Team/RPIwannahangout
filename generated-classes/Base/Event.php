@@ -33,7 +33,6 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\DefaultTranslator;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Context\ExecutionContextFactory;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
@@ -95,6 +94,12 @@ abstract class Event implements ActiveRecordInterface
     protected $title;
 
     /**
+     * The value for the date field.
+     * @var        \DateTime
+     */
+    protected $date;
+
+    /**
      * The value for the start_time field.
      * @var        \DateTime
      */
@@ -126,11 +131,10 @@ abstract class Event implements ActiveRecordInterface
     protected $description_isLoaded = false;
 
     /**
-     * The value for the need_car field.
-     * Note: this column has a database default value of: false
-     * @var        boolean
+     * The value for the max_attendance field.
+     * @var        int
      */
-    protected $need_car;
+    protected $max_attendance;
 
     /**
      * The value for the creator_user_id field.
@@ -193,23 +197,10 @@ abstract class Event implements ActiveRecordInterface
     protected $commentsScheduledForDeletion = null;
 
     /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues()
-    {
-        $this->need_car = false;
-    }
-
-    /**
      * Initializes internal state of Base\Event object.
-     * @see applyDefaults()
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -443,13 +434,33 @@ abstract class Event implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [date] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDate($format = NULL)
+    {
+        if ($format === null) {
+            return $this->date;
+        } else {
+            return $this->date instanceof \DateTime ? $this->date->format($format) : null;
+        }
+    }
+
+    /**
      * Get the [optionally formatted] temporal [start_time] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
      *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -469,7 +480,7 @@ abstract class Event implements ActiveRecordInterface
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
      *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -536,23 +547,13 @@ abstract class Event implements ActiveRecordInterface
         }
     }
     /**
-     * Get the [need_car] column value.
+     * Get the [max_attendance] column value.
      *
-     * @return boolean
+     * @return int
      */
-    public function getNeedCar()
+    public function getMaxAttendance()
     {
-        return $this->need_car;
-    }
-
-    /**
-     * Get the [need_car] column value.
-     *
-     * @return boolean
-     */
-    public function isNeedCar()
-    {
-        return $this->getNeedCar();
+        return $this->max_attendance;
     }
 
     /**
@@ -604,6 +605,26 @@ abstract class Event implements ActiveRecordInterface
 
         return $this;
     } // setTitle()
+
+    /**
+     * Sets the value of [date] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->date !== null || $dt !== null) {
+            if ($dt !== $this->date) {
+                $this->date = $dt;
+                $this->modifiedColumns[EventTableMap::COL_DATE] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setDate()
 
     /**
      * Sets the value of [start_time] column to a normalized version of the date/time value specified.
@@ -692,32 +713,24 @@ abstract class Event implements ActiveRecordInterface
     } // setDescription()
 
     /**
-     * Sets the value of the [need_car] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Set the value of [max_attendance] column.
      *
-     * @param  boolean|integer|string $v The new value
+     * @param  int $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
-    public function setNeedCar($v)
+    public function setMaxAttendance($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (int) $v;
         }
 
-        if ($this->need_car !== $v) {
-            $this->need_car = $v;
-            $this->modifiedColumns[EventTableMap::COL_NEED_CAR] = true;
+        if ($this->max_attendance !== $v) {
+            $this->max_attendance = $v;
+            $this->modifiedColumns[EventTableMap::COL_MAX_ATTENDANCE] = true;
         }
 
         return $this;
-    } // setNeedCar()
+    } // setMaxAttendance()
 
     /**
      * Set the value of [creator_user_id] column.
@@ -753,10 +766,6 @@ abstract class Event implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->need_car !== false) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -789,25 +798,25 @@ abstract class Event implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : EventTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
             $this->title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : EventTableMap::translateFieldName('StartTime', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : EventTableMap::translateFieldName('Date', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00') {
                 $col = null;
             }
+            $this->date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : EventTableMap::translateFieldName('StartTime', TableMap::TYPE_PHPNAME, $indexType)];
             $this->start_time = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : EventTableMap::translateFieldName('EndTime', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : EventTableMap::translateFieldName('EndTime', TableMap::TYPE_PHPNAME, $indexType)];
             $this->end_time = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : EventTableMap::translateFieldName('Location', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : EventTableMap::translateFieldName('Location', TableMap::TYPE_PHPNAME, $indexType)];
             $this->location = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : EventTableMap::translateFieldName('NeedCar', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->need_car = (null !== $col) ? (boolean) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : EventTableMap::translateFieldName('MaxAttendance', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->max_attendance = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : EventTableMap::translateFieldName('CreatorUserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : EventTableMap::translateFieldName('CreatorUserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->creator_user_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -817,7 +826,7 @@ abstract class Event implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = EventTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = EventTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Event'), 0, $e);
@@ -1078,6 +1087,9 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_TITLE)) {
             $modifiedColumns[':p' . $index++]  = 'title';
         }
+        if ($this->isColumnModified(EventTableMap::COL_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'date';
+        }
         if ($this->isColumnModified(EventTableMap::COL_START_TIME)) {
             $modifiedColumns[':p' . $index++]  = 'start_time';
         }
@@ -1090,8 +1102,8 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = 'description';
         }
-        if ($this->isColumnModified(EventTableMap::COL_NEED_CAR)) {
-            $modifiedColumns[':p' . $index++]  = 'need_car';
+        if ($this->isColumnModified(EventTableMap::COL_MAX_ATTENDANCE)) {
+            $modifiedColumns[':p' . $index++]  = 'max_attendance';
         }
         if ($this->isColumnModified(EventTableMap::COL_CREATOR_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'creator_user_id';
@@ -1113,6 +1125,9 @@ abstract class Event implements ActiveRecordInterface
                     case 'title':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
+                    case 'date':
+                        $stmt->bindValue($identifier, $this->date ? $this->date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
                     case 'start_time':
                         $stmt->bindValue($identifier, $this->start_time ? $this->start_time->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
@@ -1125,8 +1140,8 @@ abstract class Event implements ActiveRecordInterface
                     case 'description':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
-                    case 'need_car':
-                        $stmt->bindValue($identifier, (int) $this->need_car, PDO::PARAM_INT);
+                    case 'max_attendance':
+                        $stmt->bindValue($identifier, $this->max_attendance, PDO::PARAM_INT);
                         break;
                     case 'creator_user_id':
                         $stmt->bindValue($identifier, $this->creator_user_id, PDO::PARAM_INT);
@@ -1200,21 +1215,24 @@ abstract class Event implements ActiveRecordInterface
                 return $this->getTitle();
                 break;
             case 2:
-                return $this->getStartTime();
+                return $this->getDate();
                 break;
             case 3:
-                return $this->getEndTime();
+                return $this->getStartTime();
                 break;
             case 4:
-                return $this->getLocation();
+                return $this->getEndTime();
                 break;
             case 5:
-                return $this->getDescription();
+                return $this->getLocation();
                 break;
             case 6:
-                return $this->getNeedCar();
+                return $this->getDescription();
                 break;
             case 7:
+                return $this->getMaxAttendance();
+                break;
+            case 8:
                 return $this->getCreatorUserId();
                 break;
             default:
@@ -1249,12 +1267,13 @@ abstract class Event implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getEventId(),
             $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getStartTime(),
-            $keys[3] => $this->getEndTime(),
-            $keys[4] => $this->getLocation(),
-            $keys[5] => ($includeLazyLoadColumns) ? $this->getDescription() : null,
-            $keys[6] => $this->getNeedCar(),
-            $keys[7] => $this->getCreatorUserId(),
+            $keys[2] => $this->getDate(),
+            $keys[3] => $this->getStartTime(),
+            $keys[4] => $this->getEndTime(),
+            $keys[5] => $this->getLocation(),
+            $keys[6] => ($includeLazyLoadColumns) ? $this->getDescription() : null,
+            $keys[7] => $this->getMaxAttendance(),
+            $keys[8] => $this->getCreatorUserId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1348,21 +1367,24 @@ abstract class Event implements ActiveRecordInterface
                 $this->setTitle($value);
                 break;
             case 2:
-                $this->setStartTime($value);
+                $this->setDate($value);
                 break;
             case 3:
-                $this->setEndTime($value);
+                $this->setStartTime($value);
                 break;
             case 4:
-                $this->setLocation($value);
+                $this->setEndTime($value);
                 break;
             case 5:
-                $this->setDescription($value);
+                $this->setLocation($value);
                 break;
             case 6:
-                $this->setNeedCar($value);
+                $this->setDescription($value);
                 break;
             case 7:
+                $this->setMaxAttendance($value);
+                break;
+            case 8:
                 $this->setCreatorUserId($value);
                 break;
         } // switch()
@@ -1398,22 +1420,25 @@ abstract class Event implements ActiveRecordInterface
             $this->setTitle($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setStartTime($arr[$keys[2]]);
+            $this->setDate($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setEndTime($arr[$keys[3]]);
+            $this->setStartTime($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setLocation($arr[$keys[4]]);
+            $this->setEndTime($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setDescription($arr[$keys[5]]);
+            $this->setLocation($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setNeedCar($arr[$keys[6]]);
+            $this->setDescription($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCreatorUserId($arr[$keys[7]]);
+            $this->setMaxAttendance($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setCreatorUserId($arr[$keys[8]]);
         }
     }
 
@@ -1462,6 +1487,9 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_TITLE)) {
             $criteria->add(EventTableMap::COL_TITLE, $this->title);
         }
+        if ($this->isColumnModified(EventTableMap::COL_DATE)) {
+            $criteria->add(EventTableMap::COL_DATE, $this->date);
+        }
         if ($this->isColumnModified(EventTableMap::COL_START_TIME)) {
             $criteria->add(EventTableMap::COL_START_TIME, $this->start_time);
         }
@@ -1474,8 +1502,8 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_DESCRIPTION)) {
             $criteria->add(EventTableMap::COL_DESCRIPTION, $this->description);
         }
-        if ($this->isColumnModified(EventTableMap::COL_NEED_CAR)) {
-            $criteria->add(EventTableMap::COL_NEED_CAR, $this->need_car);
+        if ($this->isColumnModified(EventTableMap::COL_MAX_ATTENDANCE)) {
+            $criteria->add(EventTableMap::COL_MAX_ATTENDANCE, $this->max_attendance);
         }
         if ($this->isColumnModified(EventTableMap::COL_CREATOR_USER_ID)) {
             $criteria->add(EventTableMap::COL_CREATOR_USER_ID, $this->creator_user_id);
@@ -1567,11 +1595,12 @@ abstract class Event implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setTitle($this->getTitle());
+        $copyObj->setDate($this->getDate());
         $copyObj->setStartTime($this->getStartTime());
         $copyObj->setEndTime($this->getEndTime());
         $copyObj->setLocation($this->getLocation());
         $copyObj->setDescription($this->getDescription());
-        $copyObj->setNeedCar($this->getNeedCar());
+        $copyObj->setMaxAttendance($this->getMaxAttendance());
         $copyObj->setCreatorUserId($this->getCreatorUserId());
 
         if ($deepCopy) {
@@ -2189,16 +2218,16 @@ abstract class Event implements ActiveRecordInterface
         }
         $this->event_id = null;
         $this->title = null;
+        $this->date = null;
         $this->start_time = null;
         $this->end_time = null;
         $this->location = null;
         $this->description = null;
         $this->description_isLoaded = false;
-        $this->need_car = null;
+        $this->max_attendance = null;
         $this->creator_user_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -2263,7 +2292,7 @@ abstract class Event implements ActiveRecordInterface
         $metadata->addPropertyConstraint('description', new NotBlank());
         $metadata->addPropertyConstraint('description', new Length(array ('max' => 1200,)));
         $metadata->addPropertyConstraint('creator_user_id', new NotBlank());
-        $metadata->addPropertyConstraint('need_car', new NotNull());
+        $metadata->addPropertyConstraint('max_attendance', new NotBlank());
     }
 
     /**

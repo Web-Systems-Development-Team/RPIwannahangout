@@ -13,11 +13,12 @@ CREATE TABLE `event`
 (
     `event_id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(50) NOT NULL,
-    `start_time` DATETIME NOT NULL,
-    `end_time` DATETIME NOT NULL,
+    `date` DATE NOT NULL,
+    `start_time` TIME NOT NULL,
+    `end_time` TIME NOT NULL,
     `location` VARCHAR(255) NOT NULL,
     `description` TEXT(1200) NOT NULL,
-    `need_car` TINYINT(1) DEFAULT 0 NOT NULL,
+    `max_attendance` INTEGER NOT NULL,
     `creator_user_id` INTEGER NOT NULL,
     PRIMARY KEY (`event_id`),
     INDEX `event_fi_d5fb72` (`creator_user_id`),
@@ -52,7 +53,6 @@ DROP TABLE IF EXISTS `event_interest`;
 CREATE TABLE `event_interest`
 (
     `event_interest_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `bringing_car` TINYINT(1) DEFAULT 0 NOT NULL,
     `interested_user_id` INTEGER NOT NULL,
     `target_event_id` INTEGER NOT NULL,
     PRIMARY KEY (`event_interest_id`),
