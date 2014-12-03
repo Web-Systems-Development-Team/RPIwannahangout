@@ -137,4 +137,11 @@ video[poster]{
     margin-top: 2em;
     padding-bottom: 10em;
 }
-
+div.comment-head {
+    display:block;
+}
+.glyphicon-remove {
+    display:inline;
+    float: right;
+    color: #777;
+}

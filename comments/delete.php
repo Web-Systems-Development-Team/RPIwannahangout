@@ -1,12 +1,10 @@
-<?php
-	
-
+<?php	
 	require_once '../database_access.php';
 
+echo "text";
 
-
-	if (isset($_GET['comment_id'])) {
-		$comment = CommentQuery::create()->findPk($_GET['comment_id']);
+	if (isset($_POST['comment_id'])) {
+		$comment = CommentQuery::create()->findPk($_POST['comment_id']);
 		if ($comment) {
 			$comment->delete();
 			echo '<p>Successfully deleted comment</p>';

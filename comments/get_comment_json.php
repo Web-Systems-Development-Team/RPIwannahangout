@@ -1,9 +1,10 @@
 <?php
 
-	require_once '../database_access.php';
-	$q = new CommentQuery();
-	$q->join("Comment.Author")
-		->withColumn("Author.first_name", 'authorName');
+require_once '../database_access.php';
+$q = new CommentQuery();
+$q->join("Comment.Author")
+  ->withColumn("Author.first_name", 'authorFirstName')
+  ->withColumn("Author.last_name", 'authorLastName');
 
 
 	if(isset($_GET['event_id'])){
@@ -17,6 +18,6 @@
 	}
 
 	
-	echo $q->find()->toJson();
+echo $q->find()->toJson();
 
 ?>
