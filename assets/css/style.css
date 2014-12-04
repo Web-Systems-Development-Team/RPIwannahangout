@@ -194,3 +194,7 @@ div.comment-head {
 .highlight {
     color: #5bc0de;
 }
+
+div.error {
+    background-color: #f88;
+}

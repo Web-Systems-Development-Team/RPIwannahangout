@@ -36,7 +36,6 @@ require_once 'database_access.php';
 
 //User has logged in and the form has sent them back to this.
 if(!isset($_POST['submit'])) {
-    
     //phpCAS library
     require_once 'phpCAS/CAS.php';
     
@@ -136,7 +135,7 @@ if(!isset($_POST['submit'])) {
 </head>
 <body>
   <?php include 'basic_includes/navbar.php' ?>
-  
+  <?php include 'basic_includes/errorbox.php' ?>
   <div class="panel panel-default">
     <div class="panel-heading">Please Register</div>
     <div class="panel-body">
