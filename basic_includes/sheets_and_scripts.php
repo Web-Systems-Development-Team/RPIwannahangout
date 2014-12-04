@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap-responsive.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap-timepicker.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/sweet-alert.css" />
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
