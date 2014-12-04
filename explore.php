@@ -1,7 +1,6 @@
 <?php
+    session_start();
 	require_once 'database_access.php';
-	$q = new EventQuery();
-	$events = $q->orderByStartTime()->find();
 ?>
 <!DOCTYPE html>
 <html>

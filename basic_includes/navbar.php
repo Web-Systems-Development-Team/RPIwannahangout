@@ -29,8 +29,8 @@
           <li id="createLink"><a href="/events/create.php">Create Event</a></li>
           <li id="myEventsLink"><a href="/my_events.php">My Events</a></li>
         <?php } else { ?>
-          <li id="myEventsLink"><a href="/login.php">My Events</a></li>
           <li id="createLink"><a href="/login.php">Create Event</a></li>
+          <li id="myEventsLink"><a href="/login.php">My Events</a></li>
         <?php } ?>
 
         <li id="findLink"><a href="/events/list.php">Find Event</a></li>

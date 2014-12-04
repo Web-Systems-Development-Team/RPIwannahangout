@@ -47,7 +47,7 @@
 						<div class="cell"><?php echo $event->getStartTime()->format('H:i'); ?></div>
 						<div class="cell"><?php echo $event->getEndTime()->format('H:i'); ?></div>
 						<div class="cell"><?php echo $event->getLocation(); ?></div>
-						<div class="cell"><?php echo $event->getDescription(); ?></div>
+						<div class="cell line-clamp"><?php echo $event->getDescription(); ?></div>
 						<div class="cell"><?php echo $event->countInterests()."/".$event->getMaxAttendance(); ?></div>
 						<div class="bcell">
 							<a href="events/details.php?event_id=<?php echo $event->getPrimaryKey() ?>" >

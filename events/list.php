@@ -16,14 +16,13 @@
 	<div class="panel panel-default" id="list_events">
 		<table class="table table-hover">
 			<thead>
-				<th class="sort col-md-3" data-sort="title">Title</th>
-				<th class="sort col-md-1" data-sort="date">Date</th>
-				<th class="sort col-md-1" data-sort="start_time">Start Time</th>
-				<th class="sort col-md-1" data-sort="end_time">End Time</th>
-				<th class="sort col-md-2" data-sort="location">Location</th>
-				<th class="sort col-md-1" data-sort="attending">Attending</th>
+				<th class="sort col-md-3" data-sort="title">Title <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort col-md-2" data-sort="date">Date <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort col-md-1" data-sort="start_time">Start Time <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort col-md-1" data-sort="end_time">End Time <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
+				<th class="sort col-md-3" data-sort="location">Location <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
 				<th class="sort col-md-1" data-sort="max_attendance">Max Attendance</th>
-				<th class="sort col-md-1" data-sort="open_spots">Open Spots</th>
+				<th class="sort col-md-1" data-sort="open_spots">Open Spots <span class="glyphicon glyphicon-sort" aria-hidden="true"></span></th>
 				<th colspan="2">
 		          <input type="text" class="search" placeholder="Search" />
 		        </th>
@@ -36,7 +35,6 @@
 					<td class="start_time"><?php echo $event->getStartTime()->format('H:i'); ?></td>
 					<td class="end_time"><?php echo $event->getEndTime()->format('H:i'); ?></td>
 					<td class="location"><?php echo $event->getLocation(); ?></td>
-					<td class="attending"><?php echo $event->countInterests(); ?></td>
 					<td class="max_attendance"><?php echo $event->getMaxAttendance(); ?></td>
 					<td class="open_spots"><?php echo $event->getMaxAttendance() - $event->countInterests(); ?></td>
 					<td>

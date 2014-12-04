@@ -26,7 +26,7 @@
 	<title>Event List</title>
 </head>
 <body>
-    <div id="list_page">
+    <div id="list_page2">
 	<?php include 'basic_includes/navbar.php' ?>
 	<div class="panel panel-default" id="my_events_list">
 		<h3>My Events</h3>
