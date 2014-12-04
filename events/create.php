@@ -73,21 +73,22 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     else {
 
         // validate date fields
-        $now = new DateTime('now');
-        $st = DateTime::createFromFormat("Y-m-d\TH:i",$start_time);
-        $et = DateTime::createFromFormat("Y-m-d\TH:i",$end_time);
+        //$now = new DateTime('now');
+        $st = DateTime::createFromFormat("m/d/Y H:i A",$date . " " . $start_time);
+        $et = DateTime::createFromFormat("m/d/Y H:i A",$date . " " . $end_time);
 
+        /*
         if($now > $st) {
             array_push($failure_messages, "<p><strong>Error:</strong> You cannot create an event that has already started</p>");
-        } else if ($st > $et) {
+            } else */
+        if ($st > $et) {
             array_push($failure_messages, "<p><strong>Time paradox:</strong> You cannot have an event which ends before it starts.</p>");
         } else {
-            //$event->save();
+            $event->save();
             $event_id = $event->getEventId();
-            //header("Location:../events/details.php?event_id=$event_id&new=1");
+            header("Location:../events/details.php?event_id=$event_id&new=1");
         }
     }
-    var_dump($failure_messages);
 } // end if for was submitted
 ?>
 <!DOCTYPE html>
@@ -99,6 +100,7 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
 <body>
     <div id="create_event">
     <?php include '../basic_includes/navbar.php' ?>
+    <?php include '../basic_includes/errorbox.php' ?>
 
 	<div class="panel panel-default">
         <div class="panel-heading">Event Creation Form</div>
