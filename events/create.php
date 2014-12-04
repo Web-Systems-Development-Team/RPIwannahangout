@@ -25,6 +25,7 @@ $end_time = '';
 $location = '';
 $description = '';
 $max_attendance = '';
+$failure_messages = Array();
 
 if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     // populate vars
@@ -60,7 +61,6 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
     $event->setMaxAttendance($max_attendance);
     $event->setCreatorUserId($_SESSION['uid']);
     
-    $failure_messages = Array();
     if (!$event->validate()) {
         foreach ($event->getValidationFailures() as $failure) {
             $message = '<p><strong>Error in '.$failure->getPropertyPath().' field!</strong> '.$failure->getMessage().'</p>';
@@ -79,7 +79,7 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
         $ei->save();
         header("Location:../events/details.php?event_id=$event_id");
     }
-    var_dump($failure_messages);
+    // var_dump($failure_messages);
 } // end if for was submitted
 ?>
 <!DOCTYPE html>
@@ -91,6 +91,14 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
 <body>
     <div id="create_event">
     <?php include '../basic_includes/navbar.php' ?>
+
+    <?php foreach($failure_messages as $message) { ?>
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <!-- <strong>Warning!</strong> Better check yourself, you're not looking too good. -->
+      <?php echo $message; ?>
+    </div>
+    <?php }?>
 
 	<div class="panel panel-default">
         <div class="panel-heading">Event Creation Form</div>

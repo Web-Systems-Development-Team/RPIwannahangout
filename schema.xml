@@ -17,6 +17,7 @@
     <behavior name="validate">
       <parameter name="title_not_blank" value="{column: title, validator: NotBlank}" />
       <parameter name="title_length" value="{column: title, validator: Length, options: {max: 50}}" />
+      <parameter name="date_not_blank" value="{column: date, validator: NotBlank}" />
       <parameter name="start_time_not_blank" value="{column: start_time, validator: NotBlank}" />
       <parameter name="start_time_valid" value="{column: start_time, validator: SymfonyDateTime}" />
       <parameter name="end_time_not_blank" value="{column: end_time, validator: NotBlank}" />

@@ -2283,6 +2283,7 @@ abstract class Event implements ActiveRecordInterface
     {
         $metadata->addPropertyConstraint('title', new NotBlank());
         $metadata->addPropertyConstraint('title', new Length(array ('max' => 50,)));
+        $metadata->addPropertyConstraint('date', new NotBlank());
         $metadata->addPropertyConstraint('start_time', new NotBlank());
         $metadata->addPropertyConstraint('start_time', new SymfonyDateTime());
         $metadata->addPropertyConstraint('end_time', new NotBlank());

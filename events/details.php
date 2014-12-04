@@ -186,10 +186,26 @@ $(".comment-form").submit(function(event) {
 });
 
 function add_interest(interest) {
-    var row = $("<tr/>").append($("<td/>", {
-        'text':(interest.authorFirstName + " " + interest.authorLastName)
-    }));
-    $(".interest-table-body").append(row);
+    var data = $("<td/>", { 
+        'text':(interest.authorFirstName + " " + interest.authorLastName),
+        'interest_id':interest.EventInterestId });
+    //delete button
+    if (interest.InterestedUserId == <?php echo $_SESSION['uid']; ?>) {
+        //set up the interest delete button action
+        var del_button = $('<span/>', { class: "glyphicon glyphicon-remove interest_delete_button"});
+        $(del_button).click(function() {
+            int_id = $(this).parent().attr("interest_id");
+            $.post("../interest/delete.php", { interest_id : int_id },
+                function(data) { 
+                    $("td[interest_id='"+int_id+"']").parent().remove(); 
+                    var cur = parseInt($("#interest_count").text());
+                    $("#interest_count").text(cur-1);
+                },
+                "text");
+        });
+       data.append(del_button);
+    }
+    $(".interest-table-body").append($("<tr/>").append(data));
 }
 
 // display interests
