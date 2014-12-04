@@ -13,11 +13,21 @@
 		echo '<p class="error_message">Need an event ID</p>';
 	}
 
+    //get event from event id
 	$q = new EventQuery();
 	$event = $q->findPk($event_id);
 
+    //get interests
 	$interests = EventInterestQuery::create()
 		->find();
+
+    //check if current user is interested in this event
+    $interested = FALSE;
+    foreach ($interests as $interest) {
+        if ($interest->getInterestedUserID() == $_SESSION['uid']) {
+            $interested = TRUE;
+        }
+    }
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -60,11 +70,21 @@
 			
 			<!-- Display the Interested button only if there is a user session active (anyone can read event details, but only users can mark interest) -->
 			<?php if(isset($_SESSION['uid'])) { ?>
+
+                <!-- If user has indicated their interest, show remove interest button -->
+                <?php if ($interested) { ?>
+                <form class=".remove_interest" method="post">
+                    <button class="btn btn-primary" type="submit" name="remove" value="remove" id="remove_interest_button">Remove Interest</button>
+                </form>
+                <?php } else { ?>
+
+                <!-- otherwise show add interest button -->
 				<form class="interested_form" method="post">
 					<input type="hidden" name="interested_user_id" value="<?php echo $_SESSION['uid']; ?>">
 					<input type="hidden" name="target_event_id" value="<?php echo $event->getEventId(); ?>">
 					<button class="btn btn-primary" type="submit" name="interest" value="interest" id="add_interest_button">I'm Interested!</button>
 				</form>
+                <?php } ?>
 			<?php } else {?>
 				<a href="/RPIWannaHangOut/login.php">
 					<button class="btn btn-primary" value="interest">I'm Interested!</button>
@@ -129,6 +149,7 @@ function add_comment(comment) {
     
     //delete button
     if (comment.AuthorUserId == <?php echo $_SESSION['uid']; ?>) {
+
         //set up the comment delete button action
         var del_button = $('<span/>', { class: "glyphicon glyphicon-remove comment_delete_button" });
         $(del_button).click(function() {
@@ -187,7 +208,8 @@ $(".comment-form").submit(function(event) {
 
 function add_interest(interest) {
     var row = $("<tr/>").append($("<td/>", {
-        'text':(interest.authorFirstName + " " + interest.authorLastName)
+        'text':(interest.authorFirstName + " " + interest.authorLastName),
+        'interestid' : interest.EventInterestId
     }));
     $(".interest-table-body").append(row);
 }
@@ -233,6 +255,28 @@ $(".interested_form").submit(function(event) {
             console.dir( xhr );
         },
     });
+});
+
+//remove interest form
+$(".remove_interest").submit(function(event) {
+
+    //get interest id
+    <?php
+
+        $interest = EventInterestQuery::create()->filterByInterestedUserId($_SESSION['uid'])
+            ->filterByTargetEventId($event_id)->find();
+
+        $i_id = $interest->getEventInterestId();
+
+    ?>
+    i_id = <?php echo $i_id ?>
+
+
+    $.post("../interest/remove_interest.php", { event_interest_id : i_id },
+        function(data) { $("td[interestid='"+i_id+"']").remove(); },
+        "text");
+
+        }
 });
     </script>
     </div>
