@@ -1,6 +1,6 @@
 #index{
     min-height: 100%; 
-    background: url("/RPIwannahangout/background-pics/home.JPG")no-repeat center center fixed; 
+    background: url("/background-pics/home.JPG")no-repeat center center fixed; 
     background-size: cover;
     background-position: 0 2px;
     padding-bottom: 3em;
@@ -31,20 +31,20 @@ p{
 }
 #list_page{
     min-height: 100%; 
-    background: url("/RPIwannahangout/background-pics/campus2.JPG")no-repeat center center fixed; 
+    background: url("/background-pics/campus2.JPG")no-repeat center center fixed; 
     background-size: cover;
     background-position: 0 10px;
     padding-bottom: 3em;
 }
 #create_event{
     min-height: 100%; 
-    background: url("/RPIwannahangout/background-pics/campus1.JPG")no-repeat center center fixed; 
+    background: url("/background-pics/campus1.JPG")no-repeat center center fixed; 
     background-size: cover;
     padding-bottom: 3em;
 }
 #detail_page {
     min-height: 100%;
-    background: url("/RPIwannahangout/background-pics/icons-asphalt.JPG")fixed; 
+    background: url("/background-pics/icons-asphalt.JPG")fixed; 
     padding-bottom: 3em;
 }
 #events {

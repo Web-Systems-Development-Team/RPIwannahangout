@@ -8,9 +8,6 @@ if(isset($_POST['interested_user_id'])) {
 if(isset($_POST['target_event_id'])) {
     $ei->setTargetEventId($_POST['target_event_id']);
 }
-if(isset($_POST['bringing_car'])) {
-    $ei->setBringingCar($_POST['bringing_car']);
-}
 
 if (!$ei->validate()) {
     foreach ($ei->getValidationFailures() as $failure) {

@@ -66,7 +66,7 @@
 					<button class="btn btn-primary" type="submit" name="interest" value="interest" id="add_interest_button">I'm Interested!</button>
 				</form>
 			<?php } else {?>
-				<a href="/RPIWannaHangOut/login.php">
+				<a href="/login.php">
 					<button class="btn btn-primary" value="interest">I'm Interested!</button>
 				</a>
 			<?php } ?>

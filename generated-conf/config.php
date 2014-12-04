@@ -5,8 +5,8 @@ $serviceContainer->setAdapterClass('RPIWannaHangOut', 'mysql');
 $manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
 $manager->setConfiguration(array (
   'classname' => 'Propel\\Runtime\\Connection\\ConnectionWrapper',
-  'dsn' => 'mysql:host=localhost;dbname=RPIWannaHangOut',
-  'user' => 'propel_user',
+  'dsn' => 'mysql:host=localhost;dbname=rpiwhwyv_RPIWannaHangOut',
+  'user' => 'rpiwhwyv_propel',
   'password' => 'HvwE49yK23wKmQ6',
   'attributes' =>
   array (

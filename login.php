@@ -22,10 +22,10 @@ function getData($formName) {
 //Starts a session and then redirects back to the main page.
 function beginSession($user_id) {
     if(!session_start()) {
-        echo "ERROR: session could not be started.";
+        // echo "ERROR: session could not be started.";
     }
     else {
-        echo "Successfully beginning session " . $user_id;
+        // echo "Successfully beginning session " . $user_id;
         $_SESSION['uid'] = $user_id;
     }
     redirect();

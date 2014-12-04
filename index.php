@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	require_once 'database_access.php';
 	$q = new EventQuery();
 	$events = $q->orderByStartTime()->find();
@@ -62,7 +63,7 @@
     </div>
     </div>
 
-    <script src="/RPIwannahangout/easyticker/jquery.easy-ticker.js"></script>
+    <script src="/easyticker/jquery.easy-ticker.js"></script>
     <script> //apply easyTicker function on "what's going on now"
         $('.ticker1').easyTicker({
 	       direction: 'up',

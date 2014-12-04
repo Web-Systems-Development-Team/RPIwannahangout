@@ -17,10 +17,10 @@
 
 	//session_destroy returned false, 
 	if (!session_destroy()) {
-		echo "ERROR: Session could not be destroyed.";
+		// echo "ERROR: Session could not be destroyed.";
 	}
 	else {
-		echo "Session successfully destroyed.";
+		// echo "Session successfully destroyed.";
 	}
 	redirect();
 	

@@ -1,16 +1,10 @@
 <?php
   
-  if (!isset($_SESSION)) {
-    session_start();
-  }
-
   if (isset($_SESSION['uid'])) {
     //get user from uid
     $q = new UserQuery();
     $user = $q->findPk($_SESSION['uid']);
   }
-  
-
 ?>
 
 <nav class="navbar navbar-default" role="navigation">
@@ -24,27 +18,27 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/RPIWannaHangOut/index.php">RPIWannaHangOut</a>
+      <a class="navbar-brand" href="/index.php">RPIWannaHangOut</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="/RPIWannaHangOut/explore.php">Explore</a></li>
+        <li><a href="/explore.php">Explore</a></li>
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
-          <li id="createLink"><a href="/RPIWannaHangOut/events/create.php">Create Event</a></li>
+          <li id="createLink"><a href="/events/create.php">Create Event</a></li>
         <?php } else { ?>
-          <li id="createLink"><a href="/RPIWannaHangOut/login.php">Create Event</a></li>
+          <li id="createLink"><a href="/login.php">Create Event</a></li>
         <?php } ?>
 
-        <li id="findLink"><a href="/RPIWannaHangOut/events/list.php">Find Event</a></li>
+        <li id="findLink"><a href="/events/list.php">Find Event</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
           <p class="navbar-text">Welcome, <?php echo $user->getFirstName(); ?></p>
-          <li><a href="/RPIWannaHangOut/logout.php">Log Out</a></li>
+          <li><a href="/logout.php">Log Out</a></li>
         <?php } else { ?>
-        <li><a href="/RPIWannaHangOut/login.php">Log In</a></li>
+        <li><a href="/login.php">Log In</a></li>
         <?php } ?> 
       </ul>  
     </div><!-- /.navbar-collapse -->
