@@ -22,8 +22,9 @@ h1{
 p{
     opacity: 1;
 }
-.glyphicon-sort{
+.fa-sort{
     color:#777;
+    padding-left: .1em;
 }
 #list_events, #my_events_list, #my_interests_list{
     width: 900px;
@@ -151,8 +152,9 @@ h3{
 }
 #step1{
     text-align: center;
+    margin-top: -1.1em;
     height: 30em;
-    padding-top: 1em;
+    padding-top: 2em;
     background-color: #1993B6;
     font-size: 1.25em;
     color: #F0F0F1;
