@@ -13,6 +13,7 @@
 			->useInterestQuery()
 				->filterByInterestedUserId($_SESSION['uid'])
 			->endUse()
+			->where('Event.CreatorUserId != ?', $_SESSION['uid'])
 			->orderByStartTime()
 			->find();
 	}
