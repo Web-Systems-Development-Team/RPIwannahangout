@@ -1,8 +1,10 @@
 <?php
 	session_start();
 	require_once '../database_access.php';
-	$q = new EventQuery();
-	$events = $q->orderByStartTime()->find();
+	$events = EventQuery::create()
+		->where("Event.Date >= ?", date(DATE_RFC2822))
+		->orderByStartTime()
+		->find();
 ?>
 <!DOCTYPE HTML>
 <html>
