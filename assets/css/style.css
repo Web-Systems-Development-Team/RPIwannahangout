@@ -96,7 +96,7 @@ h3{
 .newtable {
     width: 80em; 
     height:18em;
-    margin: auto;
+    margin-left:10px;
 }
 
 #calendar-wrapper{

@@ -86,7 +86,7 @@ if(isset($_POST["submit"]) && $_POST["submit"] == "submit") {
 <html>
 <head>
     <?php include_once '../basic_includes/sheets_and_scripts.php' ?>
-    <title>RPI Wanna Hangout</title>
+    <title>Create Event</title>
 </head>
 <body>
     <div id="create_event">

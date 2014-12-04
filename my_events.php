@@ -23,7 +23,7 @@
 <html>
 <head>
 	<?php include_once 'basic_includes/sheets_and_scripts.php' ?>
-	<title>Event List</title>
+	<title>My Events</title>
 </head>
 <body>
     <div id="list_page">
