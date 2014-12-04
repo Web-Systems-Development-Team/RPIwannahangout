@@ -8,7 +8,7 @@
 <head>
   <?php include_once 'basic_includes/sheets_and_scripts.php' ?>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>RPI Wanna Hangout</title>
+  <title>Explore RPI Wanna Hangout</title>
 </head>
 <body>
 	<?php include 'basic_includes/navbar.php' //create menu ?> 
