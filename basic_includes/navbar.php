@@ -27,7 +27,9 @@
         <li><a href="/explore.php">Explore</a></li>
         <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
           <li id="createLink"><a href="/events/create.php">Create Event</a></li>
+          <li id="myEventsLink"><a href="/my_events.php">My Events</a></li>
         <?php } else { ?>
+          <li id="myEventsLink"><a href="/login.php">My Events</a></li>
           <li id="createLink"><a href="/login.php">Create Event</a></li>
         <?php } ?>
 

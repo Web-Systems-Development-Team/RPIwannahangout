@@ -23,7 +23,6 @@
 <html>
 <head>
 	<?php include_once '../basic_includes/sheets_and_scripts.php' ?>
-	<link rel="stylesheet" href="../assets/css/style.css">
 	<title>Event: <?php echo $event->getTitle(); ?></title>
 </head>
 <body>

@@ -25,9 +25,12 @@ p{
 .glyphicon-sort{
     color:#777;
 }
-#list_events{
+#list_events, #my_events_list, #my_interests_list{
     width: 900px;
     padding: 1em;
+}
+#my_interests_list {
+    margin-top:15px;
 }
 #list_page{
     min-height: 100%; 
