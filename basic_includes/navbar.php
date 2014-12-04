@@ -25,13 +25,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="/explore.php">Explore</a></li>
-        <?php if (isset($_SESSION['uid']) && $_SESSION['uid'] != '') { ?>
-          <li id="createLink"><a href="/events/create.php">Create Event</a></li>
-        <?php } else { ?>
-          <li id="createLink"><a href="/login.php">Create Event</a></li>
-          <li id="myEventsLink"><a href="/login.php">My Events</a></li>
-        <?php } ?>
-
+        <li id="createLink"><a href="/events/create.php">Create Event</a></li>
         <li id="findLink"><a href="/events/list.php">Find Event</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

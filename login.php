@@ -45,10 +45,12 @@ if(!isset($_POST['submit'])) {
     //Force login
     phpCAS::client(CAS_VERSION_2_0,"cas-auth.rpi.edu",443,"/cas");
     phpCAS::setNoCasServerValidation();
+    // if already authenticated force to renew, probably same user who logged out
+    phpCAS::handleLogoutRequests();
     phpCAS::forceAuthentication();
     
     //If authentication succeeded
-    if(phpCAS::checkAuthentication()) {
+    if(phpCAS::isAuthenticated()) {
         /* This creates its own session, so replace the RPICAS session with ours
            We won't destroy the cookie set by CAS though.
            So if you log out, then go to log in again, it should not need you to
